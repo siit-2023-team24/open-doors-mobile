@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_show_all"/>
 
     <fragment
-        android:id="@+id/nav_account"
+        android:id="@+id/nav_profile"
         android:name="com.bookingapptim24.fragments.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account"/>

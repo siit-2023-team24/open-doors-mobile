@@ -83,6 +83,7 @@ public class HomeScreen extends AppCompatActivity {
                     }
                     else if (id == R.id.nav_profile) {
                         Toast.makeText(HomeScreen.this, "Profile", Toast.LENGTH_SHORT).show();
+                        //navController.navigate(R.id.nav_profile);
                     }
             }
         });
