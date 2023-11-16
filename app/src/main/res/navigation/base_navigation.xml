@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/base_navigation"
+    app:startDestination="@id/nav_show_all">
+
+    <fragment
+        android:id="@+id/nav_show_all"
+        android:name="com.bookingapptim24.fragments.ShowAllFragment"
+        android:label="Show All"
+        tools:layout="@layout/fragment_show_all"/>
+
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.bookingapptim24.fragments.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account"/>
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.bookingapptim24.fragments.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings"
+        />
+
+
+</navigation>
