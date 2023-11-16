@@ -73,7 +73,6 @@ public class HomeScreen extends AppCompatActivity {
             if (isTopLevelDestination) {
                 if (id == R.id.nav_settings){
                     Toast.makeText(HomeScreen.this, "Settings", Toast.LENGTH_SHORT).show();
-                    //prebaci fragment
                 }
 
             }

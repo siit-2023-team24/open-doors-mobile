@@ -8,19 +8,19 @@
     <fragment
         android:id="@+id/nav_show_all"
         android:name="com.bookingapptim24.fragments.ShowAllFragment"
-        android:label="Show All"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_show_all"/>
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.bookingapptim24.fragments.AccountFragment"
-        android:label="Account"
+        android:label="@string/nav_profile_title"
         tools:layout="@layout/fragment_account"/>
 
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.bookingapptim24.fragments.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/settings"
         tools:layout="@layout/fragment_settings"
         />
 
