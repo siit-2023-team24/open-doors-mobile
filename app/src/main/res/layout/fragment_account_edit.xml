@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AccountFragment"
+    tools:context=".fragments.AccountEditFragment"
     android:orientation="vertical"
     android:padding="10dp"
     android:showDividers="middle"
@@ -41,101 +42,141 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_email"
-                android:textColor="@color/dark_grey" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48sp"
                 android:text="@string/register_first_name"
-                android:textColor="@color/dark_grey" />
+                android:textColor="@color/dark_grey"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48sp"
                 android:text="@string/register_last_name"
-                android:textColor="@color/dark_grey" />
+                android:textColor="@color/dark_grey"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48sp"
+                android:textColor="@color/dark_grey"
+                android:text="@string/register_country"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48sp"
+                android:textColor="@color/dark_grey"
+                android:text="@string/register_city"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48sp"
+                android:textColor="@color/dark_grey"
+                android:text="@string/register_address"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48sp"
+                android:textColor="@color/dark_grey"
+                android:text="@string/register_phone"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/dark_grey"
-                android:text="@string/register_country" />
+                android:textColor="@color/orange"
+                android:text="@string/password_change" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48sp"
                 android:textColor="@color/dark_grey"
-                android:text="@string/register_city" />
+                android:text="@string/current_password"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48sp"
                 android:textColor="@color/dark_grey"
-                android:text="@string/register_address" />
-
+                android:text="@string/new_password"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48sp"
                 android:textColor="@color/dark_grey"
-                android:text="@string/register_phone" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dark_grey"
-                android:text="@string/role" />
-
+                android:text="@string/confirm_password"
+                android:textSize="18sp"
+                android:gravity="center_vertical" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:showDividers="middle"
             android:divider="@drawable/empty_tall_divider">
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="test@test.com"/>
+                android:layout_height="48dp"
+                android:text="Test" />
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:text="Test" />
+
+            <Spinner
+                android:id="@+id/country_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:textAlignment="textStart"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Test" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Test" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:text="Test" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text=" "/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:inputType="textPassword"
                 android:text="Test" />
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test" />
+                android:layout_height="48dp"
+                android:inputType="textPassword" />
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test" />
+                android:layout_height="48dp"
+                android:inputType="textPassword" />
 
         </LinearLayout>
 
@@ -147,28 +188,14 @@
         android:orientation="horizontal"
         android:showDividers="middle"
         android:divider="@drawable/empty_wide_divider"
-        android:gravity="center"
-        >
-
-        <Button
-            android:id="@+id/edit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/edit" />
-
-        <Button
-            android:id="@+id/del_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delete_profile" />
+        android:gravity="center">
 
         <Button
             android:id="@+id/out_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_out" />
+            android:text="@string/save" />
 
     </LinearLayout>
-
 
 </LinearLayout>
