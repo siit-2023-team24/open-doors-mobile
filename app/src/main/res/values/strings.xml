@@ -34,8 +34,14 @@
 
     <!-- Navigation and toolbar -->
     <string name="settings">Settings</string>
-    <string name="nav_profile_title">Profile</string>
-    <string name="nav_show_all_title">Show All</string>
+    <string name="profile_title">Profile</string>
+    <string name="nav_show_all_title">Accommodations</string>
+    <string name="reservations_title">Reservations</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="my_accommodations_title">My accommodations</string>
+    <string name="reported_users_title">Reported users</string>
+    <string name="reported_comments">Reported comments</string>
+    <string name="pending_accommodations">Pending accommodation changes</string>
 
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>

@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.bookingapptim24.databinding.ActivityHomeScreenBinding;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
 import com.google.android.material.navigation.NavigationView;
 
@@ -43,6 +42,9 @@ public class HomeScreen extends AppCompatActivity {
 
         binding = ActivityHomeScreenNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //check the user role for the correct layout
+        binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
 
         drawer = binding.drawerLayout;
         navigationView = binding.navView;
