@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <group android:checkableBehavior="single">
+
         <item android:id="@+id/nav_show_all"
             android:title="@string/nav_show_all_title"/>
 
         <item android:id="@+id/login"
-            android:title="@string/login_button"/>
+            android:title="@string/login_button" />
+
     </group>
+
 </menu>

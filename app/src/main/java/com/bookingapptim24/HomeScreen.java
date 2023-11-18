@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +36,8 @@ public class HomeScreen extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Set<Integer> topLevelDestinations = new HashSet<>();
 
+    public static String user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +46,7 @@ public class HomeScreen extends AppCompatActivity {
         binding = ActivityHomeScreenNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //check the user role for the correct layout
-        binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
+        setUpMenu();
 
         drawer = binding.drawerLayout;
         navigationView = binding.navView;
@@ -143,4 +145,17 @@ public class HomeScreen extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    private void setUpMenu() {
+        //temporary solution without server
+        if (user == null || user.isEmpty())
+            binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
+        else if (user.startsWith("g"))
+            binding.navView.inflateMenu(R.menu.nav_menu_guest);
+        else if (user.startsWith("a"))
+            binding.navView.inflateMenu(R.menu.nav_menu_admin);
+        else
+            binding.navView.inflateMenu(R.menu.nav_menu_host);
+    }
+
 }

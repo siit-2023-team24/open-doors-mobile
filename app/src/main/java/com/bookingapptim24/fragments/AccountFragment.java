@@ -39,6 +39,7 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("Open Doors", "AccountFr onCreateView()");
         View view = inflater.inflate(R.layout.fragment_account, container, false);
+
         Button signOutBtn = view.findViewById(R.id.sign_out_btn);
         signOutBtn.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), LoginScreen.class);
