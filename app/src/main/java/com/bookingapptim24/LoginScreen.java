@@ -29,6 +29,12 @@ public class LoginScreen extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        binding.continueButton.setOnClickListener((v) -> {
+            Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     @Override

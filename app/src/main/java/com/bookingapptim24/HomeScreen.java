@@ -77,26 +77,6 @@ public class HomeScreen extends AppCompatActivity {
         topLevelDestinations.add(R.id.nav_settings);
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
-            Log.i("OpenDoors", "Destination changed");
-            int id = navDestination.getId();
-            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-            if (isTopLevelDestination) {
-                if (id == R.id.nav_settings){
-                    Toast.makeText(HomeScreen.this, "Settings", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-            else {
-                    if (id == R.id.nav_show_all) {
-                        Toast.makeText(HomeScreen.this, "All", Toast.LENGTH_SHORT).show();
-                    }
-                    else if (id == R.id.nav_profile) {
-                        Toast.makeText(HomeScreen.this, "Profile", Toast.LENGTH_SHORT).show();
-                        //navController.navigate(R.id.nav_profile);
-                    }
-            }
-        });
 
         mAppBarConfiguration = new AppBarConfiguration
                 .Builder(R.id.nav_show_all, R.id.nav_profile, R.id.nav_settings)
