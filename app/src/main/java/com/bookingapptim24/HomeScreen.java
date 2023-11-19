@@ -10,6 +10,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +23,9 @@ import android.widget.Toast;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class HomeScreen extends AppCompatActivity {
@@ -35,8 +39,11 @@ public class HomeScreen extends AppCompatActivity {
     private ActionBar actionBar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Set<Integer> topLevelDestinations = new HashSet<>();
-
+  
     public static String user = null;
+
+    private RecyclerView recyclerView;
+    private AccommodationAdapter accommodationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +106,13 @@ public class HomeScreen extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        List<Accommodation> accommodationList = getSampleAccommodations();
+        accommodationAdapter = new AccommodationAdapter(accommodationList, this);
+        recyclerView.setAdapter(accommodationAdapter);
     }
 
     @Override
@@ -146,6 +160,7 @@ public class HomeScreen extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+
     private void setUpMenu() {
         //temporary solution without server
         if (user == null || user.isEmpty())
@@ -164,3 +179,19 @@ public class HomeScreen extends AppCompatActivity {
         startActivity(intent);
     }
 }
+    private List<Accommodation> getSampleAccommodations() {
+        List<Accommodation> accommodations = new ArrayList<>();
+        accommodations.add(new Accommodation("Accommodation 1", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 2", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 3", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 4", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 5", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 6", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 7", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 8", R.drawable.accommodation_image, 4.5, 1500));
+        accommodations.add(new Accommodation("Accommodation 9", R.drawable.accommodation_image, 4.5, 1500));
+
+        return accommodations;
+    }
+}
+
