@@ -54,6 +54,7 @@ public class AccountFragment extends Fragment {
                     .setCancelable(false)
                     .setPositiveButton("Yes", (dialogInterface, id) -> {
                         Toast.makeText(requireActivity(), "Deleted account", Toast.LENGTH_SHORT).show();
+                        requireActivity().finish();
                         signOutBtn.performClick();
                     })
                     .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());

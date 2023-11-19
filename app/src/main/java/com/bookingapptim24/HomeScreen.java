@@ -178,7 +178,7 @@ public class HomeScreen extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
-}
+
     private List<Accommodation> getSampleAccommodations() {
         List<Accommodation> accommodations = new ArrayList<>();
         accommodations.add(new Accommodation("Accommodation 1", R.drawable.accommodation_image, 4.5, 1500));
