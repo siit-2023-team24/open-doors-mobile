@@ -57,12 +57,14 @@
     <string name="edit_profile">Editing my profile</string>
 
     <!-- Buttons-->
-    <string name="edit">Edit</string>
+    <string name="edit">Edit account</string>
     <string name="delete_profile">Delete account</string>
     <string name="sign_out">Sign out</string>
     <string name="save">Save</string>
     <string name="continue_not_login">Continue as unregistered user</string>
 
+<!--    Titles-->
     <string name="login_title">Log into your account</string>
+    <string name="reg_title">Create a new account</string>
 
 </resources>
