@@ -89,7 +89,6 @@ public class HomeScreen extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         List<Accommodation> accommodationList = getSampleAccommodations();
         accommodationAdapter = new AccommodationAdapter(accommodationList, this);
         recyclerView.setAdapter(accommodationAdapter);
@@ -97,7 +96,13 @@ public class HomeScreen extends AppCompatActivity {
 
     @Override
     protected void onStart(){
+
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

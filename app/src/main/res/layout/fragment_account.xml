@@ -150,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:showDividers="middle"
         android:divider="@drawable/empty_tall_divider">
 
@@ -158,22 +158,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_horizontal"
         android:showDividers="middle">
 
         <Button
             android:id="@+id/del_btn"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginHorizontal="16dp"
-            android:backgroundTint="@color/orange"
+            android:backgroundTint="?attr/colorAccent"
             android:text="@string/delete_profile" />
 
         <Button
             android:id="@+id/edit_btn"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginHorizontal="16dp"
             android:text="@string/edit" />
 
@@ -183,8 +182,8 @@
             android:id="@+id/sign_out_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/gray"
-            android:textColor="@color/dark_blue"
+            android:backgroundTint="?attr/colorTertiary"
+            android:textColor="?attr/colorOnTertiary"
             android:text="@string/sign_out" />
 
     </LinearLayout>
