@@ -2,8 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.BookingAppTim24" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/dark_blue</item>
+        <item name="colorSecondary">@color/light_blue</item>
+        <item name="colorTertiary">@color/gray</item>
+        <item name="colorAccent">@color/orange</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
     <style name="Theme.BookingAppTim24" parent="Base.Theme.BookingAppTim24" />
 </resources>
