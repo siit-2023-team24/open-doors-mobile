@@ -7,12 +7,27 @@
     android:layout_height="match_parent"
     tools:showIn="@layout/activity_home_screen">
 
-    <fragment
-        android:id="@+id/fragment_nav_content_main"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/base_navigation" />
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/fragment_nav_content_main"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true"
+                app:navGraph="@navigation/base_navigation" />
+
+        </FrameLayout>
+
+
+    </ScrollView>
 
 </LinearLayout>

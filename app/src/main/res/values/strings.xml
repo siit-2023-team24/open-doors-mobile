@@ -48,6 +48,7 @@
     <string name="password_change">Changing my password:</string>
     <string name="current_password">Current password:</string>
     <string name="new_password">New password:</string>
+    <string name="edit_profile">Editing my profile</string>
 
     <!-- Buttons-->
     <string name="edit">Edit</string>
