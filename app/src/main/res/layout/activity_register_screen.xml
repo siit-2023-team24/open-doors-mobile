@@ -270,16 +270,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/back_button"
-                android:textColor="@android:color/white"
-                android:layout_margin="30dp"/>
+                android:layout_margin="30dp"
+                android:backgroundTint="?attr/colorAccent"
+                android:textColor="@color/dark_orange"
+                android:textStyle="bold"/>
             <Button
                 android:id="@+id/sign_up_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/sign_up_button"
-                android:textColor="@android:color/white"
-                android:layout_margin="30dp"/>
+                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorPrimary"
+                android:layout_margin="30dp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
