@@ -31,5 +31,5 @@
         <item>Serbia</item>
         <item>Other</item>
     </string-array>
-
+    <string name="login_title">Log into your account</string>
 </resources>
