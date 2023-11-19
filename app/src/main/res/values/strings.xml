@@ -61,5 +61,6 @@
     <string name="delete_profile">Delete account</string>
     <string name="sign_out">Sign out</string>
     <string name="save">Save</string>
+    <string name="continue_not_login">Continue as unregistered user</string>
 
 </resources>
