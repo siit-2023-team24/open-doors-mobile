@@ -13,13 +13,13 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.bookingapptim24.databinding.ActivityHomeScreenBinding;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
 import com.google.android.material.navigation.NavigationView;
 
@@ -39,8 +39,12 @@ public class HomeScreen extends AppCompatActivity {
     private ActionBar actionBar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Set<Integer> topLevelDestinations = new HashSet<>();
+  
+    public static String user = null;
+
     private RecyclerView recyclerView;
     private AccommodationAdapter accommodationAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,8 @@ public class HomeScreen extends AppCompatActivity {
 
         binding = ActivityHomeScreenNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setUpMenu();
 
         drawer = binding.drawerLayout;
         navigationView = binding.navView;
@@ -154,6 +160,25 @@ public class HomeScreen extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+
+    private void setUpMenu() {
+        //temporary solution without server
+        if (user == null || user.isEmpty())
+            binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
+        else if (user.startsWith("g"))
+            binding.navView.inflateMenu(R.menu.nav_menu_guest);
+        else if (user.startsWith("a"))
+            binding.navView.inflateMenu(R.menu.nav_menu_admin);
+        else
+            binding.navView.inflateMenu(R.menu.nav_menu_host);
+    }
+
+    public void clearBackStack(MenuItem item) {
+        Intent intent = new Intent(this, LoginScreen.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+}
     private List<Accommodation> getSampleAccommodations() {
         List<Accommodation> accommodations = new ArrayList<>();
         accommodations.add(new Accommodation("Accommodation 1", R.drawable.accommodation_image, 4.5, 1500));
@@ -169,3 +194,4 @@ public class HomeScreen extends AppCompatActivity {
         return accommodations;
     }
 }
+
