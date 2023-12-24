@@ -9,6 +9,9 @@
         <item android:id="@+id/nav_host_accommodations"
             android:title="@string/my_accommodations_title"/>
 
+        <item android:id="@+id/nav_host_pending_accommodations"
+            android:title="@string/my_pending_accommodations_title"/>
+
         <item android:id="@+id/nav_reservations"
             android:title="@string/reservations_title"/>
 
