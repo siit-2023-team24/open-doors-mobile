@@ -71,7 +71,7 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
 //            final int resourceId = resources.getIdentifier(uri, "drawable", getContext().getPackageName());
             imageView.setImageResource(R.drawable.accommodation_image);
 
-            accommodationName.setText(accommodation.getName() + " #" + accommodation.getAccommodationId());
+            accommodationName.setText(accommodation.getName());
 
             accommodationCard.setOnClickListener(v -> {
                 Log.i("OpenDoors", "Clicked: " + accommodation.getName() + ", id: " + accommodation.getId());
