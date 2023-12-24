@@ -48,5 +48,26 @@
         android:label="@string/pending_accommodations"
         tools:layout="@layout/fragment_pending_accommodation_admin_page"/>
 
+    <fragment
+        android:id="@+id/nav_accommodation_details"
+        android:name="com.bookingapptim24.fragments.AccommodationDetailsFragment"
+        android:label="@string/accommodation_details"
+        tools:layout="@layout/fragment_accommodation_details"/>
+
+    <fragment
+        android:id="@+id/nav_accommodation_details_host"
+        android:name="com.bookingapptim24.fragments.AccommodationDetailsFragment"
+        android:label="@string/accommodation_details"
+        tools:layout="@layout/accommodation_details_host"/>
+
+
+    <fragment
+        android:id="@+id/nav_accommodation_details_admin"
+        android:name="com.bookingapptim24.fragments.AccommodationDetailsFragment"
+        android:label="@string/accommodation_details"
+        tools:layout="@layout/accommodation_details_admin"/>
+
+
+
 
 </navigation>

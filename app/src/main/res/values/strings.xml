@@ -43,6 +43,7 @@
     <string name="reported_users_title">Reported users</string>
     <string name="reported_comments">Reported comments</string>
     <string name="pending_accommodations">Pending accommodations</string>
+    <string name="accommodation_details">Accommodation details</string>
 
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>

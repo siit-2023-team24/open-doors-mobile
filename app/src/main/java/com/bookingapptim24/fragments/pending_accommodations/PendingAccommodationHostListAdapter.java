@@ -1,7 +1,7 @@
 package com.bookingapptim24.fragments.pending_accommodations;
 
 import android.app.Activity;
-import android.content.res.Resources;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.bookingapptim24.R;
-import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationHost;
 
 import java.util.ArrayList;
@@ -76,6 +77,26 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
             accommodationCard.setOnClickListener(v -> {
                 Log.i("OpenDoors", "Clicked: " + accommodation.getName() + ", id: " + accommodation.getId());
                 //todo
+                Bundle args = new Bundle();
+                args.putLong("id", accommodation.getId());
+                if (accommodation.getAccommodationId() != null)
+                    args.putLong("accommodationId", accommodation.getAccommodationId());
+                args.putString("name", accommodation.getName());
+                if (accommodation.getImage() != null)
+                    args.putLong("image", accommodation.getImage());
+                NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
+
+                //todo get role
+                String role = "ROLE_ADMIN";
+
+                if (role.equals("ROLE_ADMIN")) {
+                    navController.navigate(R.id.nav_accommodation_details_admin, args);
+                } else if (role.equals("ROLE_HOST")) {
+                    navController.navigate(R.id.nav_accommodation_details_host, args);
+                }
+                else {
+                    navController.navigate(R.id.nav_accommodation_details, args);
+                }
             });
         }
 
