@@ -18,6 +18,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bookingapptim24.R;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.PendingAccommodationHost;
 
 import java.util.ArrayList;
@@ -30,11 +31,14 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
 
     private FragmentManager fragmentManager;
 
+    private SessionManager sessionManager;
+
     public PendingAccommodationHostListAdapter(Activity context, FragmentManager fragmentManager, ArrayList<PendingAccommodationHost> accommodations) {
         super(context, R.layout.pending_accommodation_host_item, accommodations);
         this.accommodations = accommodations;
         activity = context;
         this.fragmentManager = fragmentManager;
+        this.sessionManager = new SessionManager(context);
     }
 
     @Override
@@ -85,8 +89,7 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
                     args.putLong("image", accommodation.getImage());
                 NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
 
-                //todo get role
-                String role = "ROLE_HOST";
+                String role = sessionManager.getRole();
 
                 if (role.equals("ROLE_ADMIN")) {
                     navController.navigate(R.id.nav_accommodation_details_admin, args);

@@ -19,6 +19,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bookingapptim24.R;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.AccommodationHost;
 
 import java.util.ArrayList;
@@ -31,11 +32,14 @@ public class AccommodationHostListAdapter extends ArrayAdapter<AccommodationHost
 
     private FragmentManager fragmentManager;
 
+    private SessionManager sessionManager;
+
     public AccommodationHostListAdapter(Activity context, FragmentManager fragmentManager, ArrayList<AccommodationHost> accommodations) {
         super(context, R.layout.accommodation_host_item, accommodations);
         this.accommodations = accommodations;
         activity = context;
         this.fragmentManager = fragmentManager;
+        this.sessionManager = new SessionManager(context);
     }
 
     @Override
@@ -83,8 +87,7 @@ public class AccommodationHostListAdapter extends ArrayAdapter<AccommodationHost
                     args.putLong("image", accommodation.getImage());
                 NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
 
-                //todo get role
-                String role = "ROLE_HOST";
+                String role = sessionManager.getRole();
 
                 if (role.equals("ROLE_ADMIN")) {
                     navController.navigate(R.id.nav_accommodation_details_admin, args);

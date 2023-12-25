@@ -1,15 +1,15 @@
 package com.bookingapptim24.models;
 
 public class User {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String street;
-    private int number;
-    private String city;
-    private String country;
-    private Long imageId;
+    protected Long id;
+    protected String firstName;
+    protected String lastName;
+    protected String phone;
+    protected String street;
+    protected int number;
+    protected String city;
+    protected String country;
+    protected Long imageId;
 
     public User(Long id, String firstName, String lastName, String phone, String street, int number, String city, String country, Long imageId) {
         this.id = id;
@@ -30,6 +30,8 @@ public class User {
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id) { this.id = id; }
 
     public String getFirstName() {
         return firstName;

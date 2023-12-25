@@ -67,6 +67,12 @@
         android:label="@string/accommodation_details"
         tools:layout="@layout/accommodation_details_admin"/>
 
+    <fragment
+        android:id="@+id/nav_edit_password"
+        android:name="com.bookingapptim24.fragments.EditPasswordFragment"
+        android:label="@string/password_change"
+        tools:layout="@layout/fragment_edit_password"/>
+
 
 
 

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
 
@@ -25,6 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AccommodationDetailsFragment extends Fragment {
+
+    private SessionManager sessionManager;
 
     private static final String ARG_ID = "id";
     private static final String ARG_ACCOMMODATION_ID = "accommodationId";
@@ -62,6 +65,7 @@ public class AccommodationDetailsFragment extends Fragment {
             dto.setName(getArguments().getString(ARG_NAME));
             dto.setImage(getArguments().getLong(ARG_IMAGE));
         }
+        sessionManager = new SessionManager(requireContext());
     }
 
     @Override
@@ -77,9 +81,7 @@ public class AccommodationDetailsFragment extends Fragment {
         Log.i("OpenDoors", "Accommodation Details onCreateView()");
         View view;
 
-        //todo get user role
-
-        String role = "ROLE_HOST";
+        String role = sessionManager.getRole();
 
         if (role.equals("ROLE_ADMIN") && dto.getId() != null) {
             view = inflater.inflate(R.layout.accommodation_details_admin, container, false);
