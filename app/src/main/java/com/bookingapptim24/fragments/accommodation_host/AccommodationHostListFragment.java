@@ -12,6 +12,7 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.ListFragment;
 
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.FragmentAccommodationHostListBinding;
 import com.bookingapptim24.models.AccommodationHost;
 
@@ -25,6 +26,7 @@ public class AccommodationHostListFragment extends ListFragment {
     private AccommodationHostListAdapter adapter;
     private FragmentAccommodationHostListBinding binding;
     private MenuProvider menuProvider;
+    private SessionManager sessionManager;
 
     private ArrayList<AccommodationHost> accommodations = new ArrayList<>();
 
@@ -37,6 +39,7 @@ public class AccommodationHostListFragment extends ListFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.i("OpenDoors", "onCreateView AccommodationHost List Fragment");
+        sessionManager = new SessionManager(requireContext());
         binding = FragmentAccommodationHostListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         return root;
@@ -64,8 +67,8 @@ public class AccommodationHostListFragment extends ListFragment {
     }
 
     private void getDataFromClient() {
-        //todo: get user id
-        Long hostId = 1L;
+
+        Long hostId = sessionManager.getUserId();
 
         Call<ArrayList<AccommodationHost>> call = ClientUtils.accommodationService.getForHost(hostId);
         call.enqueue(new Callback<ArrayList<AccommodationHost>>() {
