@@ -10,22 +10,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class HomeScreen extends AppCompatActivity {
@@ -40,7 +36,7 @@ public class HomeScreen extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Set<Integer> topLevelDestinations = new HashSet<>();
   
-    public static String user = null;
+    public static String role = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,14 +135,16 @@ public class HomeScreen extends AppCompatActivity {
 
     private void setUpMenu() {
         //temporary solution without server
-        if (user == null || user.isEmpty())
-            binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
-        else if (user.startsWith("g"))
+        SessionManager sm = new SessionManager(getApplicationContext());
+        role = sm.getRole();
+        if (role.equals("ROLE_HOST"))
+            binding.navView.inflateMenu(R.menu.nav_menu_host);
+        else if (role.equals("ROLE_ADMIN"))
             binding.navView.inflateMenu(R.menu.nav_menu_guest);
-        else if (user.startsWith("a"))
+        else if (role.equals("ROLE_GUEST"))
             binding.navView.inflateMenu(R.menu.nav_menu_admin);
         else
-            binding.navView.inflateMenu(R.menu.nav_menu_host);
+            binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
     }
 
     public void clearBackStack(MenuItem item) {

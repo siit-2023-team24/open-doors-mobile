@@ -20,8 +20,8 @@
     <string name="city_hint">Enter your city</string>
     <string name="register_address">Street:</string>
     <string name="address_hint">Enter your street</string>
-    <string name="register_street_number">Street number:</string>
-    <string name="number_hint">Enter your street number</string>
+    <string name="register_street_number">House number:</string>
+    <string name="number_hint">Enter your house number</string>
     <string name="register_phone">Phone number:</string>
     <string name="phone_hint">Enter your phone number</string>
     <string name="back_button">Back</string>
