@@ -78,6 +78,7 @@ public class AccommodationDetailsFragment extends Fragment {
         View view;
 
         //todo get user role
+
         String role = "ROLE_HOST";
 
         if (role.equals("ROLE_ADMIN") && dto.getId() != null) {

@@ -116,10 +116,10 @@ public class RegisterScreen extends AppCompatActivity {
                 valid = false;
             }
 
-            if(!valid) return;
-
             Spinner spinnerCountry = binding.countrySpinner;
             String country = spinnerCountry.getSelectedItem().toString();
+
+            if(!valid) return;
 
             UserAccount user = new UserAccount(null, firstName, lastName, phone, street, number,
                     city, country, null, username, password, role);
@@ -131,7 +131,7 @@ public class RegisterScreen extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UserAccount> call, Response<UserAccount> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(RegisterScreen.this, "Please check your email to verify your account.", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), "Please check your email to verify your account.", Toast.LENGTH_SHORT);
                         Intent intent = new Intent(RegisterScreen.this, LoginScreen.class);
                         startActivity(intent);
                         finish();

@@ -2,12 +2,15 @@ package com.bookingapptim24.clients;
 
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.AccommodationHost;
+import com.bookingapptim24.models.PendingAccommodationWhole;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface AccommodationService {
@@ -26,8 +29,5 @@ public interface AccommodationService {
     })
     @GET("accommodations/host/{hostId}")
     Call<ArrayList<AccommodationHost>> getForHost(@Path("hostId") Long hostId);
-
-
-
 
 }

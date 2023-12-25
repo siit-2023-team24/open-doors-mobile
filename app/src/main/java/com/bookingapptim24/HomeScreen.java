@@ -40,7 +40,7 @@ public class HomeScreen extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Set<Integer> topLevelDestinations = new HashSet<>();
   
-    public static String user = null;
+    public static String user = "host";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

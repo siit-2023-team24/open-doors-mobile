@@ -1,5 +1,6 @@
 package com.bookingapptim24.fragments.pending_accommodations;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.bookingapptim24.HomeScreen;
+import com.bookingapptim24.LoginScreen;
 import com.bookingapptim24.R;
+import com.bookingapptim24.activities.CreateAccommodationActivity;
 import com.bookingapptim24.databinding.FragmentAccommodationHostPageBinding;
 import com.bookingapptim24.databinding.FragmentPendingAccommodationHostListBinding;
 import com.bookingapptim24.databinding.FragmentPendingAccommodationHostPageBinding;
@@ -22,11 +27,16 @@ public class PendingAccommodationHostPageFragment extends Fragment {
         return new PendingAccommodationHostPageFragment();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pending_accommodation_host_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_pending_accommodation_host_page, container, false);
+        Button createButton = view.findViewById(R.id.btnCreateAccommodation);
+        createButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), CreateAccommodationActivity.class);
+            startActivity(intent);
+        });
+        return view;
     }
 
 
