@@ -67,8 +67,8 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_ROLE, null);
     }
 
-    public int getUserId() {
-        return sharedPreferences.getInt(KEY_ID, -1);
+    public Long getUserId() {
+        return sharedPreferences.getLong(KEY_ID, -1);
     }
 
     public void logout() {

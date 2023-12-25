@@ -18,8 +18,10 @@ import com.bookingapptim24.LoginScreen;
 import com.bookingapptim24.R;
 import com.bookingapptim24.activities.EditAccountActivity;
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.UserAccountView;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,6 +29,7 @@ import retrofit2.Response;
 
 public class AccountFragment extends Fragment {
 
+    private SessionManager sessionManager;
     private UserAccountView user = new UserAccountView();
 
     private TextView email;
@@ -40,6 +43,7 @@ public class AccountFragment extends Fragment {
     private TextView role;
 
     private ImageView image;
+    private Button signOutBtn;
 
 
     public AccountFragment() {
@@ -54,14 +58,14 @@ public class AccountFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i("Open Doors", "AccountFr onCreate()");
         super.onCreate(savedInstanceState);
+        sessionManager = new SessionManager(requireActivity().getApplicationContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        //todo get id
-        Long userId = 1L;
+        Long userId = sessionManager.getUserId();
 
         Call<UserAccountView> call = ClientUtils.userService.getById(userId);
         call.enqueue(new Callback<UserAccountView>() {
@@ -112,8 +116,9 @@ public class AccountFragment extends Fragment {
         role = view.findViewById(R.id.roleTV);
         image = view.findViewById(R.id.account_image);
 
-        Button signOutBtn = view.findViewById(R.id.sign_out_btn);
+        signOutBtn = view.findViewById(R.id.sign_out_btn);
         signOutBtn.setOnClickListener((v) -> {
+            sessionManager.logout();
             Intent intent = new Intent(getActivity(), LoginScreen.class);
             startActivity(intent);
             requireActivity().finish();
@@ -126,9 +131,6 @@ public class AccountFragment extends Fragment {
                     .setCancelable(false)
                     .setPositiveButton("Yes", (dialogInterface, id) -> {
                         onDeleteAccount();
-                        Toast.makeText(requireActivity(), "Deleted account", Toast.LENGTH_SHORT).show();
-                        requireActivity().finish();
-                        signOutBtn.performClick();
                     })
                     .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
             dialog.create().show();
@@ -144,5 +146,25 @@ public class AccountFragment extends Fragment {
     }
 
     private void onDeleteAccount() {
+        Long id = sessionManager.getUserId();
+        Call<ResponseBody> call = ClientUtils.userService.delete(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("OpenDoors", "Message received");
+                    Toast.makeText(requireActivity(), "Deleted account", Toast.LENGTH_SHORT).show();
+                    signOutBtn.performClick();
+
+                } else {
+                    Log.d("OpenDoors", "Message received: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
     }
 }

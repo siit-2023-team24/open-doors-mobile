@@ -134,17 +134,22 @@ public class HomeScreen extends AppCompatActivity {
 
 
     private void setUpMenu() {
-        //temporary solution without server
         SessionManager sm = new SessionManager(getApplicationContext());
         role = sm.getRole();
-        if (role.equals("ROLE_HOST"))
-            binding.navView.inflateMenu(R.menu.nav_menu_host);
-        else if (role.equals("ROLE_ADMIN"))
-            binding.navView.inflateMenu(R.menu.nav_menu_guest);
-        else if (role.equals("ROLE_GUEST"))
-            binding.navView.inflateMenu(R.menu.nav_menu_admin);
-        else
-            binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
+        switch (role) {
+            case "ROLE_HOST":
+                binding.navView.inflateMenu(R.menu.nav_menu_host);
+                break;
+            case "ROLE_ADMIN":
+                binding.navView.inflateMenu(R.menu.nav_menu_guest);
+                break;
+            case "ROLE_GUEST":
+                binding.navView.inflateMenu(R.menu.nav_menu_admin);
+                break;
+            default:
+                binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
+                break;
+        }
     }
 
     public void clearBackStack(MenuItem item) {
