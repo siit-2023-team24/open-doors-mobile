@@ -2,7 +2,7 @@
 <network-security-config>
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
-<!--            <certificates src="system" />-->
+            <!-- Trust anchors for your secure connections go here -->
         </trust-anchors>
     </base-config>
 </network-security-config>
