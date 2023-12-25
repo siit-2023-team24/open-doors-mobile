@@ -78,17 +78,15 @@ public class AccommodationDetailsFragment extends Fragment {
         View view;
 
         //todo get user role
-        String role = "ROLE_ADMIN";
+        String role = "ROLE_HOST";
 
-        if (role.equals("ROLE_ADMIN")) {
+        if (role.equals("ROLE_ADMIN") && dto.getId() != null) {
             view = inflater.inflate(R.layout.accommodation_details_admin, container, false);
-
-            //todo set onclick listeners
 
             Button approveBtn = view.findViewById(R.id.approve_accommodation_btn);
             approveBtn.setOnClickListener(v -> {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
-                dialog.setMessage("Are you sure you want to approve this pending accommodation?")
+                dialog.setMessage("Are you sure you want to approve this accommodation?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", (dialogInterface, id) -> {
                             onApprove();
@@ -97,7 +95,19 @@ public class AccommodationDetailsFragment extends Fragment {
                 dialog.create().show();
             });
 
-        } else if (role.equals("ROLE_HOST")) {
+            Button denyBtn = view.findViewById(R.id.deny_accommodation_btn);
+            denyBtn.setOnClickListener(v -> {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setMessage("Are you sure you want to deny this accommodation?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", (dialogInterface, id) -> {
+                            onDeny();
+                        })
+                        .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
+                dialog.create().show();
+            });
+
+        } else if (role.equals("ROLE_HOST") && dto.getId() == 0) {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
             //onclick edit and financial report
 
@@ -119,8 +129,7 @@ public class AccommodationDetailsFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     Log.d("OpenDoors", "Message received");
-                    Toast.makeText(requireActivity(),"You have successfully approved this pending accommodation.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(),"Accommodation approved", Toast.LENGTH_SHORT).show();
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     navController.navigate(R.id.nav_pending_accommodations);
                 } else {
@@ -133,6 +142,28 @@ public class AccommodationDetailsFragment extends Fragment {
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
 
+    public void onDeny() {
+        Log.d("OpenDoors", "Denying pending accommodation " + accommodation.getId());
+        Call<ResponseBody> call = ClientUtils.pendingAccommodationService.deny(dto.getId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("OpenDoors", "Message received");
+                    Toast.makeText(requireActivity(), "Accommodation denied", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.navigate(R.id.nav_pending_accommodations);
+                } else {
+                    Log.d("OpenDoors", "Message received: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
     }
 }

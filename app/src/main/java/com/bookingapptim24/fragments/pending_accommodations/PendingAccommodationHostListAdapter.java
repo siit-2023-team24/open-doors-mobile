@@ -76,7 +76,6 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
 
             accommodationCard.setOnClickListener(v -> {
                 Log.i("OpenDoors", "Clicked: " + accommodation.getName() + ", id: " + accommodation.getId());
-                //todo
                 Bundle args = new Bundle();
                 args.putLong("id", accommodation.getId());
                 if (accommodation.getAccommodationId() != null)
@@ -87,7 +86,7 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
                 NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
 
                 //todo get role
-                String role = "ROLE_ADMIN";
+                String role = "ROLE_HOST";
 
                 if (role.equals("ROLE_ADMIN")) {
                     navController.navigate(R.id.nav_accommodation_details_admin, args);
