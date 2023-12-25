@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.bookingapptim24.model.AccountDTO;
-import com.bookingapptim24.model.UserTokenState;
-import com.bookingapptim24.tools.AuthService;
+import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.models.Account;
+import com.bookingapptim24.models.UserTokenState;
+import com.bookingapptim24.clients.AuthService;
 import com.bookingapptim24.databinding.ActivityLoginScreenBinding;
-import com.bookingapptim24.tools.SessionManager;
-import com.bookingapptim24.tools.Utils;
+import com.bookingapptim24.clients.SessionManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,10 +44,10 @@ public class LoginScreen extends AppCompatActivity {
             String username = binding.editTextEmail.getText().toString();
             String password = binding.editTextPassword.getText().toString();
 
-            AuthService service = Utils.authService;
-            AccountDTO accountDTO = new AccountDTO(username, password);
+            AuthService service = ClientUtils.authService;
+            Account account = new Account(username, password);
 
-            Call<UserTokenState> call = service.login(accountDTO);
+            Call<UserTokenState> call = service.login(account);
             call.enqueue(new Callback<UserTokenState>() {
                 @Override
                 public void onResponse(Call<UserTokenState> call, Response<UserTokenState> response) {

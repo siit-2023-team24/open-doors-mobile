@@ -1,4 +1,4 @@
-package com.bookingapptim24.tools;
+package com.bookingapptim24.clients;
 
 import android.content.Context;
 import android.content.SharedPreferences;

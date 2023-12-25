@@ -1,10 +1,10 @@
-package com.bookingapptim24.model;
+package com.bookingapptim24.models;
 
-public class AccountDTO {
+public class Account {
     private String username;
     private String password;
 
-    public AccountDTO(String username, String password) {
+    public Account(String username, String password) {
         this.username = username;
         this.password = password;
     }

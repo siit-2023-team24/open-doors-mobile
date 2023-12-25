@@ -1,23 +1,23 @@
-package com.bookingapptim24.model;
+package com.bookingapptim24.models;
 
-public class UserAccountDTO extends UserDTO {
+public class UserAccount extends User {
     private String username;
     private String password;
     private String role;
 
 
-    public UserAccountDTO() {
+    public UserAccount() {
 
     }
 
-    public UserAccountDTO(Long id, String firstName, String lastName, String phone, String street, int number, String city, String country, Long imageId, String email, String password, String role) {
+    public UserAccount(Long id, String firstName, String lastName, String phone, String street, int number, String city, String country, Long imageId, String email, String password, String role) {
         super(id, firstName, lastName, phone, street, number, city, country, imageId);
         this.username = email;
         this.password = password;
         this.role = role;
     }
 
-    public UserAccountDTO(String email, String password, String role) {
+    public UserAccount(String email, String password, String role) {
         this.username = email;
         this.password = password;
         this.role = role;

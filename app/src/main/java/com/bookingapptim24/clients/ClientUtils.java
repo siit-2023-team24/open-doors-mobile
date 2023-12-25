@@ -33,9 +33,7 @@ public class ClientUtils {
             .client(test())
             .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().serializeNulls().create()))
             .build();
-
-
     public static AccommodationService accommodationService = retrofit.create(AccommodationService.class);
-
+    public static AuthService authService = retrofit.create(AuthService.class);
     public static PendingAccommodationService pendingAccommodationService = retrofit.create(PendingAccommodationService.class);
 }

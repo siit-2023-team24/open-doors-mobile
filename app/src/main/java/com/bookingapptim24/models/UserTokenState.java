@@ -1,4 +1,4 @@
-package com.bookingapptim24.model;
+package com.bookingapptim24.models;
 
 public class UserTokenState {
     private String accessToken;

@@ -1,6 +1,6 @@
-package com.bookingapptim24.model;
+package com.bookingapptim24.models;
 
-public class UserDTO {
+public class User {
     private Long id;
     private String firstName;
     private String lastName;
@@ -11,7 +11,7 @@ public class UserDTO {
     private String country;
     private Long imageId;
 
-    public UserDTO(Long id, String firstName, String lastName, String phone, String street, int number, String city, String country, Long imageId) {
+    public User(Long id, String firstName, String lastName, String phone, String street, int number, String city, String country, Long imageId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,7 +23,7 @@ public class UserDTO {
         this.imageId = imageId;
     }
 
-    public UserDTO() {
+    public User() {
 
     }
 

@@ -1,4 +1,4 @@
-package com.bookingapptim24.model.enums;
+package com.bookingapptim24.models.enums;
 
 import java.util.HashMap;
 import java.util.Map;

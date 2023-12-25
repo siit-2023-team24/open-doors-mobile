@@ -12,12 +12,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.databinding.ActivityRegisterScreenBinding;
-import com.bookingapptim24.model.UserAccountDTO;
-import com.bookingapptim24.model.UserTokenState;
-import com.bookingapptim24.model.enums.Country;
-import com.bookingapptim24.tools.AuthService;
-import com.bookingapptim24.tools.Utils;
+import com.bookingapptim24.models.UserAccount;
+import com.bookingapptim24.models.enums.Country;
+import com.bookingapptim24.clients.AuthService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -122,15 +121,15 @@ public class RegisterScreen extends AppCompatActivity {
             Spinner spinnerCountry = binding.countrySpinner;
             String country = spinnerCountry.getSelectedItem().toString();
 
-            UserAccountDTO user = new UserAccountDTO(null, firstName, lastName, phone, street, number,
+            UserAccount user = new UserAccount(null, firstName, lastName, phone, street, number,
                     city, country, null, username, password, role);
 
-            AuthService service = Utils.authService;
+            AuthService service = ClientUtils.authService;
 
-            Call<UserAccountDTO> call = service.register(user);
-            call.enqueue(new Callback<UserAccountDTO>() {
+            Call<UserAccount> call = service.register(user);
+            call.enqueue(new Callback<UserAccount>() {
                 @Override
-                public void onResponse(Call<UserAccountDTO> call, Response<UserAccountDTO> response) {
+                public void onResponse(Call<UserAccount> call, Response<UserAccount> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(RegisterScreen.this, "Please check your email to verify your account.", Toast.LENGTH_SHORT);
                         Intent intent = new Intent(RegisterScreen.this, LoginScreen.class);
@@ -141,7 +140,7 @@ public class RegisterScreen extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<UserAccountDTO> call, Throwable t) {
+                public void onFailure(Call<UserAccount> call, Throwable t) {
                     // Handle network failure or exception
                 }
             });
