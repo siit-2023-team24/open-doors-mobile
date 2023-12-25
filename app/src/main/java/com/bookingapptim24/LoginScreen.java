@@ -47,7 +47,7 @@ public class LoginScreen extends AppCompatActivity {
             AuthService service = Utils.authService;
             AccountDTO accountDTO = new AccountDTO(username, password);
 
-            Call<UserTokenState> call = service.loginUser(accountDTO);
+            Call<UserTokenState> call = service.login(accountDTO);
             call.enqueue(new Callback<UserTokenState>() {
                 @Override
                 public void onResponse(Call<UserTokenState> call, Response<UserTokenState> response) {
@@ -58,12 +58,13 @@ public class LoginScreen extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
+                        System.out.println("HERE I AM");
                         Toast.makeText(LoginScreen.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<UserTokenState> call, Throwable t) {
-                    // Handle network failure or exception
+                    Toast.makeText(LoginScreen.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                 }
             });
 
