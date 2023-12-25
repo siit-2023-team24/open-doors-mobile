@@ -183,12 +183,13 @@
         android:showDividers="middle">
 
         <Button
-            android:id="@+id/del_account_btn"
+            android:id="@+id/change_password_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:backgroundTint="?attr/colorAccent"
-            android:text="@string/delete_profile" />
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
+            android:text="@string/change_password" />
 
         <Button
             android:id="@+id/edit_account_btn"
@@ -199,13 +200,32 @@
 
     </LinearLayout>
 
-        <Button
-            android:id="@+id/sign_out_btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorTertiary"
-            android:textColor="?attr/colorOnTertiary"
-            android:text="@string/sign_out" />
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:showDividers="middle">
+
+            <Button
+                android:id="@+id/del_account_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:backgroundTint="?attr/colorAccent"
+                android:text="@string/delete_profile" />
+
+            <Button
+                android:id="@+id/sign_out_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorTertiary"
+                android:textColor="?attr/colorOnTertiary"
+                android:text="@string/sign_out" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </LinearLayout>

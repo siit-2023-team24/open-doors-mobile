@@ -63,6 +63,7 @@
     <!-- Buttons-->
     <string name="edit_account">Edit account</string>
     <string name="delete_profile">Delete account</string>
+    <string name="change_password">Change password</string>
     <string name="sign_out">Sign out</string>
     <string name="save">Save</string>
     <string name="continue_not_login">Continue as unregistered user</string>
@@ -79,6 +80,8 @@
 
     <!--    Helpers-->
     <string name="accommodation_image_descriptor">Accommodation image</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--    Accommodation-->
     <!--    <string name="accommodation_name_and_id"></string>-->

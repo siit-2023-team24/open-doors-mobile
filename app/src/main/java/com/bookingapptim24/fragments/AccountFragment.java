@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.bookingapptim24.LoginScreen;
 import com.bookingapptim24.R;
@@ -134,6 +136,15 @@ public class AccountFragment extends Fragment {
                     })
                     .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
             dialog.create().show();
+        });
+
+        Button changePasswordBtn = view.findViewById(R.id.change_password_btn);
+        changePasswordBtn.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("username", sessionManager.getUsername());
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            navController.navigate(R.id.nav_edit_password, args);
+//            FragmentTransition.to(new EditPasswordFragment(), requireActivity(), false, R.layout.fragment_edit_password);
         });
 
         Button editBtn = view.findViewById(R.id.edit_account_btn);
