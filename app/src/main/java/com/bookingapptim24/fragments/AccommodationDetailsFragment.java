@@ -114,6 +114,18 @@ public class AccommodationDetailsFragment extends Fragment {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
             //onclick edit and financial report
 
+            Button deleteBtn = view.findViewById(R.id.delete_accommodation_btn);
+            deleteBtn.setOnClickListener(v -> {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setMessage("Are you sure you want to delete this accommodation?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", (dialogInterface, id) -> {
+                            onDelete();
+                        })
+                        .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
+                dialog.create().show();
+            });
+
         }
         else  {
             view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
@@ -122,6 +134,11 @@ public class AccommodationDetailsFragment extends Fragment {
         //set data in view
 
         return view;
+    }
+
+    private void onDelete() {
+        Log.d("OpenDoors", "Delete accommodation " + accommodation.getAccommodationId());
+        //TODO
     }
 
     private void onApprove() {
