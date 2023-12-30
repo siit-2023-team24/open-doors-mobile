@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.FragmentPendingAccommodationHostListBinding;
 import com.bookingapptim24.fragments.accommodation_host.AccommodationHostListAdapter;
 import com.bookingapptim24.models.AccommodationHost;
@@ -28,6 +29,7 @@ import retrofit2.Response;
 
 public class PendingAccommodationHostListFragment extends ListFragment {
 
+    private SessionManager sessionManager;
     private PendingAccommodationHostListAdapter adapter;
 
     private FragmentPendingAccommodationHostListBinding binding;
@@ -44,6 +46,7 @@ public class PendingAccommodationHostListFragment extends ListFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        sessionManager = new SessionManager(requireContext());
         Log.i("OpenDoors", "onCreateView PendingAccommodationHost List Fragment");
         binding = FragmentPendingAccommodationHostListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -72,8 +75,7 @@ public class PendingAccommodationHostListFragment extends ListFragment {
     }
 
     private void getDataFromClient() {
-        //todo: get user id
-        Long hostId = 1L;
+        Long hostId = sessionManager.getUserId();
 
         Call<ArrayList<PendingAccommodationHost>> call = ClientUtils.pendingAccommodationService.getForHost(hostId);
         call.enqueue(new Callback<ArrayList<PendingAccommodationHost>>() {
