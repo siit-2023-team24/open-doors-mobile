@@ -39,6 +39,14 @@ public interface PendingAccommodationService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("pending-accommodations/{id}")
+    Call<PendingAccommodationWhole> getById(@Path("id") Long id);
+
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @PUT("pending-accommodations")
     Call<ResponseBody> approve(@Body PendingAccommodationHost dto);
 

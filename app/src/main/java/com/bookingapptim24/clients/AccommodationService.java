@@ -6,9 +6,12 @@ import com.bookingapptim24.models.PendingAccommodationWhole;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -29,5 +32,18 @@ public interface AccommodationService {
     })
     @GET("accommodations/host/{hostId}")
     Call<ArrayList<AccommodationHost>> getForHost(@Path("hostId") Long hostId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/{id}")
+    Call<PendingAccommodationWhole> getById(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @DELETE("accommodations/{id}")
+    Call<ResponseBody> delete(@Path("id") Long id);
 
 }
