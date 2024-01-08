@@ -1,5 +1,7 @@
 package com.bookingapptim24.fragments;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -82,50 +84,6 @@ public class AccommodationDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("OpenDoors", "Getting accommodation details: " + dto.getId() + ", " + dto.getAccommodationId());
-        if (dto.getId() > 0) {
-            //get pending accommodation
-            Call<PendingAccommodationWhole> call = ClientUtils.pendingAccommodationService.getById(dto.getId());
-            call.enqueue(new Callback<PendingAccommodationWhole>() {
-                @Override
-                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
-                    if (response.code() == 200) {
-                        Log.d("OpenDoors", "Received pending accommodation: " + dto.getId());
-                        accommodation = response.body();
-                    } else {
-                        Log.d("OpenDoors","Meesage recieved: " + response.code());
-                    }
-                }
-                @Override
-                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
-                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
-                }
-            });
-
-        } else {
-            //get active accommodation
-            Call<PendingAccommodationWhole> call = ClientUtils.accommodationService.getById(dto.getAccommodationId());
-            call.enqueue(new Callback<PendingAccommodationWhole>() {
-                @Override
-                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
-                    if (response.code() == 200) {
-                        Log.d("OpenDoors", "Received accommodation: " + dto.getAccommodationId());
-                        accommodation = response.body();
-                    } else {
-                        Log.d("OpenDoors","Meesage recieved: " + response.code());
-                    }
-                }
-                @Override
-                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
-                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
-                }
-            });
-
-
-        }
-
-        //TODO set values to the page
-        //change the dto the getting the active accommodation with the total price
     }
 
     @Override
@@ -184,10 +142,58 @@ public class AccommodationDetailsFragment extends Fragment {
         else  {
             view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
         }
-
-        //set data in view
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getData();
+        //set attributes
+    }
+
+    private void getData() {
+        Log.d("OpenDoors", "Getting accommodation details: " + dto.getId() + ", " + dto.getAccommodationId());
+        if (dto.getId() > 0) {
+            //get pending accommodation
+            Call<PendingAccommodationWhole> call = ClientUtils.pendingAccommodationService.getById(dto.getId());
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received pending accommodation: " + dto.getId());
+                        accommodation = response.body();
+                    } else {
+                        Log.d("OpenDoors","Message received: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+
+        } else {
+            //get active accommodation
+            Call<PendingAccommodationWhole> call = ClientUtils.accommodationService.getById(dto.getAccommodationId());
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received accommodation: " + dto.getAccommodationId());
+                        accommodation = response.body();
+                    } else {
+                        Log.d("OpenDoors","Message received: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+        }
+
+        //change the dto the getting the active accommodation with the total price as needed
     }
 
     private void onDelete() {
