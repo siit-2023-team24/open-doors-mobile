@@ -19,7 +19,15 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
 
     private List<AccommodationSearchDTO> accommodationList;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(AccommodationSearchDTO accommodation);
+    }
     public AccommodationAdapter(List<AccommodationSearchDTO> accommodationList, Context context) {
         this.accommodationList = accommodationList;
         this.context = context;
@@ -47,6 +55,15 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
                 holder.heartImage.setImageResource(R.drawable.clicked_heart);
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener != null) {
+                    onItemClickListener.onItemClick(accommodation);
+                }
+            }
+        });
     }
 
     @Override
@@ -54,7 +71,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         return accommodationList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView nameTextView;
         TextView ratingTextView;
@@ -68,6 +85,15 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
             ratingTextView = itemView.findViewById(R.id.accommodationRating);
             priceTextView = itemView.findViewById(R.id.accommodationPrice);
             heartImage = itemView.findViewById(R.id.heartImage);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onItemClickListener != null) {
+                        onItemClickListener.onItemClick(accommodationList.get(getAbsoluteAdapterPosition()));
+                    }
+                }
+            });
         }
     }
 }

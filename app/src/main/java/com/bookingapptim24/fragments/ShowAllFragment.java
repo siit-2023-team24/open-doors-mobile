@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -97,8 +98,11 @@ public class ShowAllFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(requireActivity(), SearchActivity.class);
-                startActivity(intent);
+                // Use FragmentTransaction to replace the current fragment with the search fragment
+//                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment_container, new SearchFragment());
+//                transaction.addToBackStack(null);  // Optional: Add to back stack if you want to navigate back
+//                transaction.commit();
             }
         });
 
@@ -123,6 +127,13 @@ public class ShowAllFragment extends Fragment {
                     List<AccommodationSearchDTO> accommodations = response.body();
                     accommodationAdapter = new AccommodationAdapter(accommodations, requireContext());
                     recyclerView.setAdapter(accommodationAdapter);
+
+                    accommodationAdapter.setOnItemClickListener(new AccommodationAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AccommodationSearchDTO accommodation) {
+                            //openAccommodationDetailsFragment(accommodation);
+                        }
+                    });
                 } else {
                     Log.d("REZ","Meesage recieved: "+response.code());
                 }
@@ -138,18 +149,4 @@ public class ShowAllFragment extends Fragment {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private List<Accommodation> getSampleAccommodations() {
-        List<Accommodation> accommodations = new ArrayList<>();
-        accommodations.add(new Accommodation("Accommodation 1", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 2", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 3", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 4", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 5", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 6", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 7", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 8", R.drawable.accommodation_image, 4.5, 1500));
-        accommodations.add(new Accommodation("Accommodation 9", R.drawable.accommodation_image, 4.5, 1500));
-
-        return accommodations;
-    }
 }
