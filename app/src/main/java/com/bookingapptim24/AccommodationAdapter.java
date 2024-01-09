@@ -11,14 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bookingapptim24.models.AccommodationSearchDTO;
+
 import java.util.List;
 
 public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.ViewHolder> {
 
-    private List<Accommodation> accommodationList;
+    private List<AccommodationSearchDTO> accommodationList;
     private Context context;
 
-    public AccommodationAdapter(List<Accommodation> accommodationList, Context context) {
+    public AccommodationAdapter(List<AccommodationSearchDTO> accommodationList, Context context) {
         this.accommodationList = accommodationList;
         this.context = context;
     }
@@ -32,9 +34,9 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Accommodation accommodation = accommodationList.get(position);
+        AccommodationSearchDTO accommodation = accommodationList.get(position);
 
-        holder.imageView.setImageResource(accommodation.getImageResource());
+//        holder.imageView.setImageResource(accommodation.getImageResource());
         holder.nameTextView.setText(accommodation.getName());
         holder.ratingTextView.setText(String.valueOf(accommodation.getAverageRating()));
         holder.priceTextView.setText(String.valueOf(accommodation.getPrice()));

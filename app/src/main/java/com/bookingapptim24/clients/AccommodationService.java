@@ -2,6 +2,7 @@ package com.bookingapptim24.clients;
 
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.AccommodationHost;
+import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.PendingAccommodationWhole;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public interface AccommodationService {
             "Content-Type:application/json"
     })
     @GET("accommodations/all")
-    Call<ArrayList<Accommodation>> getAll();
+    Call<ArrayList<AccommodationSearchDTO>> getAll();
 
 
     @Headers({

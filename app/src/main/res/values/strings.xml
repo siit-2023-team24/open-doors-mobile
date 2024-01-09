@@ -34,7 +34,7 @@
         <item>Other</item>
     </string-array>
 
-<!--    Create accommodation-->
+    <!--    Create accommodation-->
     <string name="create_acc_name">Accommodation name:</string>
     <string name="create_acc_name_hint">Enter accommodation name</string>
     <string name="confirmation">Reservation confirmation:</string>
