@@ -11,11 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
+import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
 
@@ -36,6 +40,8 @@ public class AccommodationDetailsFragment extends Fragment {
     private PendingAccommodationHost dto = new PendingAccommodationHost();
 
     private PendingAccommodationWhole accommodation = new PendingAccommodationWhole();
+
+    private AccommodationWithTotalPrice accommodationDetails = new AccommodationWithTotalPrice();
 
 
     public AccommodationDetailsFragment() {
@@ -125,8 +131,7 @@ public class AccommodationDetailsFragment extends Fragment {
             Log.i("Fragment inflated", "Inflated accommodation_details_guest");
 
         }
-
-        //set data in view
+        loadAccommodationDetails(getArguments().getLong(ARG_ACCOMMODATION_ID), view);
 
         return view;
     }
@@ -175,5 +180,53 @@ public class AccommodationDetailsFragment extends Fragment {
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
+
+    public void loadAccommodationDetails(Long accommodationId, View view) {
+        Call<AccommodationWithTotalPrice> call = ClientUtils.accommodationService.getAccommodation(accommodationId);
+        call.enqueue(new Callback<AccommodationWithTotalPrice>() {
+            @Override
+            public void onResponse(Call<AccommodationWithTotalPrice> call, Response<AccommodationWithTotalPrice> response) {
+                if (response.isSuccessful()) {
+                    accommodationDetails = response.body();
+                    // Now that you have the details, update your views
+                    updateViews(view);
+                } else {
+                    // Handle error
+                    Log.e("OpenDoors", "Failed to fetch accommodation details: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccommodationWithTotalPrice> call, Throwable t) {
+                // Handle failure
+                Log.e("OpenDoors", "Network request failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
+    private void updateViews(View view) {
+        // Retrieve views from the layout
+        ImageView imageView = view.findViewById(R.id.imageView);
+        TextView nameTextView = view.findViewById(R.id.nameTextView);
+        TextView cityCountryTextView = view.findViewById(R.id.cityCountryTextView);
+        TextView ratingTextView = view.findViewById(R.id.ratingTextView);
+        TextView reviewsTextView = view.findViewById(R.id.reviewsTextView);
+        TextView descriptionTextView = view.findViewById(R.id.descriptionTextView);
+
+        // Set data in views
+        //Glide.with(requireContext()).load(accommodation.getImage()).into(imageView);
+        nameTextView.setText(accommodationDetails.getName());
+        cityCountryTextView.setText(accommodationDetails.getCity() + ", " + accommodationDetails.getCountry());
+        ratingTextView.setText(String.valueOf(accommodationDetails.getAverageRating()));
+        descriptionTextView.setText(accommodationDetails.getDescription());
+
+        // Add amenities dynamically (replace this with your actual data)
+        LinearLayout amenitiesLayout = view.findViewById(R.id.amenitiesLayout);
+        for (String amenity : accommodationDetails.getAmenities()) {
+            TextView amenityTextView = new TextView(requireContext());
+            amenityTextView.setText(amenity);
+            amenitiesLayout.addView(amenityTextView);
+        }
     }
 }
