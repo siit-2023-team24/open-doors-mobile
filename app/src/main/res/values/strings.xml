@@ -91,6 +91,7 @@
     <string name="deny">Deny</string>
     <string name="create_accommodation">Add an accommodation</string>
     <string name="financial_report">Financial report</string>
+    <string name="make_reservation">Make reservation</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>

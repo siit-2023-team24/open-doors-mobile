@@ -1,7 +1,9 @@
-package com.bookingapptim24;
+package com.bookingapptim24.fragments.home_page;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,26 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bookingapptim24.R;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 
 import java.util.List;
 
-public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.ViewHolder> {
+public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageAccommodationAdapter.ViewHolder> {
 
     private List<AccommodationSearchDTO> accommodationList;
     private Context context;
-    private OnItemClickListener onItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(AccommodationSearchDTO accommodation);
-    }
-    public AccommodationAdapter(List<AccommodationSearchDTO> accommodationList, Context context) {
+    public HomePageAccommodationAdapter(List<AccommodationSearchDTO> accommodationList, Context context) {
         this.accommodationList = accommodationList;
         this.context = context;
     }
@@ -59,9 +55,7 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemClickListener != null) {
-                    onItemClickListener.onItemClick(accommodation);
-                }
+                holder.openAccommodationDetailsFragment(accommodation);
             }
         });
     }
@@ -85,15 +79,15 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
             ratingTextView = itemView.findViewById(R.id.accommodationRating);
             priceTextView = itemView.findViewById(R.id.accommodationPrice);
             heartImage = itemView.findViewById(R.id.heartImage);
+        }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(onItemClickListener != null) {
-                        onItemClickListener.onItemClick(accommodationList.get(getAbsoluteAdapterPosition()));
-                    }
-                }
-            });
+        private void openAccommodationDetailsFragment(AccommodationSearchDTO accommodation) {
+            // Use FragmentTransaction to replace the current fragment with the details fragment
+            Bundle args = new Bundle();
+            args.putLong("accommodationId", accommodation.getId());
+
+            NavController navController = Navigation.findNavController((Activity) context, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.nav_accommodation_details, args);
         }
     }
 }

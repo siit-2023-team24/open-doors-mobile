@@ -1,4 +1,4 @@
-package com.bookingapptim24.fragments;
+package com.bookingapptim24.fragments.accommodation_page;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
@@ -83,8 +82,13 @@ public class AccommodationDetailsFragment extends Fragment {
 
         String role = sessionManager.getRole();
 
-        if (role.equals("ROLE_ADMIN") && dto.getId() != null) {
+        if(role == null) {
+            view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
+            Log.i("Fragment inflated", "Inflated accommodation_details");
+        } else if (role.equals("ROLE_ADMIN") && dto.getId() != null) {
             view = inflater.inflate(R.layout.accommodation_details_admin, container, false);
+            Log.i("Fragment inflated", "Inflated accommodation_details_admin");
+
 
             Button approveBtn = view.findViewById(R.id.approve_accommodation_btn);
             approveBtn.setOnClickListener(v -> {
@@ -112,11 +116,14 @@ public class AccommodationDetailsFragment extends Fragment {
 
         } else if (role.equals("ROLE_HOST") && dto.getId() == 0) {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
+            Log.i("Fragment inflated", "Inflated accommodation_host");
+
             //onclick edit and financial report
 
-        }
-        else  {
-            view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
+        } else {
+            view = inflater.inflate(R.layout.accommodation_details_guest, container, false);
+            Log.i("Fragment inflated", "Inflated accommodation_details_guest");
+
         }
 
         //set data in view

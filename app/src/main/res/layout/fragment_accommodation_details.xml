@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/accommodation_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".fragments.AccommodationDetailsFragment">
+    tools:context=".fragments.accommodation_page.AccommodationDetailsFragment"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/accommodation_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/accommodation_image"/>
 
     <TextView
         android:id="@+id/nameTextView"
@@ -25,15 +24,14 @@
         android:layout_marginTop="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        tools:text="adsfasdfad" />
 
     <TextView
         android:id="@+id/cityCountryTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -41,9 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cityCountryTextView"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/cityCountryTextView"
-        tools:layout_editor_absoluteX="16dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/ratingTextView"
@@ -67,8 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/descriptionTitleTextView"
@@ -84,75 +79,12 @@
             android:layout_height="wrap_content"
             android:textSize="16sp" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/reservationDetailsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/descriptionLayout"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"
-        tools:layout_editor_absoluteX="16dp">
-
-        <TextView
-            android:id="@+id/reservationDetailsTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reservation Details"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- Date Pickers -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Check-In Date Picker -->
-            <DatePicker
-                android:id="@+id/checkInDatePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner" />
-
-            <!-- Check-Out Date Picker -->
-            <DatePicker
-                android:id="@+id/checkOutDatePicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner" />
-        </LinearLayout>
-
-        <!-- Number Input for Guests -->
-        <EditText
-            android:id="@+id/guestsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of Guests"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/reserveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reserve"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <LinearLayout
         android:id="@+id/amenitiesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/reservationDetailsLayout"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/reserveButton">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/amenitiesTitleTextView"
@@ -175,5 +107,4 @@
         </GridLayout>
     </LinearLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
