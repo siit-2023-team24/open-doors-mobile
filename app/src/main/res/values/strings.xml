@@ -88,7 +88,9 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="delete_profile_image">Delete image</string>
+    <string name="delete_all_images">Delete images</string>
     <string name="change_profile_image">Change image</string>
+    <string name="add_image">Add image</string>
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="create_accommodation">Add an accommodation</string>

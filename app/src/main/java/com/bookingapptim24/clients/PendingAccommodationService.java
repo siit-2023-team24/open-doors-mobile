@@ -4,6 +4,7 @@ import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
+import com.bookingapptim24.models.PendingAccommodationWholeEdited;
 
 import java.util.ArrayList;
 
@@ -64,6 +65,6 @@ public interface PendingAccommodationService {
             "Content-Type:application/json"
     })
     @POST("pending-accommodations")
-    Call<PendingAccommodationWhole> add(@Body PendingAccommodationWhole dto);
+    Call<PendingAccommodationWholeEdited> add(@Body PendingAccommodationWholeEdited dto);
 
 }

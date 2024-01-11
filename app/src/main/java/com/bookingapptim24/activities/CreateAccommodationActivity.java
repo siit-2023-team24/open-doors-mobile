@@ -1,33 +1,29 @@
 package com.bookingapptim24.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bookingapptim24.Accommodation;
-import com.bookingapptim24.HomeScreen;
-import com.bookingapptim24.LoginScreen;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.bookingapptim24.R;
-import com.bookingapptim24.RegisterScreen;
-import com.bookingapptim24.clients.AuthService;
+import com.bookingapptim24.additionalAdapters.ImageAdapter;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.PendingAccommodationService;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.ActivityCreateAccommodationBinding;
 import com.bookingapptim24.models.PendingAccommodationWhole;
-import com.bookingapptim24.models.UserAccount;
+import com.bookingapptim24.models.PendingAccommodationWholeEdited;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
@@ -44,11 +40,14 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
 
-    private List<String> selectedAmenities;
-
     private Long id = null;
     private Long accommodationId = null;
     private PendingAccommodationWhole accommodation;
+
+
+    private List<String> selectedAmenities;
+    private List<Long> oldImages = new ArrayList<>();
+    private List<Long> toDeleteImages = new ArrayList<>();
 
     private RadioButton isAutomaticTrue;
     private RadioButton isAutomaticFalse;
@@ -65,6 +64,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private EditText defaultPriceET;
     private EditText cityET;
     private EditText streetET;
+    private ViewPager2 viewPager;
 
 
 
@@ -86,6 +86,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         defaultPriceET = binding.defaultPrice;
         cityET = binding.city;
         streetET = binding.street;
+
+        viewPager = binding.viewPager;
 
         isAutomaticFalse = binding.automaticFalse;
         isAutomaticTrue = binding.automaticTrue;
@@ -240,14 +242,17 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 return;
             }
 
-            PendingAccommodationWhole dto = new PendingAccommodationWhole(
+            if (id == 0) id = null;
+            if (accommodationId == 0) accommodationId = null;
+
+            PendingAccommodationWholeEdited dto = new PendingAccommodationWholeEdited(
                     id,
                     accommodationId,
                     name,
                     description,
                     "",
                     selectedAmenities,
-                    new ArrayList<Long>(), //images
+                    oldImages, //images
                     minGuests,
                     maxGuests,
                     type,
@@ -259,15 +264,16 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     number,
                     deadline,
                     isAutomatic,
-                    sessionManager.getUsername()
+                    sessionManager.getUsername(),
+                    toDeleteImages
             );
 
             PendingAccommodationService service = ClientUtils.pendingAccommodationService;
 
-            Call<PendingAccommodationWhole> call = service.add(dto);
-            call.enqueue(new Callback<PendingAccommodationWhole>() {
+            Call<PendingAccommodationWholeEdited> call = service.add(dto);
+            call.enqueue(new Callback<PendingAccommodationWholeEdited>() {
                 @Override
-                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                public void onResponse(Call<PendingAccommodationWholeEdited> call, Response<PendingAccommodationWholeEdited> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "Accommodation created successfuly", Toast.LENGTH_SHORT);
                         finish();
@@ -276,7 +282,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                public void onFailure(Call<PendingAccommodationWholeEdited> call, Throwable t) {
                     // Handle network failure or exception
                 }
             });
@@ -284,9 +290,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
         });
 
-        binding.backButton.setOnClickListener(v -> {
-            this.finish();
-        });
+        binding.backButton.setOnClickListener(v -> this.finish());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -306,6 +310,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.d("OpenDoors", "Received pending accommodation: " + id);
                         accommodation = response.body();
+                        if (accommodation.getImages() != null)
+                            oldImages = accommodation.getImages();
                         setData();
                     }
                     else Log.d("OpenDoors","Message received: " + response.code());
@@ -324,6 +330,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     if (response.code() == 200) {
                         Log.d("OpenDoors", "Received accommodation: " + accommodationId);
                         accommodation = response.body();
+                        if (accommodation.getImages() != null)
+                            oldImages = accommodation.getImages();
                         setData();
                     }
                     else Log.d("OpenDoors","Message received: " + response.code());
@@ -368,5 +376,31 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         defaultPriceET.setText(String.valueOf(accommodation.getPrice()));
         cityET.setText(accommodation.getCity());
         streetET.setText(accommodation.getStreet());
+
+        //todo set amenities
+
+        //todo set images
+        if (accommodation.getImages() != null && accommodation.getImages().size() > 0) {
+            viewPager.setAdapter(new ImageAdapter(getApplicationContext(), accommodation.getImages()));
+        }
+
     }
+
+
+    public void deleteImages(View view) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setMessage("Are you sure you want to delete all images for this accommodation?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialogInterface, id) -> {
+                    toDeleteImages = oldImages;
+                    //todo show message, empty the imageViews
+                })
+                .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
+        dialog.create().show();
+    }
+
+
+    public void selectImage(View view) {
+    }
+
 }
