@@ -79,4 +79,10 @@ public interface PendingAccommodationService {
     Call<ResponseBody> sendImages(@Path("id") Long id,
                                   @Part List<MultipartBody.Part> images);
 
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @DELETE("pending-accommodations/{id}")
+    Call<ResponseBody> delete(@Path("id") Long id);
+
 }

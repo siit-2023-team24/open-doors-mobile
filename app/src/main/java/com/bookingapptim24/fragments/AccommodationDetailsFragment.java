@@ -124,9 +124,9 @@ public class AccommodationDetailsFragment extends Fragment {
                 dialog.create().show();
             });
 
-        } else if (role.equals("ROLE_HOST") && dto.getId() == 0 && fromMyList) {
+        } else if (role.equals("ROLE_HOST") && fromMyList) {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
-            //onclick edit and financial report
+            //todo onclick financial report
             Button editBtn = view.findViewById(R.id.edit_accommodation_btn);
             editBtn.setOnClickListener(v -> onEdit());
 
@@ -203,6 +203,13 @@ public class AccommodationDetailsFragment extends Fragment {
     }
 
     private void onDelete() {
+        if (dto.getId() == 0)
+            onDeleteActive();
+        else
+            onDeletePending();
+    }
+
+    private void onDeleteActive() {
         Log.d("OpenDoors", "Delete accommodation " + dto.getAccommodationId());
         Call<ResponseBody> call = ClientUtils.accommodationService.delete(dto.getAccommodationId());
         call.enqueue(new Callback<ResponseBody>() {
@@ -211,6 +218,37 @@ public class AccommodationDetailsFragment extends Fragment {
                 if (response.code() == 200) {
                     Log.d("OpenDoors", "Message received");
                     Toast.makeText(requireActivity(), "Deleted accommodation", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack();
+                } else {
+                    Log.d("OpenDoors", "Message received: " + response.code());
+                    try {
+                        String errorBody = response.errorBody().string();
+                        JSONObject jsonObject = new JSONObject(errorBody);
+                        String errorMessage = jsonObject.optString("message", "Unknown error");
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private void onDeletePending() {
+        Log.d("OpenDoors", "Delete pending accommodation " + dto.getId());
+        Call<ResponseBody> call = ClientUtils.pendingAccommodationService.delete(dto.getId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("OpenDoors", "Message received");
+                    Toast.makeText(requireActivity(), "Deleted pending accommodation", Toast.LENGTH_SHORT).show();
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     navController.popBackStack();
                 } else {
