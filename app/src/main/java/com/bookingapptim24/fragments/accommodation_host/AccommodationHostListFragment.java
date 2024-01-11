@@ -50,7 +50,7 @@ public class AccommodationHostListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.i("OpenDoors", "onCreate AccommodationHost List Fragment");
         this.getListView().setDividerHeight(2);
-        getDataFromClient();
+//        getDataFromClient();
     }
 
     @Override
@@ -62,20 +62,17 @@ public class AccommodationHostListFragment extends ListFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 
     private void getDataFromClient() {
-
         Long hostId = sessionManager.getUserId();
-
         Call<ArrayList<AccommodationHost>> call = ClientUtils.accommodationService.getForHost(hostId);
         call.enqueue(new Callback<ArrayList<AccommodationHost>>() {
             @Override
             public void onResponse(Call<ArrayList<AccommodationHost>> call, Response<ArrayList<AccommodationHost>> response) {
                 if (response.code() == 200){
-                    Log.d("REZ","Meesage recieved");
+                    Log.d("REZ","Message received");
                     System.out.println(response.body());
                     accommodations = response.body();
                     adapter = new AccommodationHostListAdapter(getActivity(), getActivity().getSupportFragmentManager(), accommodations);
@@ -83,7 +80,7 @@ public class AccommodationHostListFragment extends ListFragment {
                     adapter.notifyDataSetChanged();
 
                 }else{
-                    Log.d("REZ","Meesage recieved: "+response.code());
+                    Log.d("REZ","Message received: "+response.code());
                 }
             }
 

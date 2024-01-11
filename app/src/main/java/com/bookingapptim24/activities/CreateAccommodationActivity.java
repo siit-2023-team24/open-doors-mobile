@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +46,32 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
     private List<String> selectedAmenities;
 
+    private Long id = null;
+    private Long accommodationId = null;
+    private PendingAccommodationWhole accommodation;
+
+    private RadioButton isAutomaticTrue;
+    private RadioButton isAutomaticFalse;
+    private RadioButton isPricePerGuestTrue;
+    private RadioButton isPricePerGuestFalse;
+    private NumberPicker deadlinePicker;
+    private NumberPicker minGuestsPicker;
+    private NumberPicker maxGuestsPicker;
+    private NumberPicker numberPicker;
+    private Spinner countrySpinner;
+    private Spinner typeSpinner;
+    private EditText nameET;
+    private EditText descriptionET;
+    private EditText defaultPriceET;
+    private EditText cityET;
+    private EditText streetET;
+
+
+
+    //todo bind amenities
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         selectedAmenities = new ArrayList<>();
@@ -53,15 +81,21 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         ActivityCreateAccommodationBinding binding = ActivityCreateAccommodationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        RadioButton isAutomaticFalse = binding.automaticFalse;
-        RadioButton isAutomaticTrue = binding.automaticTrue;
+        nameET = binding.name;
+        descriptionET = binding.description;
+        defaultPriceET = binding.defaultPrice;
+        cityET = binding.city;
+        streetET = binding.street;
+
+        isAutomaticFalse = binding.automaticFalse;
+        isAutomaticTrue = binding.automaticTrue;
 
         isAutomaticTrue.setChecked(true);
         isAutomaticTrue.setTag(true);
         isAutomaticFalse.setTag(false);
 
-        RadioButton isPricePerGuestTrue = binding.pricePerGuestTrue;
-        RadioButton isPricePerGuestFalse = binding.pricePerGuestFalse;
+        isPricePerGuestTrue = binding.pricePerGuestTrue;
+        isPricePerGuestFalse = binding.pricePerGuestFalse;
 
         isPricePerGuestTrue.setChecked(true);
         isPricePerGuestTrue.setTag(true);
@@ -71,19 +105,19 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             finish();
         });
 
-        NumberPicker deadlinePicker = binding.deadline;
+        deadlinePicker = binding.deadline;
         deadlinePicker.setMinValue(1);
         deadlinePicker.setMaxValue(100);
 
-        NumberPicker minGuestsPicker = binding.minGuests;
+        minGuestsPicker = binding.minGuests;
         minGuestsPicker.setMinValue(1);
         minGuestsPicker.setMaxValue(100);
 
-        NumberPicker maxGuestsPicker = binding.maxGuests;
+        maxGuestsPicker = binding.maxGuests;
         maxGuestsPicker.setMinValue(1);
         maxGuestsPicker.setMaxValue(100);
 
-        NumberPicker numberPicker = binding.number;
+        numberPicker = binding.number;
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(1000000);
 
@@ -98,7 +132,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 countryArray);
 
         countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.countrySpinner.setAdapter(countryAdapter);
+        countrySpinner = binding.countrySpinner;
+        countrySpinner.setAdapter(countryAdapter);
 
         String[] typeArray = new String[AccommodationType.values().length];
         for (int i=0; i < AccommodationType.values().length; i++){
@@ -108,7 +143,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item,
                 typeArray);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.typeSpinner.setAdapter(typeAdapter);
+        typeSpinner = binding.typeSpinner;
+        typeSpinner.setAdapter(typeAdapter);
 
         String[] amenityArray = new String[Amenity.values().length];
         for (int i = 0; i < Amenity.values().length; i++) {
@@ -199,14 +235,14 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
 
             if(!valid) {
-                System.out.println("THERE RIGHT THERE");
+                System.out.println("THERE RIGHT THERE - Look at that condescending smirk, see it on every guy at work.");
                 Toast.makeText(CreateAccommodationActivity.this, "Please enter the data according to the validations.", Toast.LENGTH_SHORT);
                 return;
             }
 
             PendingAccommodationWhole dto = new PendingAccommodationWhole(
-                    null,
-                    null,
+                    id,
+                    accommodationId,
                     name,
                     description,
                     "",
@@ -251,5 +287,86 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         binding.backButton.setOnClickListener(v -> {
             this.finish();
         });
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            id = extras.getLong("id");
+            accommodationId = extras.getLong("accommodationId");
+            getData();
+        }
+    }
+
+    private void getData() {
+        Log.d("OpenDoors", "Getting accommodation details: " + id + ", " + accommodationId);
+        if (id > 0) {
+            Call<PendingAccommodationWhole> call = ClientUtils.pendingAccommodationService.getById(id);
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received pending accommodation: " + id);
+                        accommodation = response.body();
+                        setData();
+                    }
+                    else Log.d("OpenDoors","Message received: " + response.code());
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+        }
+        else {
+            Call<PendingAccommodationWhole> call = ClientUtils.accommodationService.getForEdit(accommodationId);
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received accommodation: " + accommodationId);
+                        accommodation = response.body();
+                        setData();
+                    }
+                    else Log.d("OpenDoors","Message received: " + response.code());
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+        }
+    }
+
+    private void setData() {
+        if (accommodation.isAutomatic()) {
+            isAutomaticTrue.setChecked(true);
+            isAutomaticFalse.setChecked(false);
+        } else {
+            isAutomaticTrue.setChecked(false);
+            isAutomaticFalse.setChecked(true);
+        }
+
+        if (accommodation.isPricePerGuest()) {
+            isPricePerGuestTrue.setChecked(true);
+            isPricePerGuestFalse.setChecked(false);
+        } else {
+            isPricePerGuestTrue.setChecked(false);
+            isPricePerGuestFalse.setChecked(true);
+        }
+        deadlinePicker.setValue(accommodation.getDeadline());
+        minGuestsPicker.setValue(accommodation.getMinGuests());
+        maxGuestsPicker.setValue(accommodation.getMaxGuests());
+        numberPicker.setValue(accommodation.getNumber());
+
+        Country accommodationCountry = Country.fromString(accommodation.getCountry());
+        countrySpinner.setSelection(Arrays.asList(Country.values()).indexOf(accommodationCountry));
+
+        AccommodationType accommodationType = AccommodationType.fromString(accommodation.getType());
+        typeSpinner.setSelection(Arrays.asList(AccommodationType.values()).indexOf(accommodationType));
+
+        nameET.setText(accommodation.getName());
+        descriptionET.setText(accommodation.getDescription());
+        defaultPriceET.setText(String.valueOf(accommodation.getPrice()));
+        cityET.setText(accommodation.getCity());
+        streetET.setText(accommodation.getStreet());
     }
 }

@@ -41,6 +41,13 @@ public interface AccommodationService {
     Call<PendingAccommodationWhole> getById(@Path("id") Long id);
 
     @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/editable/{id}")
+    Call<PendingAccommodationWhole> getForEdit(@Path("id") Long id);
+
+    @Headers({
             "User-Agent: Mobile-Android"
     })
     @DELETE("accommodations/{id}")

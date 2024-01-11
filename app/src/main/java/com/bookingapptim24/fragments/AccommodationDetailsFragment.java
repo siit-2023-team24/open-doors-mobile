@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.R;
+import com.bookingapptim24.activities.CreateAccommodationActivity;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.PendingAccommodationHost;
@@ -125,6 +127,8 @@ public class AccommodationDetailsFragment extends Fragment {
         } else if (role.equals("ROLE_HOST") && dto.getId() == 0 && fromMyList) {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
             //onclick edit and financial report
+            Button editBtn = view.findViewById(R.id.edit_accommodation_btn);
+            editBtn.setOnClickListener(v -> onEdit());
 
             Button deleteBtn = view.findViewById(R.id.delete_accommodation_btn);
             deleteBtn.setOnClickListener(v -> {
@@ -182,6 +186,8 @@ public class AccommodationDetailsFragment extends Fragment {
                     if (response.code() == 200) {
                         Log.d("OpenDoors", "Received accommodation: " + dto.getAccommodationId());
                         accommodation = response.body();
+                        accommodation.setId(dto.getId());
+                        accommodation.setAccommodationId(dto.getAccommodationId());
                     } else {
                         Log.d("OpenDoors","Message received: " + response.code());
                     }
@@ -271,5 +277,12 @@ public class AccommodationDetailsFragment extends Fragment {
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
+
+    private void onEdit() {
+        Intent intent = new Intent(requireActivity(), CreateAccommodationActivity.class);
+        intent.putExtra("id", accommodation.getId());
+        intent.putExtra("accommodationId", accommodation.getAccommodationId());
+        startActivity(intent);
     }
 }

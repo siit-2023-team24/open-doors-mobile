@@ -87,6 +87,8 @@
     <string name="continue_not_login">Continue as unregistered user</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="delete_profile_image">Delete image</string>
+    <string name="change_profile_image">Change image</string>
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="create_accommodation">Add an accommodation</string>
@@ -100,8 +102,6 @@
 
     <!--    Helpers-->
     <string name="accommodation_image_descriptor">Accommodation image</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--    Accommodation-->
     <!--    <string name="accommodation_name_and_id"></string>-->

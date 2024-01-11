@@ -28,14 +28,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center" >
+        android:gravity="center"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_wide_divider">
 
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:id="@+id/edit_account_image"
+            android:scaleType="centerCrop"
             />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="@drawable/empty_tall_divider">
+
+            <Button
+                android:id="@+id/change_profile_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_profile_image"
+                android:backgroundTint="?attr/colorPrimary"/>
+
+            <Button
+            android:id="@+id/delete_profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_profile_image"
+            android:backgroundTint="?attr/colorAccent"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 
