@@ -7,7 +7,9 @@ import com.bookingapptim24.models.PendingAccommodationWhole;
 import com.bookingapptim24.models.PendingAccommodationWholeEdited;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -15,8 +17,10 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface PendingAccommodationService {
@@ -66,5 +70,13 @@ public interface PendingAccommodationService {
     })
     @POST("pending-accommodations")
     Call<PendingAccommodationWholeEdited> add(@Body PendingAccommodationWholeEdited dto);
+
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @Multipart
+    @POST("pending-accommodations/{id}/images")
+    Call<ResponseBody> sendImages(@Path("id") Long id,
+                                  @Part List<MultipartBody.Part> images);
 
 }

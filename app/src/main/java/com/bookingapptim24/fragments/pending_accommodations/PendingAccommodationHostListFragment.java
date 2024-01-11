@@ -85,7 +85,7 @@ public class PendingAccommodationHostListFragment extends ListFragment {
                     Log.d("REZ","Meesage recieved");
                     System.out.println(response.body());
                     accommodations = response.body();
-                    adapter = new PendingAccommodationHostListAdapter(getActivity(), getActivity().getSupportFragmentManager(), accommodations);
+                    adapter = new PendingAccommodationHostListAdapter(getActivity(), requireActivity().getSupportFragmentManager(), accommodations);
                     setListAdapter(adapter);
                     adapter.notifyDataSetChanged();
 

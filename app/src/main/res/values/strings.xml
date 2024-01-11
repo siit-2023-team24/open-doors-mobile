@@ -102,6 +102,8 @@
 
     <string name="create_acc_title">Create accommodation</string>
 
+    <string name="selected_images_title">New selected images:</string>
+
     <!--    Helpers-->
     <string name="accommodation_image_descriptor">Accommodation image</string>
 

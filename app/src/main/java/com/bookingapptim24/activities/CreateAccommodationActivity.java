@@ -1,6 +1,12 @@
 package com.bookingapptim24.activities;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,11 +18,14 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bookingapptim24.R;
+import com.bookingapptim24.additionalAdapters.BitmapAdapter;
 import com.bookingapptim24.additionalAdapters.ImageAdapter;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.PendingAccommodationService;
@@ -28,10 +37,16 @@ import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +63,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private List<String> selectedAmenities;
     private List<Long> oldImages = new ArrayList<>();
     private List<Long> toDeleteImages = new ArrayList<>();
+    private List<Bitmap> newImages = new ArrayList<>();
 
     private RadioButton isAutomaticTrue;
     private RadioButton isAutomaticFalse;
@@ -65,11 +81,14 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private EditText cityET;
     private EditText streetET;
     private ViewPager2 viewPager;
-
+    private ViewPager2 viewPagerNewImages;
 
 
     //todo bind amenities
 
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 101;
 
 
     @Override
@@ -88,6 +107,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         streetET = binding.street;
 
         viewPager = binding.viewPager;
+        viewPagerNewImages = binding.viewPagerNewImages;
+
 
         isAutomaticFalse = binding.automaticFalse;
         isAutomaticTrue = binding.automaticTrue;
@@ -242,8 +263,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 return;
             }
 
-            if (id == 0) id = null;
-            if (accommodationId == 0) accommodationId = null;
+            if (id != null && id == 0) id = null;
+            if (accommodationId != null && accommodationId == 0) accommodationId = null;
 
             PendingAccommodationWholeEdited dto = new PendingAccommodationWholeEdited(
                     id,
@@ -252,7 +273,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     description,
                     "",
                     selectedAmenities,
-                    oldImages, //images
+                    oldImages,
                     minGuests,
                     maxGuests,
                     type,
@@ -275,7 +296,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<PendingAccommodationWholeEdited> call, Response<PendingAccommodationWholeEdited> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Accommodation created successfuly", Toast.LENGTH_SHORT);
+                        sendImages(response.body().getId());
+                        Toast.makeText(getApplicationContext(), "Accommodation created successfully", Toast.LENGTH_SHORT);
                         finish();
                     } else {
                         Toast.makeText(CreateAccommodationActivity.this, "Unexpected error", Toast.LENGTH_SHORT).show();
@@ -291,6 +313,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         });
 
         binding.backButton.setOnClickListener(v -> this.finish());
+
+        binding.selectImageButton.setOnClickListener(v -> checkPermissions());
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -377,9 +401,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         cityET.setText(accommodation.getCity());
         streetET.setText(accommodation.getStreet());
 
-        //todo set amenities
+        //todo set amenities, availabilities and rates
 
-        //todo set images
         if (accommodation.getImages() != null && accommodation.getImages().size() > 0) {
             viewPager.setAdapter(new ImageAdapter(getApplicationContext(), accommodation.getImages()));
         }
@@ -393,14 +416,108 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", (dialogInterface, id) -> {
                     toDeleteImages = oldImages;
-                    //todo show message, empty the imageViews
+                    newImages.clear();
+                    viewPager.setAdapter(new ImageAdapter(getApplicationContext(), new ArrayList<>()));
+                    Log.d("OpenDoors", "Images set to delete.");
+                    Toast.makeText(this, "Images set to be deleted", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
         dialog.create().show();
     }
 
-
-    public void selectImage(View view) {
+    private void checkPermissions() {
+        Log.d("OpenDoors", "Checking permissions.");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+        } else {
+            selectImage();
+        }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImage();
+            } else {
+                Toast.makeText(this, "No permission to open camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void selectImage() {
+        Intent imageChooserIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        imageChooserIntent.setType("image/*");
+
+        imageChooserIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent chooserIntent = Intent.createChooser(imageChooserIntent, "Select image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST && data != null) {
+            if (data.getClipData() != null) {
+                int countSelected = data.getClipData().getItemCount();
+                for (int i=0; i < countSelected; i++) {
+                    Uri selectedImageUri = data.getClipData().getItemAt(i).getUri();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                        newImages.add(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else {
+                Bundle extras = data.getExtras();
+                Bitmap bitmap = (Bitmap) extras.get("data");
+                newImages.add(bitmap);
+            }
+            Toast.makeText(this, "New image added.", Toast.LENGTH_SHORT).show();
+            viewPagerNewImages.setAdapter(new BitmapAdapter(getApplicationContext(), newImages));
+        }
+        else {
+            Log.e("OpenDoors", "RESULT CODE: " + resultCode);
+        }
+    }
+
+    private void sendImages(Long pendingId) {
+        List<MultipartBody.Part> imageParts = new ArrayList<>();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        for (int i = 0; i < newImages.size(); i++) {
+            Bitmap bitmap = newImages.get(i);
+            String filename = "image" + i + ".png";
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            byte[] bytes = out.toByteArray();
+
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), bytes);
+            MultipartBody.Part imagePart = MultipartBody.Part.createFormData("images", filename, requestBody);
+            imageParts.add(imagePart);
+
+            Call<ResponseBody> call = ClientUtils.pendingAccommodationService.sendImages(pendingId, imageParts);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.code() == 200) {
+                        Toast.makeText(CreateAccommodationActivity.this, "Uploading images complete", Toast.LENGTH_SHORT).show();
+                        Log.d("OpenDoors", "Sending accommodation images completed");
+                    } else {
+                        Toast.makeText(CreateAccommodationActivity.this, "Uploading images failed", Toast.LENGTH_SHORT).show();
+                        Log.d("OpenDoors", "Sending accommodation images failed: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("OpenDoors", "Sending accommodation images failed");
+                }
+            });
+
+        }
+    }
 }
