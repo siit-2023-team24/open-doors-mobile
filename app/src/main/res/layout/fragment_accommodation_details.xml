@@ -23,8 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="adsfasdfad" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/cityCountryTextView"

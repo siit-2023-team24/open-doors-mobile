@@ -82,7 +82,6 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
         }
 
         private void openAccommodationDetailsFragment(AccommodationSearchDTO accommodation) {
-            // Use FragmentTransaction to replace the current fragment with the details fragment
             Bundle args = new Bundle();
             args.putLong("accommodationId", accommodation.getId());
 

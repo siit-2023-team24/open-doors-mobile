@@ -18,6 +18,18 @@
         tools:layout="@layout/fragment_show_all"/>
 
     <fragment
+        android:id="@+id/fragment_search_accommodations"
+        android:name="com.bookingapptim24.fragments.home_page.SearchAccommodationsFragment"
+        android:label="@string/app_title"
+        tools:layout="@layout/fragment_search_accommodations"/>
+
+    <fragment
+        android:id="@+id/fragment_filter_accommodations"
+        android:name="com.bookingapptim24.fragments.home_page.FilterAccommodationsFragment"
+        android:label="@string/app_title"
+        tools:layout="@layout/fragment_filter_accommodations"/>
+
+    <fragment
         android:id="@+id/nav_profile"
         android:name="com.bookingapptim24.fragments.AccountFragment"
         android:label="@string/profile_title"
