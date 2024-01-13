@@ -62,6 +62,7 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
 
     @Override
     public int getItemCount() {
+        if(accommodationList == null) return 0;
         return accommodationList.size();
     }
 

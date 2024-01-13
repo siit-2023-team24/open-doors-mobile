@@ -4,21 +4,25 @@ import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SearchAndFilter {
     private String location;
     private Integer guestNumber;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private String startDate;
+    private String endDate;
     private Double startPrice;
     private Double endPrice;
     private Set<AccommodationType> types;
     private Set<Amenity> amenities;
 
-    public SearchAndFilter() {}
+    public SearchAndFilter() {
+        this.types = new HashSet<>();
+        this.amenities = new HashSet<>();
+    }
 
-    public SearchAndFilter(String location, Integer guestNumber, Timestamp startDate, Timestamp endDate,
+    public SearchAndFilter(String location, Integer guestNumber, String startDate, String endDate,
                               Double startPrice, Double endPrice, Set<AccommodationType> types, Set<Amenity> amenities) {
         this.location = location;
         this.guestNumber = guestNumber;
@@ -46,19 +50,19 @@ public class SearchAndFilter {
         this.guestNumber = guestNumber;
     }
 
-    public Timestamp getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
