@@ -61,7 +61,7 @@
     <string name="my_accommodations_title">My accommodations</string>
     <string name="my_pending_accommodations_title">My pending accommodations</string>
     <string name="reported_users_title">Reported users</string>
-    <string name="reported_comments">Reported comments</string>
+    <string name="reported_reviews">Reported reviews</string>
     <string name="pending_accommodations">Pending accommodations</string>
     <string name="accommodation_details">Accommodation details</string>
 
@@ -93,6 +93,7 @@
     <string name="add_image">Add image</string>
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
+    <string name="dismiss">Dismiss</string>
     <string name="create_accommodation">Add an accommodation</string>
     <string name="financial_report">Financial report</string>
 
