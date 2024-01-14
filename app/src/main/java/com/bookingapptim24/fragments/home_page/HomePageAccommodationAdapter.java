@@ -1,7 +1,9 @@
-package com.bookingapptim24;
+package com.bookingapptim24.fragments.home_page;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bookingapptim24.R;
+import com.bookingapptim24.models.AccommodationSearchDTO;
 
 import java.util.List;
 
-public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdapter.ViewHolder> {
+public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageAccommodationAdapter.ViewHolder> {
 
-    private List<Accommodation> accommodationList;
+    private List<AccommodationSearchDTO> accommodationList;
     private Context context;
-
-    public AccommodationAdapter(List<Accommodation> accommodationList, Context context) {
+    public HomePageAccommodationAdapter(List<AccommodationSearchDTO> accommodationList, Context context) {
         this.accommodationList = accommodationList;
         this.context = context;
     }
@@ -32,9 +38,9 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Accommodation accommodation = accommodationList.get(position);
+        AccommodationSearchDTO accommodation = accommodationList.get(position);
 
-        holder.imageView.setImageResource(accommodation.getImageResource());
+//        holder.imageView.setImageResource(accommodation.getImageResource());
         holder.nameTextView.setText(accommodation.getName());
         holder.ratingTextView.setText(String.valueOf(accommodation.getAverageRating()));
         holder.priceTextView.setText(String.valueOf(accommodation.getPrice()));
@@ -45,14 +51,22 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
                 holder.heartImage.setImageResource(R.drawable.clicked_heart);
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.openAccommodationDetailsFragment(accommodation);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
+        if(accommodationList == null) return 0;
         return accommodationList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView nameTextView;
         TextView ratingTextView;
@@ -66,6 +80,14 @@ public class AccommodationAdapter extends RecyclerView.Adapter<AccommodationAdap
             ratingTextView = itemView.findViewById(R.id.accommodationRating);
             priceTextView = itemView.findViewById(R.id.accommodationPrice);
             heartImage = itemView.findViewById(R.id.heartImage);
+        }
+
+        private void openAccommodationDetailsFragment(AccommodationSearchDTO accommodation) {
+            Bundle args = new Bundle();
+            args.putLong("accommodationId", accommodation.getId());
+
+            NavController navController = Navigation.findNavController((Activity) context, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.nav_accommodation_details, args);
         }
     }
 }
