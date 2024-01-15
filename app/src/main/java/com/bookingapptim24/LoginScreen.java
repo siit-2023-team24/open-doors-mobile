@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bookingapptim24.clients.ClientUtils;
@@ -58,12 +59,14 @@ public class LoginScreen extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        System.out.println("HERE I AM");
+                        Log.d("BUGBUGBUG", "BUGBUGBUG");
                         Toast.makeText(LoginScreen.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<UserTokenState> call, Throwable t) {
+                    Log.d("FAILFAILFAIL", "FAILFAILFAIL");
+
                     Toast.makeText(LoginScreen.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                 }
             });
