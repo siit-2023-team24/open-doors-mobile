@@ -94,6 +94,7 @@
     <string name="add_image">Add image</string>
     <string name="approve">Approve</string>
     <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
     <string name="deny">Deny</string>
     <string name="dismiss">Dismiss</string>
     <string name="block_user">Block user</string>

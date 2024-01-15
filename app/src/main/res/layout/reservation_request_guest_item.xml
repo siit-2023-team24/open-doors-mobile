@@ -8,6 +8,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:contentDescription="@string/accommodation_image_descriptor"
+            android:id="@+id/request_image"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
@@ -42,21 +57,6 @@
             android:text="@string/status" />
 
         <TextView
-            android:id="@+id/request_guest_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:text="@string/guest" />
-
-        <TextView
-            android:id="@+id/request_cancelled_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_grey"
-            android:textSize="16dp"
-            android:text="The guest has cancelled 0 time(s)." />
-
-        <TextView
             android:id="@+id/request_guest_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,18 +89,20 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/request_deny_button"
+            android:id="@+id/request_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnTertiary"
-            android:backgroundTint="?attr/colorTertiary"
-            android:text="@string/deny" />
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="?attr/colorPrimary"
+            android:text="@string/delete" />
 
         <Button
-            android:id="@+id/request_confirm_button"
+            android:id="@+id/request_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirm" />
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="?attr/colorAccent"
+            android:text="@string/cancel" />
 
     </LinearLayout>
 </LinearLayout>

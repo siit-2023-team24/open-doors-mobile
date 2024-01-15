@@ -32,21 +32,16 @@ public class ReservationRequestListPageFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
         binding = FragmentReservationRequestListPageBinding.inflate(inflater, container, false);
 
-
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         String role = sessionManager.getRole();
         if (role.equals("ROLE_HOST")) {
             FragmentTransition.to(ReservationRequestForHostListFragment.newInstance(), requireActivity(),
                     false, R.id.reservation_request_list);
         }
         else if (role.equals("ROLE_GUEST")) {
-
+            FragmentTransition.to(ReservationRequestForGuestListFragment.newInstance(), requireActivity(),
+                    false, R.id.reservation_request_list);
         }
+        return binding.getRoot();
     }
 
     @Override
