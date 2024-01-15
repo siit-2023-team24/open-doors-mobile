@@ -95,6 +95,12 @@
     <string name="start_date">Select start date</string>
     <string name="end_date">Select end date</string>
     <string name="search_accommodations">Search accommodations</string>
+    <string name="filter_accommodations">Filter accommodations</string>
+    <string name="accommodation_types">Accommodation types</string>
+    <string name="amenities">Amenities</string>
+    <string name="price_range">Price range</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>

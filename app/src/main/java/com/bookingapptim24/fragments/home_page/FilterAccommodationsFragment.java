@@ -1,66 +1,270 @@
 package com.bookingapptim24.fragments.home_page;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.bookingapptim24.R;
+import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.models.AccommodationSearchDTO;
+import com.bookingapptim24.models.SearchAndFilterAccommodations;
+import com.bookingapptim24.models.enums.AccommodationType;
+import com.bookingapptim24.models.enums.Amenity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FilterAccommodationsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FilterAccommodationsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private View view;
+    private SearchAndFilterAccommodations searchAndFilterDTO;
+    private ArrayList<String> accommodationTypes;
+    private ArrayList<String> amenities;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public FilterAccommodationsFragment() {}
 
-    public FilterAccommodationsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FilterAccommodationsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FilterAccommodationsFragment newInstance(String param1, String param2) {
+    public static FilterAccommodationsFragment newInstance() {
         FilterAccommodationsFragment fragment = new FilterAccommodationsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter_accommodations, container, false);
+        view = inflater.inflate(R.layout.fragment_filter_accommodations, container, false);
+
+        Log.d("MILICA", "1. First I create view!");
+        getAccommodationTypes();
+        getAmenities();
+
+        Button filterButton = view.findViewById(R.id.filterButton);
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCheckedAccommodationTypes();
+                getCheckedAmenities();
+
+                EditText startPriceEditText = view.findViewById(R.id.startPriceEditText);
+                EditText endPriceEditText = view.findViewById(R.id.endPriceEditText);
+                String startPriceText = startPriceEditText.getText().toString().trim();
+                String endPriceText = endPriceEditText.getText().toString().trim();
+
+                if(!startPriceText.isEmpty())
+                    searchAndFilterDTO.setStartPrice(Double.valueOf(startPriceText));
+                if(!endPriceText.isEmpty())
+                    searchAndFilterDTO.setEndPrice(Double.valueOf(endPriceText));
+
+                filterAccommodations();
+            }
+        });
+
+        return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Bundle args = getArguments();
+        ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
+        searchAndFilterDTO = searchAndFilters.get(0);
+        loadAccommodationTypes();
+        loadAmenities();
+        EditText startPriceEditText = view.findViewById(R.id.startPriceEditText);
+        EditText endPriceEditText = view.findViewById(R.id.endPriceEditText);
+        if(searchAndFilterDTO.getStartPrice() != null)
+            startPriceEditText.setText(searchAndFilterDTO.getStartPrice().toString());
+        if(searchAndFilterDTO.getEndPrice() != null)
+            endPriceEditText.setText(searchAndFilterDTO.getEndPrice().toString());
+    }
+
+    private void getAccommodationTypes() {
+        Call<ArrayList<String>> call = ClientUtils.accommodationService.getAccommodationTypes();
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                if(response.isSuccessful()) {
+                    accommodationTypes = response.body();
+                    Log.d("MILICA", "2. Then I get types!");
+                    loadAccommodationTypes();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getAmenities() {
+        Call<ArrayList<String>> call = ClientUtils.accommodationService.getAmenities();
+        call.enqueue(new Callback<ArrayList<String>>() {
+            @Override
+            public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+                if(response.isSuccessful()) {
+                    amenities = response.body();
+                    Log.d("MILICA", "3. Then I get amenities!");
+                    loadAmenities();
+                } else {
+                    Log.d("REZ", "Message received: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void loadAccommodationTypes() {
+        Log.d("MILICA", "4. Now I load types!");
+        LinearLayout accommodationTypesLayout = view.findViewById(R.id.accommodationTypesLayout);
+        accommodationTypesLayout.removeAllViewsInLayout();
+
+        if(accommodationTypes != null) {
+            for (String accommodationType: accommodationTypes) {
+                CheckBox checkBox = new CheckBox(requireContext());
+                checkBox.setText(accommodationType);
+
+                // Check if the type is in searchAndFilterDTO
+                if (searchAndFilterDTO.getTypes() != null &&
+                        searchAndFilterDTO.getTypes().contains(AccommodationType.valueOf(accommodationType))) {
+                    checkBox.setChecked(true);
+                }
+
+                accommodationTypesLayout.addView(checkBox);
+            }
+        }
+    }
+
+    private void loadAmenities() {
+        Log.d("MILICA", "5. Now I load amenities!");
+        LinearLayout amenitiesLayout = view.findViewById(R.id.amenitiesFilterLayout);
+        amenitiesLayout.removeAllViewsInLayout();
+
+        if(amenities != null) {
+            for (String amenity : amenities) {
+                CheckBox checkBox = new CheckBox(requireContext());
+                checkBox.setText(amenity);
+
+                // Check if the amenity is in searchAndFilterDTO
+                if (searchAndFilterDTO.getAmenities() != null &&
+                        searchAndFilterDTO.getAmenities().contains(Amenity.valueOf(amenity))) {
+                    checkBox.setChecked(true);
+                }
+
+                amenitiesLayout.addView(checkBox);
+            }
+        }
+    }
+
+    private void filterAccommodations() {
+        Log.d("FilterDTO", searchAndFilterDTO.toString());
+        Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodations(searchAndFilterDTO);
+        call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
+            @Override
+            public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
+                if(response.isSuccessful()) {
+                    ArrayList<AccommodationSearchDTO> accommodations = response.body();
+                    for(AccommodationSearchDTO a : accommodations)
+                        Log.d("REZ", a.toString());
+
+                    ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+                    searchAndFilters.add(searchAndFilterDTO);
+
+                    Bundle args = new Bundle();
+                    args.putSerializable("accommodations", accommodations);
+                    args.putSerializable("searchAndFilterDTO", searchAndFilters);
+
+                    NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+                    navController.navigate(R.id.nav_show_all, args);
+
+                } else {
+                    Log.d("REZ","Meesage recieved: "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private void getCheckedAccommodationTypes() {
+        LinearLayout accommodationTypesLayout = view.findViewById(R.id.accommodationTypesLayout);
+        Set<AccommodationType> checkedAccommodationTypes = EnumSet.noneOf(AccommodationType.class);
+
+        for (int i = 0; i < accommodationTypesLayout.getChildCount(); i++) {
+            View childView = accommodationTypesLayout.getChildAt(i);
+
+            if (childView instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox) childView;
+                if (checkBox.isChecked()) {
+                    try {
+                        AccommodationType accommodationType = AccommodationType.valueOf(checkBox.getText().toString());
+                        checkedAccommodationTypes.add(accommodationType);
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid enum constant, if needed
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        searchAndFilterDTO.setTypes(checkedAccommodationTypes);
+    }
+
+    private void getCheckedAmenities() {
+        LinearLayout amenitiesLayout = view.findViewById(R.id.amenitiesFilterLayout);
+        Set<Amenity> checkedAmenities = EnumSet.noneOf(Amenity.class);
+
+        for (int i = 0; i < amenitiesLayout.getChildCount(); i++) {
+            View childView = amenitiesLayout.getChildAt(i);
+
+            if (childView instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox) childView;
+                if (checkBox.isChecked()) {
+                    try {
+                        Amenity amenity = Amenity.valueOf(checkBox.getText().toString());
+                        checkedAmenities.add(amenity);
+                    } catch (IllegalArgumentException e) {
+                        // Handle invalid enum constant, if needed
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        searchAndFilterDTO.setAmenities(checkedAmenities);
+    }
+
 }
