@@ -83,6 +83,15 @@
         android:label="@string/pending_reviews_title"
         tools:layout="@layout/fragment_reported_review_list"/>
 
+    <fragment android:id="@+id/nav_reported_users"
+        android:name="com.bookingapptim24.fragments.user_reports.UserReportListFragment"
+        android:label="@string/reported_users_title"
+        tools:layout="@layout/fragment_user_report_list"/>
+
+    <fragment android:id="@+id/nav_blocked_users"
+        android:name="com.bookingapptim24.fragments.blocked_users.BlockedUserListFragment"
+        android:label="@string/blocked_users_title"
+        tools:layout="@layout/fragment_blocked_user_list"/>
 
 
 </navigation>

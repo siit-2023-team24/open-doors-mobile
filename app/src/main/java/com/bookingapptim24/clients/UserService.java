@@ -1,8 +1,10 @@
 package com.bookingapptim24.clients;
 
 import com.bookingapptim24.models.NewPassword;
-import com.bookingapptim24.models.User;
 import com.bookingapptim24.models.UserAccountView;
+import com.bookingapptim24.models.UserSummary;
+
+import java.util.ArrayList;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -51,4 +53,16 @@ public interface UserService {
                             @Part("country") String country,
                             @Part("imageId") String imageId,
                             @Part MultipartBody.Part file);
+
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @GET("users/blocked")
+    Call<ArrayList<UserSummary>> getBlocked();
+
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @GET("users/unblock/{id}")
+    Call<ResponseBody> unblock(@Path("id") Long id);
 }

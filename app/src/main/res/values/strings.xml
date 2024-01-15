@@ -61,6 +61,7 @@
     <string name="my_accommodations_title">My accommodations</string>
     <string name="my_pending_accommodations_title">My pending accommodations</string>
     <string name="reported_users_title">Reported users</string>
+    <string name="blocked_users_title">Blocked users</string>
     <string name="reported_reviews">Reported reviews</string>
     <string name="pending_accommodations">Pending accommodations</string>
     <string name="accommodation_details">Accommodation details</string>
@@ -94,6 +95,8 @@
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="dismiss">Dismiss</string>
+    <string name="block_user">Block user</string>
+    <string name="unblock_user">Unblock user</string>
     <string name="create_accommodation">Add an accommodation</string>
     <string name="financial_report">Financial report</string>
 
