@@ -60,7 +60,6 @@
         android:label="@string/accommodation_details"
         tools:layout="@layout/accommodation_details_host"/>
 
-
     <fragment
         android:id="@+id/nav_accommodation_details_admin"
         android:name="com.bookingapptim24.fragments.AccommodationDetailsFragment"
@@ -93,5 +92,9 @@
         android:label="@string/blocked_users_title"
         tools:layout="@layout/fragment_blocked_user_list"/>
 
+    <fragment android:id="@+id/nav_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestListPageFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_list_page"/>
 
 </navigation>

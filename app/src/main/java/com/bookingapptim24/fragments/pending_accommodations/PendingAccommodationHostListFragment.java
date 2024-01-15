@@ -68,7 +68,6 @@ public class PendingAccommodationHostListFragment extends ListFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 
