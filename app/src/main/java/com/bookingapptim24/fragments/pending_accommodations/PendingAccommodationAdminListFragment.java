@@ -49,10 +49,8 @@ public class PendingAccommodationAdminListFragment extends ListFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i("OpenDoors", "onCreate PendingAccommodationHost List Fragment");
+        super.onViewCreated(view, savedInstanceState);
         this.getListView().setDividerHeight(2);
-        getDataFromClient();
     }
 
     @Override

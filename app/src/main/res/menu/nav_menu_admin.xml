@@ -9,8 +9,14 @@
         <item android:id="@+id/nav_reported_users"
             android:title="@string/reported_users_title"/>
 
-        <item android:id="@+id/nav_reported_comments"
-            android:title="@string/reported_comments"/>
+        <item android:id="@+id/nav_blocked_users"
+            android:title="@string/blocked_users_title"/>
+
+        <item android:id="@+id/nav_reported_reviews"
+            android:title="@string/reported_reviews"/>
+
+        <item android:id="@+id/nav_pending_reviews"
+            android:title="@string/pending_reviews_title"/>
 
         <item android:id="@+id/nav_pending_accommodations"
             android:title="@string/pending_accommodations"/>

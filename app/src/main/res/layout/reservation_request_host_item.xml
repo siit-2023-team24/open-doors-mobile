@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/request_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/request_accommodation_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="@string/no_accommodation_name" />
+
+        <TextView
+            android:id="@+id/request_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="@string/request_id" />
+
+        <TextView
+            android:id="@+id/request_date_range"
+            android:layout_width="wrap_content"
+            android:textSize="20dp"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/request_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorAccent"
+            android:textSize="18dp"
+            android:text="@string/status" />
+
+        <TextView
+            android:id="@+id/request_guest_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/guest" />
+
+        <TextView
+            android:id="@+id/request_cancelled_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_grey"
+            android:textSize="16dp"
+            android:text="The guest has cancelled 0 time(s)." />
+
+        <TextView
+            android:id="@+id/request_guest_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/number_of_guests" />
+
+        <TextView
+            android:id="@+id/request_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/total_price" />
+
+        <TextView
+            android:id="@+id/request_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_wide_divider"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/request_deny_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnTertiary"
+            android:backgroundTint="?attr/colorTertiary"
+            android:text="@string/deny" />
+
+        <Button
+            android:id="@+id/request_confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm" />
+
+    </LinearLayout>
+</LinearLayout>

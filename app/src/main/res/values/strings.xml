@@ -79,7 +79,8 @@
     <string name="my_accommodations_title">My accommodations</string>
     <string name="my_pending_accommodations_title">My pending accommodations</string>
     <string name="reported_users_title">Reported users</string>
-    <string name="reported_comments">Reported comments</string>
+    <string name="blocked_users_title">Blocked users</string>
+    <string name="reported_reviews">Reported reviews</string>
     <string name="pending_accommodations">Pending accommodations</string>
     <string name="accommodation_details">Accommodation details</string>
 
@@ -110,7 +111,12 @@
     <string name="change_profile_image">Change image</string>
     <string name="add_image">Add image</string>
     <string name="approve">Approve</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
     <string name="deny">Deny</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="block_user">Block user</string>
+    <string name="unblock_user">Unblock user</string>
     <string name="create_accommodation">Add an accommodation</string>
     <string name="financial_report">Financial report</string>
     <string name="make_reservation">Make reservation</string>
@@ -125,9 +131,20 @@
     <string name="create_acc_title">Create accommodation</string>
 
     <string name="selected_images_title">New selected images:</string>
+    <string name="pending_reviews_title">Pending reviews</string>
 
     <!--    Helpers-->
     <string name="accommodation_image_descriptor">Accommodation image</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    Reservation card-->
+    <string name="no_accommodation_name">No accommodation name</string>
+    <string name="request_id">Request ID: </string>
+    <string name="status">Status: </string>
+    <string name="guest">Guest: </string>
+    <string name="number_of_guests">Number of guests: </string>
+    <string name="total_price">Total price: </string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--    Accommodation-->
