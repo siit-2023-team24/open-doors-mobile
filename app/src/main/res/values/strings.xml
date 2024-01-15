@@ -94,6 +94,7 @@
     <string name="approve">Approve</string>
     <string name="deny">Deny</string>
     <string name="dismiss">Dismiss</string>
+    <string name="block_user">Block user</string>
     <string name="create_accommodation">Add an accommodation</string>
     <string name="financial_report">Financial report</string>
 

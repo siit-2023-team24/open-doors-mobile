@@ -80,7 +80,6 @@ public class ReportedReviewListAdapter extends ArrayAdapter<ReportedReview> {
                     })
                     .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
             dialog.create().show();
-
         });
 
         Button dismissBtn = convertView.findViewById(R.id.dismiss_review_btn);
