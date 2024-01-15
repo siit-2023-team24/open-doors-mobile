@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
-import com.bookingapptim24.fragments.reported_reviews.ReportedReviewListAdapter;
 import com.bookingapptim24.models.UserReport;
 import com.bookingapptim24.util.DataChangesListener;
 
@@ -117,7 +116,6 @@ public class UserReportAdapter extends ArrayAdapter<UserReport> {
                 blockBtn.setVisibility(View.GONE);
             }
         }
-
         return convertView;
     }
 

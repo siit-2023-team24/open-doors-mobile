@@ -9,6 +9,9 @@
         <item android:id="@+id/nav_reported_users"
             android:title="@string/reported_users_title"/>
 
+        <item android:id="@+id/nav_blocked_users"
+            android:title="@string/blocked_users_title"/>
+
         <item android:id="@+id/nav_reported_reviews"
             android:title="@string/reported_reviews"/>
 

@@ -1,4 +1,4 @@
-package com.bookingapptim24.fragments.user_reports;
+package com.bookingapptim24.fragments.blocked_users;
 
 import android.os.Bundle;
 
@@ -14,39 +14,38 @@ import android.view.ViewGroup;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
-import com.bookingapptim24.databinding.FragmentReportedReviewListBinding;
+import com.bookingapptim24.databinding.FragmentBlockedUserListBinding;
 import com.bookingapptim24.databinding.FragmentUserReportListBinding;
-import com.bookingapptim24.fragments.reported_reviews.ReportedReviewListAdapter;
-import com.bookingapptim24.models.ReportedReview;
+import com.bookingapptim24.fragments.user_reports.UserReportAdapter;
+import com.bookingapptim24.fragments.user_reports.UserReportListFragment;
 import com.bookingapptim24.models.UserReport;
-import com.bookingapptim24.util.DataChangesListener;
+import com.bookingapptim24.models.UserSummary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+public class BlockedUserListFragment extends ListFragment {
 
-public class UserReportListFragment extends ListFragment implements DataChangesListener {
+    private BlockedUserAdapter adapter;
+    private FragmentBlockedUserListBinding binding;
+    private ArrayList<UserSummary> users = new ArrayList<>();
 
-    private UserReportAdapter adapter;
-    private FragmentUserReportListBinding binding;
-    private ArrayList<UserReport> reports = new ArrayList<>();
-
-    public UserReportListFragment() {}
-
-
-    public static UserReportListFragment newInstance() {
-        return new UserReportListFragment();
+    public BlockedUserListFragment() {
     }
 
+    public static BlockedUserListFragment newInstance() {
+        return new BlockedUserListFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("OpenDoors", "onCreateView User Report List Fragment");
-        binding = FragmentUserReportListBinding.inflate(inflater, container, false);
+        Log.i("OpenDoors", "onCreateView User Blocked List Fragment");
+        binding = FragmentBlockedUserListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -54,12 +53,12 @@ public class UserReportListFragment extends ListFragment implements DataChangesL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.getListView().setDividerHeight(2);
-        getData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        getData();
     }
 
     @Override
@@ -69,32 +68,26 @@ public class UserReportListFragment extends ListFragment implements DataChangesL
     }
 
     private void getData() {
-        Call<ArrayList<UserReport>> call = ClientUtils.userReportService.getAll();
-        call.enqueue(new Callback<ArrayList<UserReport>>() {
+        Call<ArrayList<UserSummary>> call = ClientUtils.userService.getBlocked();
+        call.enqueue(new Callback<ArrayList<UserSummary>>() {
             @Override
-            public void onResponse(Call<ArrayList<UserReport>> call, Response<ArrayList<UserReport>> response) {
+            public void onResponse(Call<ArrayList<UserSummary>> call, Response<ArrayList<UserSummary>> response) {
                 if (response.code() == 200){
                     Log.d("REZ","Message received");
                     System.out.println(response.body());
-                    reports = response.body();
-                    adapter = new UserReportAdapter(getActivity(), getActivity().getSupportFragmentManager(), reports);
+                    users = response.body();
+                    adapter = new BlockedUserAdapter(getActivity(), getActivity().getSupportFragmentManager(), users);
                     setListAdapter(adapter);
                     adapter.notifyDataSetChanged();
-                    adapter.setListener(UserReportListFragment.this);
 
                 } else {
                     Log.d("REZ","Message received: "+response.code());
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<UserReport>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<UserSummary>> call, Throwable t) {
                 Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
             }
         });
     }
-
-    public void onDataChanged() {
-        getData();
-    }
 }
-
