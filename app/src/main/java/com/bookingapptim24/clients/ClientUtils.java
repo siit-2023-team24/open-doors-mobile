@@ -38,4 +38,6 @@ public class ClientUtils {
     public static PendingAccommodationService pendingAccommodationService = retrofit.create(PendingAccommodationService.class);
     public static UserService userService = retrofit.create(UserService.class);
     public static ImageService imageService = retrofit.create(ImageService.class);
+    public static AccommodationReviewService accommodationReviewService = retrofit.create(AccommodationReviewService.class);
+    public static HostReviewService hostReviewService = retrofit.create(HostReviewService.class);
 }

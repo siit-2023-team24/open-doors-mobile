@@ -73,6 +73,15 @@
         android:label="@string/password_change"
         tools:layout="@layout/fragment_edit_password"/>
 
+    <fragment android:id="@+id/nav_pending_reviews"
+        android:name="com.bookingapptim24.fragments.pending_reviews.PendingReviewListFragment"
+        android:label="@string/pending_reviews_title"
+        tools:layout="@layout/fragment_pending_review_list"/>
+
+    <fragment android:id="@+id/nav_reported_reviews"
+        android:name="com.bookingapptim24.fragments.reported_reviews.ReportedReviewListFragment"
+        android:label="@string/pending_reviews_title"
+        tools:layout="@layout/fragment_reported_review_list"/>
 
 
 

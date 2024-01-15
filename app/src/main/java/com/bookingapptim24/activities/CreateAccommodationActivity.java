@@ -492,7 +492,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         for (int i = 0; i < newImages.size(); i++) {
             Bitmap bitmap = newImages.get(i);
-            String filename = "image" + i + ".png";
+            String filename = "image" + System.currentTimeMillis() + ".png";
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             byte[] bytes = out.toByteArray();
 
