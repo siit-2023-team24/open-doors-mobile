@@ -12,7 +12,7 @@
         <item android:id="@+id/nav_host_pending_accommodations"
             android:title="@string/my_pending_accommodations_title"/>
 
-        <item android:id="@+id/nav_reservations"
+        <item android:id="@+id/nav_reservation_requests"
             android:title="@string/reservations_title"/>
 
         <item android:id="@+id/nav_notifications"

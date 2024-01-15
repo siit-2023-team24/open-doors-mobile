@@ -2,6 +2,7 @@ package com.bookingapptim24.clients;
 
 
 import com.bookingapptim24.BuildConfig;
+import com.bookingapptim24.models.enums.ReservationRequestStatus;
 import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
@@ -41,4 +42,5 @@ public class ClientUtils {
     public static AccommodationReviewService accommodationReviewService = retrofit.create(AccommodationReviewService.class);
     public static HostReviewService hostReviewService = retrofit.create(HostReviewService.class);
     public static UserReportService userReportService = retrofit.create(UserReportService.class);
+    public static ReservationRequestService reservationRequestService = retrofit.create(ReservationRequestService.class);
 }
