@@ -11,11 +11,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,23 +29,34 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bookingapptim24.R;
 import com.bookingapptim24.additionalAdapters.BitmapAdapter;
 import com.bookingapptim24.additionalAdapters.ImageAdapter;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.PendingAccommodationService;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.ActivityCreateAccommodationBinding;
+import com.bookingapptim24.models.DateRange;
+import com.bookingapptim24.models.DateRangeDTO;
 import com.bookingapptim24.models.PendingAccommodationWhole;
 import com.bookingapptim24.models.PendingAccommodationWholeEdited;
+import com.bookingapptim24.models.SeasonalRate;
+import com.bookingapptim24.models.SeasonalRateDTO;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -83,6 +98,26 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private ViewPager2 viewPagerNewImages;
 
+    private TextView instructions;
+    private DatePicker availabilityDatePicker;
+    private boolean isSelecting = false;
+    private Timestamp availableRangeStart;
+    private List<Timestamp> availableDates = new ArrayList<>();
+    private List<DateRange> availability = new ArrayList<>();
+    private ListView availabilityListView;
+
+    private TextView seasonalRatesError;
+    private DatePicker seasonalRatesDatePicker;
+    private ListView seasonalRateListView;
+    private EditText seasonalRatePrice;
+    private List<Timestamp> priceDates = new ArrayList<>();
+    private Map<String, Double> priceValues = new HashMap<>();
+    private List<SeasonalRate> seasonalRates = new ArrayList<>();
+
+    private List<String> availabilityText = new ArrayList<>();
+    private List<String> seasonalRatesText = new ArrayList<>();
+    private ArrayAdapter<String> availabilityAdapter;
+    private ArrayAdapter<String> seasonalRatesAdapter;
 
     //todo bind amenities
 
@@ -144,6 +179,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(1000000);
 
+        instructions = binding.instructions;
+        availabilityDatePicker = binding.availabilityDatePicker;
+        availabilityListView = binding.availabilityListView;
+
+        availabilityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, availabilityText);
+        availabilityListView.setAdapter(availabilityAdapter);
 
         String[] countryArray = new String[Country.values().length];
         for (int i = 0; i < Country.values().length; i++) {
@@ -188,6 +229,32 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             });
             binding.gridLayout.addView(checkBox);
         }
+
+        availabilityDatePicker.init(availabilityDatePicker.getYear(), availabilityDatePicker.getMonth(), availabilityDatePicker.getDayOfMonth(),
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                    Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+                    timestamp.setNanos(0);
+                    availableDateSelected(timestamp);
+                });
+
+        seasonalRatesError = binding.seasonalRatesError;
+        seasonalRatesDatePicker = binding.seasonalRatesDatePicker;
+        seasonalRateListView = binding.seasonalRatesListView;
+        seasonalRatePrice = binding.seasonalRatePrice;
+
+        seasonalRatesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, seasonalRatesText);
+        seasonalRateListView.setAdapter(seasonalRatesAdapter);
+
+        seasonalRatesDatePicker.init(seasonalRatesDatePicker.getYear(), seasonalRatesDatePicker.getMonth(), seasonalRatesDatePicker.getDayOfMonth(),
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                    Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+                    timestamp.setNanos(0);
+                    priceDateSelected(timestamp);
+                });
 
         binding.createButton.setOnClickListener(v -> {
             boolean valid = true;
@@ -259,7 +326,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
             if(!valid) {
                 System.out.println("THERE RIGHT THERE - Look at that condescending smirk, see it on every guy at work.");
-                Toast.makeText(CreateAccommodationActivity.this, "Please enter the data according to the validations.", Toast.LENGTH_SHORT);
+                Toast.makeText(CreateAccommodationActivity.this, "Please enter the data according to the validations.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -289,6 +356,9 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     toDeleteImages
             );
 
+            dto.setAvailability(formAvailabilityDTOs());
+            dto.setSeasonalRates(formSeasonalRateDTOs());
+
             PendingAccommodationService service = ClientUtils.pendingAccommodationService;
 
             Call<PendingAccommodationWholeEdited> call = service.add(dto);
@@ -297,10 +367,10 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 public void onResponse(Call<PendingAccommodationWholeEdited> call, Response<PendingAccommodationWholeEdited> response) {
                     if (response.isSuccessful()) {
                         sendImages(response.body().getId());
-                        Toast.makeText(getApplicationContext(), "Accommodation created successfully", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), getString(R.string.toast_accommodation_created), Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(CreateAccommodationActivity.this, "Unexpected error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAccommodationActivity.this, getString(R.string.unexpected_error), Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
@@ -322,6 +392,193 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             accommodationId = extras.getLong("accommodationId");
             getData();
         }
+    }
+
+    private List<SeasonalRateDTO> formSeasonalRateDTOs() {
+        List<SeasonalRateDTO> dtos = new ArrayList<>();
+        for (SeasonalRate seasonalRate : seasonalRates) {
+            dtos.add(new SeasonalRateDTO(seasonalRate.getPrice(),
+                    new DateRangeDTO(
+                            formatDate(seasonalRate.getPeriod().getStartDate()),
+                            formatDate(seasonalRate.getPeriod().getEndDate()))));
+        }
+        return dtos;
+    }
+
+    private List<DateRangeDTO> formAvailabilityDTOs() {
+        List<DateRangeDTO> dtos = new ArrayList<>();
+        for (DateRange dateRange : availability) {
+            dtos.add(new DateRangeDTO(formatDate(dateRange.getStartDate()),
+                    formatDate(dateRange.getEndDate())));
+        }
+        return dtos;
+    }
+
+    private int find(List<Timestamp> dates, Timestamp date) {
+        for(int i=0; i<dates.size(); i++) {
+            if(dates.get(i).getTime() == date.getTime()) return i;
+        }
+        return -1;
+    }
+
+    private void availableDateSelected(Timestamp date) {
+        Log.d(date.toString(), date.toString());
+        int dateIndex = find(availableDates, date);
+
+        if (isSelecting) {
+            Log.d("Is selecting", "Is selecting");
+            if (date.getTime() < availableRangeStart.getTime()) {
+                Log.d("Wrong time", "Wrong time");
+                instructions.setText(getString(R.string.instruction_set_future_date) + formatDate(availableRangeStart));
+                return;
+            }
+
+            if (dateIndex != -1) {
+                Log.d("Occupied", "Occupied");
+                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_date_available) + formatDate(availableRangeStart) + ".");
+                return;
+            }
+
+            isSelecting = false;
+
+            Log.d("New date range", "New date range");
+            instructions.setText(getString(R.string.instruction_accommodation_available) + formatDate(availableRangeStart) + getString(R.string.instruction_to) + formatDate(date) + ".");
+            populateWithDates(availableRangeStart, date);
+        } else {
+            if (dateIndex != -1) {
+                Log.d("Deleted date", "Deleted date");
+                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_deleted));
+                availableDates.remove(dateIndex);
+            } else {
+                Log.d("Selected start", "Selected start");
+                isSelecting = true;
+                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_start_date_selected));
+                availableRangeStart = date;
+                return;
+            }
+        }
+
+        generateAvailability();
+        updateAvailabilityView();
+        Log.d("amogus", availability.toString());
+        Log.d("amogus2", availableDates.toString());
+    }
+
+    private void populateWithDates(Timestamp startDate, Timestamp endDate) {
+        Calendar counterDate = Calendar.getInstance();
+        counterDate.setTime(startDate);
+
+        while (!counterDate.getTime().after(endDate)) {
+            int dateIndex = availableDates.indexOf(counterDate.getTime());
+            if (dateIndex == -1) {
+                availableDates.add(new Timestamp(counterDate.getTime().getTime()));
+            }
+            counterDate.add(Calendar.DATE, 1);
+        }
+    }
+
+    private String formatDate(Timestamp date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
+    private void generateAvailability() {
+        availability.clear();
+
+        if (availableDates.isEmpty()) return;
+
+        availableDates.sort((a, b) -> a.compareTo(b));
+
+        int i = 0;
+        int j = 0;
+        while (i < availableDates.size()) {
+            while (j < availableDates.size() && areDatesWithinRange(availableDates, i, j)) {
+                j++;
+            }
+            availability.add(new DateRange(availableDates.get(i), availableDates.get(j-1)));
+            i = j;
+        }
+    }
+
+    private void updateAvailabilityView() {
+        availabilityText.clear();
+
+        for (DateRange range : availability) {
+            availabilityText.add("Available period: " +
+                    formatDate(range.getStartDate()) +
+                    " to " +
+                    formatDate(range.getEndDate()));
+        }
+        Log.d("dateRangesText", availabilityText.toString());
+        availabilityAdapter.notifyDataSetChanged();
+    }
+
+    private void priceDateSelected(Timestamp date) {
+        double price = 0;
+        try {
+            price = Double.parseDouble(seasonalRatePrice.getText().toString());
+            if (price < 0) {
+                seasonalRatesError.setText("Please enter a valid non-negative price.");
+                return;
+            }
+        }
+        catch (Exception e) {
+            seasonalRatesError.setText("Please enter a valid non-negative price.");
+            return;
+        }
+        seasonalRatesError.setText("");
+
+        int dateIndex = find(priceDates, date);
+        if (dateIndex == -1) {
+            priceValues.put(formatDate(date), price);
+            priceDates.add(date);
+        } else {
+            priceValues.remove(formatDate(date));
+            priceDates.remove(dateIndex);
+        }
+        generateSeasonalRates();
+        updateSeasonalRatesView();
+    }
+
+    private void generateSeasonalRates(){
+        seasonalRates.clear();
+        if(this.priceDates.size()==0) return;
+
+        priceDates.sort((a, b) -> a.compareTo(b));
+        int i = 0;
+        int j = 0;
+        while (i<priceDates.size()) {
+            while(j<priceDates.size() && areDatesWithinRange(priceDates, i, j) && areSamePrice(i,j)) {
+                j++;
+            }
+            seasonalRates.add(new SeasonalRate(priceValues.get(formatDate(priceDates.get(i))), new DateRange(priceDates.get(i), priceDates.get(j-1))));
+            i = j;
+        }
+    }
+
+    private void updateSeasonalRatesView() {
+        seasonalRatesText.clear();
+
+        for (SeasonalRate seasonalRate : seasonalRates) {
+            seasonalRatesText.add("A new price of" +
+                    seasonalRate.getPrice() + "from" +
+                    formatDate(seasonalRate.getPeriod().getStartDate()) + "to" +
+                    formatDate(seasonalRate.getPeriod().getEndDate()) + ".");
+        }
+
+        seasonalRatesAdapter.notifyDataSetChanged();
+    }
+
+    private boolean areSamePrice(int i, int j) {
+        Log.d("dict", priceValues.toString());
+        boolean yes = priceValues.get(formatDate(priceDates.get(i))).equals(priceValues.get(formatDate(priceDates.get(j))));
+        Log.d("yes", Boolean.toString(yes));
+        return yes;
+    }
+
+    private boolean areDatesWithinRange(List<Timestamp> dates, int i, int j) {
+        long range = 1000 * 60 * 60 * 24 * (j - i);
+        return (dates.get(j).getTime() - dates.get(i).getTime() <= range);
     }
 
     private void getData() {
@@ -412,16 +669,16 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
     public void deleteImages(View view) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setMessage("Are you sure you want to delete all images for this accommodation?")
+        dialog.setMessage(getString(R.string.dialog_delete_images))
                 .setCancelable(false)
-                .setPositiveButton("Yes", (dialogInterface, id) -> {
+                .setPositiveButton(getString(R.string.yes), (dialogInterface, id) -> {
                     toDeleteImages = oldImages;
                     newImages.clear();
                     viewPager.setAdapter(new ImageAdapter(getApplicationContext(), new ArrayList<>()));
                     Log.d("OpenDoors", "Images set to delete.");
-                    Toast.makeText(this, "Images set to be deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.toast_delete_images), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
+                .setNegativeButton(getString(R.string.no), (dialogInterface, id) -> dialogInterface.cancel());
         dialog.create().show();
     }
 
@@ -441,7 +698,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 selectImage();
             } else {
-                Toast.makeText(this, "No permission to open camera.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.toast_no_camera_permission), Toast.LENGTH_SHORT).show();
             }
         }
     }

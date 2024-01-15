@@ -2,6 +2,7 @@ package com.bookingapptim24.clients;
 
 
 import com.bookingapptim24.BuildConfig;
+import com.bookingapptim24.OpenDoors;
 import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
@@ -16,14 +17,17 @@ public class ClientUtils {
     public static final String SERVICE_API_PATH = "http://"+ BuildConfig.IP_ADDR +":9090/open-doors/";
 
     public static OkHttpClient test() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        TokenInterceptor tokenInterceptor = new TokenInterceptor(new SessionManager(OpenDoors.getContext()));
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(120, TimeUnit.SECONDS)
                 .readTimeout(120, TimeUnit.SECONDS)
                 .writeTimeout(120, TimeUnit.SECONDS)
-                .addInterceptor(interceptor).build();
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(tokenInterceptor)
+                .build();
 
         return client;
     }

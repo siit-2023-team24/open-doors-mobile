@@ -20,6 +20,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 public class SessionManager {
+    private static final String TOKEN = "token";
     private static final String SHARED_PREF_NAME = "user_session";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_ROLE = "role";
@@ -46,6 +47,7 @@ public class SessionManager {
             String role = jsonObject.getString("role");
             Long id = jsonObject.getLong("id");
             System.out.println(username + " " + role + " " + id.toString());
+            editor.putString(TOKEN, accessToken);
             editor.putString(KEY_USERNAME, username);
             editor.putString(KEY_ROLE, role);
             editor.putLong(KEY_ID, id);
@@ -59,6 +61,8 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_USERNAME, null) != null;
     }
 
+    public String getToken() { return sharedPreferences.getString(TOKEN, null); }
+
     public String getUsername() {
         return sharedPreferences.getString(KEY_USERNAME, null);
     }
@@ -70,6 +74,7 @@ public class SessionManager {
     public Long getUserId() {
         return sharedPreferences.getLong(KEY_ID, -1);
     }
+
 
     public void logout() {
         editor.clear();
