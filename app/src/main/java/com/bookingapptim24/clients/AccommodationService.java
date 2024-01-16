@@ -3,6 +3,7 @@ package com.bookingapptim24.clients;
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
+import com.bookingapptim24.models.PendingAccommodationWhole;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 
 import java.util.ArrayList;
