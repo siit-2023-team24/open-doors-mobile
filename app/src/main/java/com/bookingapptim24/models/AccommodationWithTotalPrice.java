@@ -3,6 +3,7 @@ package com.bookingapptim24.models;
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.enums.AccommodationType;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -207,5 +208,24 @@ public class AccommodationWithTotalPrice {
 
     public void setIsFavoriteForGuest(boolean isFavoriteForGuest) {
         this.isFavoriteForGuest = isFavoriteForGuest;
+    }
+    public boolean isDateAvailable(long targetTime) {
+        if (availability != null && !availability.isEmpty()) {
+            for (DateRange dateRange : availability) {
+                Timestamp startDate = dateRange.getStartDate();
+                Timestamp endDate = dateRange.getEndDate();
+
+                if (startDate != null && endDate != null) {
+                    long startTime = startDate.getTime();
+                    long endTime = endDate.getTime();
+
+                    // Check if the target date is within the range
+                    if (targetTime >= startTime && targetTime <= endTime) {
+                        return true; // Date is available
+                    }
+                }
+            }
+        }
+        return false; // Date is not available or availability information is not provided
     }
 }

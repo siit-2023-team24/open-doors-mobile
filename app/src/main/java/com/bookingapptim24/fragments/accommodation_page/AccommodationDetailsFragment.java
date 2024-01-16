@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -129,6 +132,18 @@ public class AccommodationDetailsFragment extends Fragment {
         } else {
             view = inflater.inflate(R.layout.accommodation_details_guest, container, false);
             Log.i("Fragment inflated", "Inflated accommodation_details_guest");
+            Button makeReservationButton = view.findViewById(R.id.make_reservation_button);
+            makeReservationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle args = new Bundle();
+                    ArrayList<AccommodationWithTotalPrice> accommodationContainer = new ArrayList<>();
+                    accommodationContainer.add(accommodationDetails);
+                    args.putSerializable("accommodationContainer", accommodationContainer);
+                    NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+                    navController.navigate(R.id.nav_fragment_make_reservation_request, args);
+                }
+            });
 
         }
         loadAccommodationDetails(getArguments().getLong(ARG_ACCOMMODATION_ID), view);

@@ -102,6 +102,7 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="not_rated">Not rated</string>
+    <string name="reservation_pricing">Pricing</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>

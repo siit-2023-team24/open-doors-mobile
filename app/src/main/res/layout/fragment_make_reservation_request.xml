@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.accommodation_page.MakeReservationRequestFragment"
+    android:id="@+id/fragment_make_reservation_request"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/make_reservation"
+        android:textSize="20dp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/numberOfGuestsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Number of Guests"
+        android:inputType="number"
+        android:layout_marginTop="16dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/reservationStartDateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_date"
+            android:layout_alignParentLeft="true"
+            android:backgroundTint="?attr/colorTertiary"
+            android:textColor="?attr/colorOnTertiary"/>
+
+        <Button
+            android:id="@+id/reservationEndDateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/end_date"
+            android:layout_alignParentRight="true"
+            android:backgroundTint="?attr/colorTertiary"
+            android:textColor="?attr/colorOnTertiary"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/make_reservation_request_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/make_reservation"
+        android:layout_marginTop="16dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/seasonalRatesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pricingTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reservation_pricing"
+            android:textColor="#98928F"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:columnCount="3"
+            android:orientation="horizontal">
+
+        </GridLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
