@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,11 +40,24 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         AccommodationSearchDTO accommodation = accommodationList.get(position);
-
 //        holder.imageView.setImageResource(accommodation.getImageResource());
         holder.nameTextView.setText(accommodation.getName());
-        holder.ratingTextView.setText(String.valueOf(accommodation.getAverageRating()));
-        holder.priceTextView.setText(String.valueOf(accommodation.getPrice()));
+        if(accommodation.getAverageRating() != null) {
+            holder.ratingStarView.setVisibility(View.VISIBLE);
+            holder.ratingTextView.setText(String.valueOf(accommodation.getAverageRating()));
+            holder.ratingTextView.setVisibility(View.VISIBLE);
+        } else {
+            holder.notRatedTextView.setVisibility(View.VISIBLE);
+        }
+        if(accommodation.getTotalPrice() != null && accommodation.getTotalPrice() != 0.0) {
+            holder.totalPriceTextView.setText(String.valueOf(accommodation.getTotalPrice()) + " rsd total");
+            holder.totalPriceTextView.setVisibility(View.VISIBLE);
+        }
+        if(accommodation.isPricePerGuest()) {
+            holder.priceTextView.setText(String.valueOf(accommodation.getPrice()) + " rsd/guest");
+        } else {
+            holder.priceTextView.setText(String.valueOf(accommodation.getPrice()) + " rsd/night");
+        }
 
         holder.heartImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,17 +83,23 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView nameTextView;
+        ImageView ratingStarView;
         TextView ratingTextView;
         TextView priceTextView;
+        TextView totalPriceTextView;
         ImageView heartImage;
+        TextView notRatedTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.accommodationImage);
             nameTextView = itemView.findViewById(R.id.accommodationName);
+            ratingStarView = itemView.findViewById(R.id.ratingStar);
             ratingTextView = itemView.findViewById(R.id.accommodationRating);
             priceTextView = itemView.findViewById(R.id.accommodationPrice);
+            totalPriceTextView = itemView.findViewById(R.id.accommodationPriceTotal);
             heartImage = itemView.findViewById(R.id.heartImage);
+            notRatedTextView = itemView.findViewById(R.id.notRated);
         }
 
         private void openAccommodationDetailsFragment(AccommodationSearchDTO accommodation) {

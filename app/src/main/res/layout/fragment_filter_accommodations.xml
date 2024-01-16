@@ -1,14 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.home_page.FilterAccommodationsFragment"
+    android:id="@+id/fragment_filter_accommodations"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.home_page.FilterAccommodationsFragment">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/filter_accommodations"
+        android:textSize="20dp"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/accommodation_types"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:id="@+id/accommodationTypesLayout">
+
+        <!-- This is a placeholder for dynamically added CheckBoxes -->
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/price_range"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/startPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Min price"
+        android:inputType="number"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/endPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Max price"
+        android:inputType="number"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/amenities"
+        android:textSize="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:id="@+id/amenitiesFilterLayout">
+
+        <!-- This is a placeholder for dynamically added CheckBoxes -->
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/filterButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

@@ -44,21 +44,29 @@
             android:text="Accommodation 8"
             android:layout_weight="9" />
         <ImageView
+            android:id="@+id/ratingStar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="16sp"
             android:src="@drawable/ic_star"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/accommodationRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="16sp"
-            android:text="5.0"
             android:layout_weight="0.5"
-            android:textAlignment="textStart"/>
+            android:textAlignment="textStart"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/notRated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_rated"
+            android:visibility="gone"/>
 
     </LinearLayout>
     <LinearLayout
@@ -78,7 +86,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="4500 rsd total"
-            android:textAlignment="textEnd"/>
+            android:textAlignment="textEnd"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

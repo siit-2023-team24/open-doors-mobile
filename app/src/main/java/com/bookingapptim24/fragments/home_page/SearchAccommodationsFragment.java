@@ -19,13 +19,14 @@ import android.widget.EditText;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.models.AccommodationSearchDTO;
-import com.bookingapptim24.models.SearchAndFilter;
+import com.bookingapptim24.models.SearchAndFilterAccommodations;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 
 public class SearchAccommodationsFragment extends Fragment {
     private View view;
-    private SearchAndFilter searchAndFilterDTO;
+    private SearchAndFilterAccommodations searchAndFilterDTO;
     private Timestamp selectedStartDate;
     private Timestamp selectedEndDate;
 
@@ -62,9 +63,18 @@ public class SearchAccommodationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                if(selectedStartDate != null)
+                if(searchAndFilterDTO.getStartDate() != null) {
+                    try {
+                        Date date = dateFormat.parse(searchAndFilterDTO.getStartDate());
+                        long timestamp = date.getTime();
+                        selectedStartDate = new Timestamp(timestamp);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     calendar.setTimeInMillis(selectedStartDate.getTime());
+                }
 
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
@@ -92,6 +102,18 @@ public class SearchAccommodationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                if(searchAndFilterDTO.getEndDate() != null) {
+                    try {
+                        Date date = dateFormat.parse(searchAndFilterDTO.getEndDate());
+                        long timestamp = date.getTime();
+                        selectedEndDate = new Timestamp(timestamp);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    calendar.setTimeInMillis(selectedEndDate.getTime());
+                }
 
                 if(selectedEndDate != null)
                     calendar.setTimeInMillis(selectedEndDate.getTime());
@@ -129,8 +151,15 @@ public class SearchAccommodationsFragment extends Fragment {
 
                 if(!locationText.isEmpty())
                     searchAndFilterDTO.setLocation(locationText.trim());
-                if(!numOfGuestsText.isEmpty())
-                    searchAndFilterDTO.setGuestNumber(Integer.getInteger(numOfGuestsText));
+                if (!numOfGuestsText.isEmpty()) {
+                    try {
+                        int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
+                        searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
+                    } catch (NumberFormatException e) {
+                        // Handle the case where numOfGuestsText is not a valid integer
+                        e.printStackTrace();
+                    }
+                }
 
                 searchAccommodations();
             }
@@ -144,15 +173,37 @@ public class SearchAccommodationsFragment extends Fragment {
         super.onResume();
 
         Bundle args = getArguments();
-        ArrayList<SearchAndFilter> searchAndFilters = (ArrayList<SearchAndFilter>) args.getSerializable("searchAndFilterDTO");
+        ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
         searchAndFilterDTO = searchAndFilters.get(0);
+        Log.d("sfDTO", searchAndFilterDTO.toString());
         if(searchAndFilterDTO.getLocation() != null) {
             EditText location = view.findViewById(R.id.locationEditText);
             location.setText(searchAndFilterDTO.getLocation());
         }
         if(searchAndFilterDTO.getGuestNumber() != null) {
             EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-            numOfGuests.setText(searchAndFilterDTO.getGuestNumber());
+            numOfGuests.setText(searchAndFilterDTO.getGuestNumber().toString());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        EditText location = view.findViewById(R.id.locationEditText);
+        EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
+        String locationText = location.getText().toString().trim();
+        String numOfGuestsText = numOfGuests.getText().toString().trim();
+
+        if(!locationText.isEmpty())
+            searchAndFilterDTO.setLocation(locationText.trim());
+        if (!numOfGuestsText.isEmpty()) {
+            try {
+                int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
+                searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -173,8 +224,12 @@ public class SearchAccommodationsFragment extends Fragment {
                     for(AccommodationSearchDTO a : accommodations)
                         Log.d("REZ", a.toString());
 
+                    ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+                    searchAndFilters.add(searchAndFilterDTO);
+
                     Bundle args = new Bundle();
                     args.putSerializable("accommodations", accommodations);
+                    args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
                     NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
                     navController.navigate(R.id.nav_show_all, args);

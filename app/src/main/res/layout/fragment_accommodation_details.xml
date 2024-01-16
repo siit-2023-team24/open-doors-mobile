@@ -44,9 +44,18 @@
             android:id="@+id/ratingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@android:drawable/star_on"
+            android:drawableStart="@drawable/ic_star"
             android:drawablePadding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/notRatedTextView"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/not_rated"
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/reviewsTextView"
@@ -97,12 +106,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:columnCount="4"
-            android:orientation="horizontal"
-            android:rowCount="2">
+            android:columnCount="3"
+            android:orientation="horizontal">
 
-            <!-- Placeholder for Amenities -->
-            <!-- Add more amenities as needed -->
         </GridLayout>
     </LinearLayout>
 

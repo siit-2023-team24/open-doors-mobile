@@ -1,11 +1,9 @@
 package com.bookingapptim24.clients;
 
-import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
-import com.bookingapptim24.models.PendingAccommodationWhole;
-import com.bookingapptim24.models.SearchAndFilter;
+import com.bookingapptim24.models.SearchAndFilterAccommodations;
 
 import java.util.ArrayList;
 
@@ -40,8 +38,21 @@ public interface AccommodationService {
             "Content-Type:application/json"
     })
     @POST("accommodations/search")
-    Call<ArrayList<AccommodationSearchDTO>> searchAccommodations(@Body SearchAndFilter searchAndFilterDTO);
+    Call<ArrayList<AccommodationSearchDTO>> searchAccommodations(@Body SearchAndFilterAccommodations searchAndFilterDTO);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/accommodationTypes")
+    Call<ArrayList<String>> getAccommodationTypes();
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/amenities")
+    Call<ArrayList<String>> getAmenities();
 
     @Headers({
             "User-Agent: Mobile-Android",

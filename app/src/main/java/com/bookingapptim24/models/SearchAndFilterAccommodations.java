@@ -3,11 +3,10 @@ package com.bookingapptim24.models;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SearchAndFilter {
+public class SearchAndFilterAccommodations {
     private String location;
     private Integer guestNumber;
     private String startDate;
@@ -17,13 +16,13 @@ public class SearchAndFilter {
     private Set<AccommodationType> types;
     private Set<Amenity> amenities;
 
-    public SearchAndFilter() {
+    public SearchAndFilterAccommodations() {
         this.types = new HashSet<>();
         this.amenities = new HashSet<>();
     }
 
-    public SearchAndFilter(String location, Integer guestNumber, String startDate, String endDate,
-                              Double startPrice, Double endPrice, Set<AccommodationType> types, Set<Amenity> amenities) {
+    public SearchAndFilterAccommodations(String location, Integer guestNumber, String startDate, String endDate,
+                                         Double startPrice, Double endPrice, Set<AccommodationType> types, Set<Amenity> amenities) {
         this.location = location;
         this.guestNumber = guestNumber;
         this.startDate = startDate;

@@ -369,6 +369,7 @@ public class AccommodationDetailsFragment extends Fragment {
         TextView nameTextView = view.findViewById(R.id.nameTextView);
         TextView cityCountryTextView = view.findViewById(R.id.cityCountryTextView);
         TextView ratingTextView = view.findViewById(R.id.ratingTextView);
+        TextView notRatedTextView = view.findViewById(R.id.notRatedTextView);
         TextView reviewsTextView = view.findViewById(R.id.reviewsTextView);
         TextView descriptionTextView = view.findViewById(R.id.descriptionTextView);
 
@@ -376,7 +377,12 @@ public class AccommodationDetailsFragment extends Fragment {
         //Glide.with(requireContext()).load(accommodation.getImage()).into(imageView);
         nameTextView.setText(accommodationDetails.getName());
         cityCountryTextView.setText(accommodationDetails.getCity() + ", " + accommodationDetails.getCountry());
-        ratingTextView.setText(String.valueOf(accommodationDetails.getAverageRating()));
+        if(accommodationDetails.getAverageRating() != null) {
+            ratingTextView.setText(String.valueOf(accommodationDetails.getAverageRating()));
+            ratingTextView.setVisibility(View.VISIBLE);
+        } else {
+            notRatedTextView.setVisibility(View.VISIBLE);
+        }
         descriptionTextView.setText(accommodationDetails.getDescription());
 
         // Add amenities dynamically (replace this with your actual data)
@@ -384,6 +390,7 @@ public class AccommodationDetailsFragment extends Fragment {
         for (String amenity : accommodationDetails.getAmenities()) {
             TextView amenityTextView = new TextView(requireContext());
             amenityTextView.setText(amenity);
+            amenityTextView.setTextSize(16);
             amenitiesLayout.addView(amenityTextView);
         }
     }
