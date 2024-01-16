@@ -101,6 +101,7 @@
     <string name="price_range">Price range</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="not_rated">Not rated</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>
