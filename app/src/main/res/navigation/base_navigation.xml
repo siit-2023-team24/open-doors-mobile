@@ -109,4 +109,10 @@
         android:label="@string/reservations_title"
         tools:layout="@layout/fragment_reservation_request_list_page"/>
 
+    <fragment android:id="@+id/nav_report_user"
+        android:name="com.bookingapptim24.fragments.user_reports.WriteReportCardListFragment"
+        android:label="@string/report_user"
+        tools:layout="@layout/fragment_write_report_card_list"
+        />
+
 </navigation>

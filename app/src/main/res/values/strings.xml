@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BookingAppTim24</string>
     <string name="app_title">Open Doors</string>
-    <string name="date_format">yyyy-MM-dd</string>
+    <string name="date_format">MM/dd/yyyy</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="unexpected_error">Unexpected error.</string>
@@ -45,6 +45,7 @@
     <string name="automatic_true">automatic</string>
     <string name="automatic_false">manual</string>
     <string name="acc_description">Description:</string>
+    <string name="acc_description_hint">Provide a description</string>
     <string name="acc_type">Accommodation type:</string>
     <string name="create_deadline">Deadline for booking a reservation:</string>
     <string name="min_guests">Minimal number of guests:</string>
@@ -58,14 +59,15 @@
     <string name="click_available_dates">Click the dates when the accommodation is available.</string>
     <string name="click_seasonal_rates_dates">Click the dates that should have the seasonal rate.</string>
     <string name="instruction_initial">Click a date to choose the start of an available period.</string>
-    <string name="instruction_set_future_date">Please select a date equal to or after the starting date of the available period: </string>
-    <string name="instruction_date_available"> is already marked as available. Please select a different date for the end of the available period starting with </string>
-    <string name="instruction_accommodation_available">"Accommodation is available from "</string>
-    <string name="instruction_to"> to</string>
-    <string name="instruction_date">Date </string>
-    <string name="instruction_deleted"> deleted.</string>
-    <string name="instruction_start_date_selected"> selected as start of available period. Please select the end of the available period.</string>
+    <string name="instruction_set_future_date">Please select a date equal to or after the starting date of the available period: %s</string>
+    <string name="instruction_date_available">Date %s is already marked as available. Please select a different date for the end of the available period starting with %s.</string>
+    <string name="instruction_accommodation_available">"Accommodation is available from %s to %s."</string>
+    <string name="instruction_deleted">Date %s deleted.</string>
+    <string name="instruction_start_date_selected">Date %s selected as start of available period. Please select the end of the available period.</string>
+    <string name="availability_new_range">Available period: %s to %s.</string>
     <string name="seasonal_rate_price">Price of seasonal rate:</string>
+    <string name="seasonal_rate_error">Please enter a valid non-negative price.</string>
+    <string name="seasonal_rate_new_rate">A new price of %f from %s to %s.</string>
     <string name="toast_accommodation_created">Accommodation created successfully.</string>
     <string name="dialog_delete_images">Are you sure you want to delete all images for this accommodation?</string>
     <string name="toast_delete_images">Images set to be deleted</string>
@@ -83,6 +85,9 @@
     <string name="reported_reviews">Reported reviews</string>
     <string name="pending_accommodations">Pending accommodations</string>
     <string name="accommodation_details">Accommodation details</string>
+    <string name="report_guest">Report a guest</string>
+    <string name="report_host">Report a host</string>
+    <string name="report_user">Report a user</string>
 
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
@@ -130,6 +135,7 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="not_rated">Not rated</string>
+    <string name="file_report">File report</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>
@@ -143,7 +149,7 @@
     <!--    Helpers-->
     <string name="accommodation_image_descriptor">Accommodation image</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+<!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
 
     <!--    Reservation card-->
     <string name="no_accommodation_name">No accommodation name</string>
@@ -157,4 +163,11 @@
     <!--    Accommodation-->
     <!--    <string name="accommodation_name_and_id"></string>-->
 
+
+<!--    User reports-->
+    <string name="hosts_you_have_stayed_with">Hosts you have stayed with:</string>
+    <string name="guests_you_have_hosted">Guests you have hosted:</string>
+    <string name="no_users_to_report">There are no %s for you to report.</string>
+    <string name="reason_for_report">Reason for report...</string>
+    <string name="no_reason_error">Please provide a reason for the report.</string>
 </resources>

@@ -45,6 +45,7 @@ import com.bookingapptim24.models.SeasonalRateDTO;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private Spinner countrySpinner;
     private Spinner typeSpinner;
     private EditText nameET;
-    private EditText descriptionET;
+    private TextInputEditText descriptionET;
     private EditText defaultPriceET;
     private EditText cityET;
     private EditText streetET;
@@ -426,33 +427,26 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         int dateIndex = find(availableDates, date);
 
         if (isSelecting) {
-            Log.d("Is selecting", "Is selecting");
             if (date.getTime() < availableRangeStart.getTime()) {
-                Log.d("Wrong time", "Wrong time");
-                instructions.setText(getString(R.string.instruction_set_future_date) + formatDate(availableRangeStart));
+                instructions.setText(getString(R.string.instruction_set_future_date, viewDate(availableRangeStart)));
                 return;
             }
 
             if (dateIndex != -1) {
-                Log.d("Occupied", "Occupied");
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_date_available) + formatDate(availableRangeStart) + ".");
+                instructions.setText(getString(R.string.instruction_date_available, viewDate(date), viewDate(availableRangeStart)));
                 return;
             }
 
             isSelecting = false;
-
-            Log.d("New date range", "New date range");
-            instructions.setText(getString(R.string.instruction_accommodation_available) + formatDate(availableRangeStart) + getString(R.string.instruction_to) + formatDate(date) + ".");
+            instructions.setText(getString(R.string.instruction_accommodation_available, viewDate(availableRangeStart), viewDate(date)));
             populateWithDates(availableRangeStart, date);
         } else {
             if (dateIndex != -1) {
-                Log.d("Deleted date", "Deleted date");
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_deleted));
+                instructions.setText(getString(R.string.instruction_deleted, viewDate(date)));
                 availableDates.remove(dateIndex);
             } else {
-                Log.d("Selected start", "Selected start");
                 isSelecting = true;
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_start_date_selected));
+                instructions.setText(getString(R.string.instruction_start_date_selected, viewDate(date)));
                 availableRangeStart = date;
                 return;
             }
@@ -460,8 +454,6 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
         generateAvailability();
         updateAvailabilityView();
-        Log.d("amogus", availability.toString());
-        Log.d("amogus2", availableDates.toString());
     }
 
     private void populateWithDates(Timestamp startDate, Timestamp endDate) {
@@ -479,6 +471,11 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
     private String formatDate(Timestamp date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
+    private String viewDate(Timestamp date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format));
         return sdf.format(date);
     }
 
@@ -504,12 +501,9 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         availabilityText.clear();
 
         for (DateRange range : availability) {
-            availabilityText.add("Available period: " +
-                    formatDate(range.getStartDate()) +
-                    " to " +
-                    formatDate(range.getEndDate()));
+            availabilityText.add(getString(R.string.availability_new_range,
+                    viewDate(range.getStartDate()), viewDate(range.getEndDate())));
         }
-        Log.d("dateRangesText", availabilityText.toString());
         availabilityAdapter.notifyDataSetChanged();
     }
 
@@ -518,12 +512,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         try {
             price = Double.parseDouble(seasonalRatePrice.getText().toString());
             if (price < 0) {
-                seasonalRatesError.setText("Please enter a valid non-negative price.");
+                seasonalRatesError.setText(getString(R.string.seasonal_rate_error));
                 return;
             }
         }
         catch (Exception e) {
-            seasonalRatesError.setText("Please enter a valid non-negative price.");
+            seasonalRatesError.setText(getString(R.string.seasonal_rate_error));
             return;
         }
         seasonalRatesError.setText("");
@@ -560,20 +554,16 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         seasonalRatesText.clear();
 
         for (SeasonalRate seasonalRate : seasonalRates) {
-            seasonalRatesText.add("A new price of" +
-                    seasonalRate.getPrice() + "from" +
-                    formatDate(seasonalRate.getPeriod().getStartDate()) + "to" +
-                    formatDate(seasonalRate.getPeriod().getEndDate()) + ".");
+            seasonalRatesText.add(getString(R.string.seasonal_rate_new_rate, seasonalRate.getPrice(),
+                    viewDate(seasonalRate.getPeriod().getStartDate()),
+                    viewDate(seasonalRate.getPeriod().getEndDate())));
         }
 
         seasonalRatesAdapter.notifyDataSetChanged();
     }
 
     private boolean areSamePrice(int i, int j) {
-        Log.d("dict", priceValues.toString());
-        boolean yes = priceValues.get(formatDate(priceDates.get(i))).equals(priceValues.get(formatDate(priceDates.get(j))));
-        Log.d("yes", Boolean.toString(yes));
-        return yes;
+        return priceValues.get(formatDate(priceDates.get(i))).equals(priceValues.get(formatDate(priceDates.get(j))));
     }
 
     private boolean areDatesWithinRange(List<Timestamp> dates, int i, int j) {

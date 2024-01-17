@@ -21,6 +21,10 @@
         <item android:id="@+id/nav_profile"
             android:title="@string/profile_title"/>
 
+
+        <item android:id="@+id/nav_report_user"
+            android:title="@string/report_guest"/>
+
     </group>
 
 </menu>

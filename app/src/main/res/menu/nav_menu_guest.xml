@@ -2,7 +2,8 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    >
 
     <group android:checkableBehavior="single">
 
@@ -17,6 +18,9 @@
 
         <item android:id="@+id/nav_profile"
             android:title="@string/profile_title"/>
+
+        <item android:id="@+id/nav_report_user"
+            android:title="@string/report_host"/>
 
     </group>
 

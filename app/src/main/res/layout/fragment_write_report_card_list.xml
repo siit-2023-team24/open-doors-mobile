@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/user_report_list"
+    android:orientation="vertical"
+    tools:context=".fragments.user_reports.WriteReportCardListFragment">
+
+    <TextView
+        android:id="@+id/reportable_users_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:paddingHorizontal="50px"
+        android:text="TEST"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginVertical="20dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/no_users_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:paddingHorizontal="70px"
+        android:text="TEST1"
+        android:textSize="25sp"
+        android:layout_marginVertical="20dp">
+
+    </TextView>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/write_report_card_item"/>
+
+</LinearLayout>
