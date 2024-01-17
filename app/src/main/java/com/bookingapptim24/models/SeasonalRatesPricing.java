@@ -39,6 +39,10 @@ public class SeasonalRatesPricing {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    public Integer getNumberOfNights() { return numberOfNights; }
+
+    public void setNumberOfNights(Integer numberOfNights) { this.numberOfNights = numberOfNights; }
     @Override
     public String toString() {
         return "SeasonalRatePricingDTO{" +

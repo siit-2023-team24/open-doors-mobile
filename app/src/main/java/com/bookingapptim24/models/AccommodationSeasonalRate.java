@@ -5,10 +5,10 @@ import java.sql.Timestamp;
 public class AccommodationSeasonalRate {
 
     private Long accommodationId;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private String startDate;
+    private String endDate;
 
-    public AccommodationSeasonalRate(Long accommodationId, Timestamp startDate, Timestamp endDate) {
+    public AccommodationSeasonalRate(Long accommodationId, String startDate, String endDate) {
         this.accommodationId = accommodationId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -22,19 +22,19 @@ public class AccommodationSeasonalRate {
         this.accommodationId = accommodationId;
     }
 
-    public Timestamp getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

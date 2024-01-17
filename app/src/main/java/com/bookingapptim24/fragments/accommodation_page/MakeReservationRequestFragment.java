@@ -1,32 +1,48 @@
 package com.bookingapptim24.fragments.accommodation_page;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Parcel;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bookingapptim24.R;
+import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
+import com.bookingapptim24.models.AccommodationSearchDTO;
+import com.bookingapptim24.models.AccommodationSeasonalRate;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.DateRange;
 import com.bookingapptim24.models.MakeReservationRequest;
+import com.bookingapptim24.models.SearchAndFilterAccommodations;
+import com.bookingapptim24.models.SeasonalRatesPricing;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,13 +51,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MakeReservationRequestFragment extends Fragment {
     private View view;
     private SessionManager sessionManager;
-    private MakeReservationRequest requestDTO;
     private AccommodationWithTotalPrice accommodation;
     private Timestamp selectedStartDate;
     private Timestamp selectedEndDate;
+    private MakeReservationRequest requestDTO;
 
 
     public MakeReservationRequestFragment() {}
@@ -63,13 +83,185 @@ public class MakeReservationRequestFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_make_reservation_request, container, false);
 
         Button makeReservationButton = view.findViewById(R.id.make_reservation_request_button);
+        EditText numberOfGuestsEditText = view.findViewById(R.id.numberOfGuestsEditText);
+
+        makeReservationButton.setEnabled(false);
+
+        makeStartDatePicker();
+        makeEndDatePicker();
+        makeFilterForGuestNumber();
+
+        numberOfGuestsEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                boolean isInputNotEmpty = charSequence.length() > 0;
+
+                try {
+                    int numOfGuestsValue = Integer.parseInt(charSequence.toString());
+                    requestDTO.setNumberOfGuests(numOfGuestsValue);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+
+                if(isInputNotEmpty && selectedStartDate != null && selectedEndDate != null) {
+                    makeReservationButton.setEnabled(true);
+                    getPricing();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+
+        makeReservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeReservationRequest();
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        requestDTO = new MakeReservationRequest();
+        requestDTO.setAccommodationId(accommodation.getId());
+        requestDTO.setGuestId(sessionManager.getUserId());
+    }
+
+    private void showPricing(ArrayList<SeasonalRatesPricing> rates) {
+        LinearLayout seasonalRatesLayout = view.findViewById(R.id.seasonalRatesLayout);
+        LinearLayout rateLayout = new LinearLayout();
+        for (SeasonalRatesPricing rate : rates) {
+            TextView amenityTextView = new TextView(requireContext());
+            amenityTextView.setText(rate.getPrice() + " rsd x " + rate.getNumberOfNights() + " nights");
+            amenityTextView.setTextSize(16);
+            seasonalRatesLayout.addView(amenityTextView);
+        }
+    }
+
+    private void getPricing() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        AccommodationSeasonalRate accommodationSeasonalRateDTO = new AccommodationSeasonalRate(
+                accommodation.getId(),
+                dateFormat.format(selectedStartDate),
+                dateFormat.format(selectedEndDate));
+        Call<ArrayList<SeasonalRatesPricing>> call = ClientUtils.accommodationService.getPricing(accommodationSeasonalRateDTO);
+        call.enqueue(new Callback<ArrayList<SeasonalRatesPricing>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SeasonalRatesPricing>> call, Response<ArrayList<SeasonalRatesPricing>> response) {
+                if(response.isSuccessful()) {
+                    ArrayList<SeasonalRatesPricing> rates = response.body();
+                    showPricing(rates);
+
+
+                } else {
+                    Log.d("REZ","Meesage recieved: "+response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SeasonalRatesPricing>> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private void makeReservationRequest() {
+        EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
+        String numOfGuestsText = numOfGuests.getText().toString().trim();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        int numOfGuestsValue = 0;
+        try {
+            numOfGuestsValue = Integer.parseInt(numOfGuestsText);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        MakeReservationRequest makeReservationRequest = new MakeReservationRequest(
+                accommodation.getId(), sessionManager.getUserId(), dateFormat.format(selectedStartDate),
+                dateFormat.format(selectedEndDate), numOfGuestsValue, 0.0
+        );
+
+    }
+
+    public void makeStartDatePicker() {
         Button startDateButton = view.findViewById(R.id.reservationStartDateButton);
+
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+
+        CalendarConstraints.DateValidator dateValidator = new CalendarConstraints.DateValidator() {
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(@NonNull Parcel dest, int flags) {
+
+            }
+
+            @Override
+            public boolean isValid(long date) {
+                long currentDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
+                if(selectedEndDate != null) {
+                    if(date > selectedEndDate.getTime()) return false;
+                    if(!accommodation.isDateRangeAvailable(date, selectedEndDate.getTime())) return false;
+                }
+                if(date < currentDate)
+                    return false;
+
+                return accommodation.isDateAvailable(date);
+            }
+        };
+        constraintsBuilder.setValidator(dateValidator);
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("SELECT A START DATE");
+        materialDateBuilder.setCalendarConstraints(constraintsBuilder.build());
+
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
+        startDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+            }
+        });
+
+        materialDatePicker.addOnPositiveButtonClickListener(
+                new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onPositiveButtonClick(Long selection) {
+                        selectedStartDate = new Timestamp(selection);
+
+                        Button makeReservationButton = view.findViewById(R.id.make_reservation_request_button);
+                        EditText numberOfGuestsEditText = view.findViewById(R.id.numberOfGuestsEditText);
+                        if(!numberOfGuestsEditText.getText().toString().trim().isEmpty() && selectedStartDate != null && selectedEndDate != null) {
+                            makeReservationButton.setEnabled(true);
+                            getPricing();
+                        }
+                    }
+                }
+        );
+    }
+
+    public void makeEndDatePicker() {
         Button endDateButton = view.findViewById(R.id.reservationEndDateButton);
 
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
@@ -88,90 +280,54 @@ public class MakeReservationRequestFragment extends Fragment {
 
             @Override
             public boolean isValid(long date) {
+                long currentDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
+                if(selectedStartDate != null) {
+                    if(date < selectedStartDate.getTime()) return false;
+                    if(!accommodation.isDateRangeAvailable(selectedStartDate.getTime(), date)) return false;
+                }
+                if(date < currentDate)
+                    return false;
+
                 return accommodation.isDateAvailable(date);
             }
         };
         constraintsBuilder.setValidator(dateValidator);
 
-        MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker();
-        materialDateBuilder.setTitleText("SELECT A DATE");
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("SELECT AN END DATE");
         materialDateBuilder.setCalendarConstraints(constraintsBuilder.build());
 
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
 
-        startDateButton.setOnClickListener(new View.OnClickListener() {
+        endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 materialDatePicker.show(requireActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
             }
         });
 
         materialDatePicker.addOnPositiveButtonClickListener(
-                new MaterialPickerOnPositiveButtonClickListener() {
+                new MaterialPickerOnPositiveButtonClickListener<Long>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void onPositiveButtonClick(Object selection) {
-                        Log.d("DATEPICKER", "KLIKNUT SAM");
+                    public void onPositiveButtonClick(Long selection) {
+                        selectedEndDate = new Timestamp(selection);
+
+                        Button makeReservationButton = view.findViewById(R.id.make_reservation_request_button);
+                        EditText numberOfGuestsEditText = view.findViewById(R.id.numberOfGuestsEditText);
+                        if(!numberOfGuestsEditText.getText().toString().trim().isEmpty() && selectedStartDate != null && selectedEndDate != null) {
+                            makeReservationButton.setEnabled(true);
+                            getPricing();
+                        }
                     }
                 }
         );
-
-        endDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar selectedDate = Calendar.getInstance();
-                        selectedDate.set(year, month, dayOfMonth);
-
-                        long timestamp = selectedDate.getTimeInMillis();
-                        selectedEndDate = new Timestamp(timestamp);
-                    }
-                }, year, month, day);
-                if(selectedStartDate != null)
-                    datePickerDialog.getDatePicker().setMinDate(selectedStartDate.getTime());
-                else
-                    datePickerDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
-
-
-                datePickerDialog.show();
-            }
-        });
-        makeReservationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeReservationRequest();
-            }
-        });
-
-        return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-    }
-
-    private void makeReservationRequest() {
-        MakeReservationRequest makeReservationRequest = new MakeReservationRequest();
-        makeReservationRequest.setAccommodationId(accommodation.getId());
-        makeReservationRequest.setGuestId(sessionManager.getUserId());
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if(selectedStartDate != null)
-            requestDTO.setStartDate(dateFormat.format(selectedStartDate));
-        if(selectedEndDate != null)
-            requestDTO.setEndDate(dateFormat.format(selectedEndDate));
-
+    private void makeFilterForGuestNumber() {
+        EditText numberOfGuestsEditText = view.findViewById(R.id.numberOfGuestsEditText);
+        int min = accommodation.getMinGuests();
+        int max = accommodation.getMaxGuests();
+        numberOfGuestsEditText.setFilters(new InputFilter[]{ new InputFilterMinMax(min, max)});
     }
 }

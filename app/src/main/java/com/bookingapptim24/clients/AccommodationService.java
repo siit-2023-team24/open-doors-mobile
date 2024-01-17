@@ -2,9 +2,12 @@ package com.bookingapptim24.clients;
 
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.AccommodationSearchDTO;
+import com.bookingapptim24.models.AccommodationSeasonalRate;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
+import com.bookingapptim24.models.SeasonalRatesPricing;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -57,5 +60,12 @@ public interface AccommodationService {
     })
     @GET("accommodations/host/{hostId}")
     Call<ArrayList<AccommodationHost>> getForHost(@Path("hostId") Long hostId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/seasonalRate")
+    Call<ArrayList<SeasonalRatesPricing>> getPricing(@Body AccommodationSeasonalRate accommodationSeasonalRate);
 
 }

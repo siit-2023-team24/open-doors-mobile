@@ -228,4 +228,22 @@ public class AccommodationWithTotalPrice {
         }
         return false; // Date is not available or availability information is not provided
     }
+
+    public boolean isDateRangeAvailable(long startTime, long endTime) {
+        if (availability != null && !availability.isEmpty()) {
+            for (DateRange dateRange : availability) {
+                Timestamp dateRangeStart = dateRange.getStartDate();
+                Timestamp dateRangeEnd = dateRange.getEndDate();
+
+                if (dateRangeStart != null && dateRangeEnd != null) {
+                    long dateRangeStartTime = dateRangeStart.getTime();
+                    long dateRangeEndTime = dateRangeEnd.getTime();
+
+                    if(startTime >= dateRangeStartTime && startTime <= dateRangeEndTime && endTime >= dateRangeStartTime && endTime <= dateRangeEndTime)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 }
