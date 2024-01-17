@@ -3,6 +3,7 @@ package com.bookingapptim24.fragments.accommodation_page;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -140,17 +142,57 @@ public class MakeReservationRequestFragment extends Fragment {
         requestDTO = new MakeReservationRequest();
         requestDTO.setAccommodationId(accommodation.getId());
         requestDTO.setGuestId(sessionManager.getUserId());
+        requestDTO.setTotalPrice(0.0);
     }
 
     private void showPricing(ArrayList<SeasonalRatesPricing> rates) {
+        requestDTO.setTotalPrice(0.0);
         LinearLayout seasonalRatesLayout = view.findViewById(R.id.seasonalRatesLayout);
-        LinearLayout rateLayout = new LinearLayout();
+        seasonalRatesLayout.removeAllViewsInLayout();
+
         for (SeasonalRatesPricing rate : rates) {
-            TextView amenityTextView = new TextView(requireContext());
-            amenityTextView.setText(rate.getPrice() + " rsd x " + rate.getNumberOfNights() + " nights");
-            amenityTextView.setTextSize(16);
-            seasonalRatesLayout.addView(amenityTextView);
+            double price = 0;
+            LinearLayout rateLayout = new LinearLayout(requireActivity());
+            rateLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            rateLayout.setLayoutParams(layoutParams);
+
+            TextView pricePerNight = new TextView(requireContext());
+            pricePerNight.setText(rate.getPrice() + " rsd x " + rate.getNumberOfNights() + " nights");
+            pricePerNight.setTextSize(14);
+            pricePerNight.setTextColor(Color.rgb(152, 146, 143));
+            rateLayout.addView(pricePerNight);
+            price += rate.getPrice() * rate.getNumberOfNights();
+
+            if(accommodation.getIsPricePerGuest()) {
+                TextView guest = new TextView(requireContext());
+                guest.setText(" x " + requestDTO.getNumberOfGuests() + " guests       ");
+                guest.setTextSize(14);
+                guest.setTextColor(Color.rgb(152, 146, 143));
+                rateLayout.addView(guest);
+                price *= requestDTO.getNumberOfGuests();
+            }
+
+            TextView dateRange = new TextView(requireContext());
+            dateRange.setText(rate.getStartDate().split("T")[0] + " - " + rate.getEndDate().split("T")[0]);
+            dateRange.setTextSize(14);
+            dateRange.setTextColor(Color.rgb(152, 146, 143));
+            rateLayout.addView(dateRange);
+
+            requestDTO.setTotalPrice(requestDTO.getTotalPrice() + price);
+            seasonalRatesLayout.addView(rateLayout);
         }
+
+        TextView totalPriceTextView = new TextView(requireContext());
+        totalPriceTextView.setText("Total price: " + requestDTO.getTotalPrice() + " rsd");
+        totalPriceTextView.setTextSize(14);
+        totalPriceTextView.setTextColor(Color.rgb(152, 146, 143));
+        seasonalRatesLayout.addView(totalPriceTextView);
+
     }
 
     private void getPricing() {
@@ -166,8 +208,6 @@ public class MakeReservationRequestFragment extends Fragment {
                 if(response.isSuccessful()) {
                     ArrayList<SeasonalRatesPricing> rates = response.body();
                     showPricing(rates);
-
-
                 } else {
                     Log.d("REZ","Meesage recieved: "+response.code());
                 }
@@ -181,20 +221,34 @@ public class MakeReservationRequestFragment extends Fragment {
     }
 
     private void makeReservationRequest() {
-        EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-        String numOfGuestsText = numOfGuests.getText().toString().trim();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        int numOfGuestsValue = 0;
-        try {
-            numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        requestDTO.setStartDate(dateFormat.format(selectedStartDate));
+        requestDTO.setEndDate(dateFormat.format(selectedEndDate));
 
-        MakeReservationRequest makeReservationRequest = new MakeReservationRequest(
-                accommodation.getId(), sessionManager.getUserId(), dateFormat.format(selectedStartDate),
-                dateFormat.format(selectedEndDate), numOfGuestsValue, 0.0
-        );
+        Call<MakeReservationRequest> call = ClientUtils.reservationRequestService.makeReservationRequest(requestDTO);
+        call.enqueue(new Callback<MakeReservationRequest>() {
+            @Override
+            public void onResponse(Call<MakeReservationRequest> call, Response<MakeReservationRequest> response) {
+                if(response.isSuccessful()) {
+                    showSnackbar("Reservation request successful!");
+                } else {
+                    showSnackbar("Reservation request failed!");
+                    Log.d("REZ","Meesage recieved: "+response.code());
+                }
+
+                Bundle args = new Bundle();
+                ArrayList<AccommodationWithTotalPrice> accommodationContainer = new ArrayList<>();
+                accommodationContainer.add(accommodation);
+                args.putSerializable("accommodationContainer", accommodationContainer);
+                NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.nav_fragment_make_reservation_request, args);
+            }
+
+            @Override
+            public void onFailure(Call<MakeReservationRequest> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
 
     }
 
@@ -329,5 +383,9 @@ public class MakeReservationRequestFragment extends Fragment {
         int min = accommodation.getMinGuests();
         int max = accommodation.getMaxGuests();
         numberOfGuestsEditText.setFilters(new InputFilter[]{ new InputFilterMinMax(min, max)});
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 }
