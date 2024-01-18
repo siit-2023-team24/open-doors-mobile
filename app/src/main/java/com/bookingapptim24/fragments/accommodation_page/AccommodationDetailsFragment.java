@@ -1,11 +1,14 @@
 package com.bookingapptim24.fragments.accommodation_page;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bookingapptim24.R;
+import com.bookingapptim24.activities.CreateAccommodationActivity;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
+import com.bookingapptim24.models.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import java.util.ArrayList;
 
@@ -39,6 +49,8 @@ public class AccommodationDetailsFragment extends Fragment {
     private static final String ARG_ACCOMMODATION_ID = "accommodationId";
     private static final String ARG_NAME = "name";
     private static final String ARG_IMAGE = "image";
+    private static final String ARG_MY = "fromMyList";
+    private boolean fromMyList = false;
 
     private PendingAccommodationHost dto = new PendingAccommodationHost();
 
@@ -50,13 +62,14 @@ public class AccommodationDetailsFragment extends Fragment {
     public AccommodationDetailsFragment() {
     }
 
-    public static AccommodationDetailsFragment newInstance(Long id, Long accommodationId, String name, Long image) {
+    public static AccommodationDetailsFragment newInstance(Long id, Long accommodationId, String name, Long image, boolean fromMyList) {
         AccommodationDetailsFragment fragment = new AccommodationDetailsFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_ID, id);
         args.putLong(ARG_ACCOMMODATION_ID, accommodationId);
         args.putString(ARG_NAME, name);
         args.putLong(ARG_IMAGE, image);
+        args.putBoolean(ARG_MY, fromMyList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +85,8 @@ public class AccommodationDetailsFragment extends Fragment {
             dto.setAccommodationId(getArguments().getLong(ARG_ACCOMMODATION_ID));
             dto.setName(getArguments().getString(ARG_NAME));
             dto.setImage(getArguments().getLong(ARG_IMAGE));
+
+            fromMyList = getArguments().getBoolean(ARG_MY);
         }
         sessionManager = new SessionManager(requireContext());
     }
@@ -79,8 +94,6 @@ public class AccommodationDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //call server to get resource
-        //check if it's pending or active and call appropriate
     }
 
     @Override
@@ -90,11 +103,13 @@ public class AccommodationDetailsFragment extends Fragment {
         View view;
 
         String role = sessionManager.getRole();
+        String username = sessionManager.getUsername();
 
+//        if (role.equals("ROLE_ADMIN") && dto.getId() != 0) {
         if(role == null) {
             view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
             Log.i("Fragment inflated", "Inflated accommodation_details");
-        } else if (role.equals("ROLE_ADMIN") && dto.getId() != null) {
+        } else if (role.equals("ROLE_ADMIN") && dto.getId() != null && dto.getId() != 0) {
             view = inflater.inflate(R.layout.accommodation_details_admin, container, false);
             Log.i("Fragment inflated", "Inflated accommodation_details_admin");
 
@@ -123,13 +138,29 @@ public class AccommodationDetailsFragment extends Fragment {
                 dialog.create().show();
             });
 
-        } else if (role.equals("ROLE_HOST") && dto.getId() == 0) {
+        } else if (role.equals("ROLE_HOST") && fromMyList) {
             view = inflater.inflate(R.layout.accommodation_details_host, container, false);
+            //todo onclick financial report
+            Button editBtn = view.findViewById(R.id.edit_accommodation_btn);
+            editBtn.setOnClickListener(v -> onEdit());
+
+            Button deleteBtn = view.findViewById(R.id.delete_accommodation_btn);
+            deleteBtn.setOnClickListener(v -> {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+                dialog.setMessage("Are you sure you want to delete this accommodation?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", (dialogInterface, id) -> {
+                            onDelete();
+                        })
+                        .setNegativeButton("No", (dialogInterface, id) -> dialogInterface.cancel());
+                dialog.create().show();
+            });
             Log.i("Fragment inflated", "Inflated accommodation_host");
 
             //onclick edit and financial report
 
         } else {
+//            view = inflater.inflate(R.layout.fragment_accommodation_details, container, false);
             view = inflater.inflate(R.layout.accommodation_details_guest, container, false);
             Log.i("Fragment inflated", "Inflated accommodation_details_guest");
             Button makeReservationButton = view.findViewById(R.id.make_reservation_button);
@@ -147,8 +178,129 @@ public class AccommodationDetailsFragment extends Fragment {
 
         }
         loadAccommodationDetails(getArguments().getLong(ARG_ACCOMMODATION_ID), view);
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getData();
+        //set attributes
+    }
+
+    private void getData() {
+        Log.d("OpenDoors", "Getting accommodation details: " + dto.getId() + ", " + dto.getAccommodationId());
+        if (dto.getId() > 0) {
+            //get pending accommodation
+            Call<PendingAccommodationWhole> call = ClientUtils.pendingAccommodationService.getById(dto.getId());
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received pending accommodation: " + dto.getId());
+                        accommodation = response.body();
+                    } else {
+                        Log.d("OpenDoors","Message received: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+
+        } else {
+            //get active accommodation
+            Call<PendingAccommodationWhole> call = ClientUtils.accommodationService.getById(dto.getAccommodationId());
+            call.enqueue(new Callback<PendingAccommodationWhole>() {
+                @Override
+                public void onResponse(Call<PendingAccommodationWhole> call, Response<PendingAccommodationWhole> response) {
+                    if (response.code() == 200) {
+                        Log.d("OpenDoors", "Received accommodation: " + dto.getAccommodationId());
+                        accommodation = response.body();
+                        accommodation.setId(dto.getId());
+                        accommodation.setAccommodationId(dto.getAccommodationId());
+                    } else {
+                        Log.d("OpenDoors","Message received: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<PendingAccommodationWhole> call, Throwable t) {
+                    Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+                }
+            });
+        }
+
+        //change the dto the getting the active accommodation with the total price as needed
+    }
+
+    private void onDelete() {
+        if (dto.getId() == 0)
+            onDeleteActive();
+        else
+            onDeletePending();
+    }
+
+    private void onDeleteActive() {
+        Log.d("OpenDoors", "Delete accommodation " + dto.getAccommodationId());
+        Call<ResponseBody> call = ClientUtils.accommodationService.delete(dto.getAccommodationId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("OpenDoors", "Message received");
+                    Toast.makeText(requireActivity(), "Deleted accommodation", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack();
+                } else {
+                    Log.d("OpenDoors", "Message received: " + response.code());
+                    try {
+                        String errorBody = response.errorBody().string();
+                        JSONObject jsonObject = new JSONObject(errorBody);
+                        String errorMessage = jsonObject.optString("message", "Unknown error");
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
+    }
+
+    private void onDeletePending() {
+        Log.d("OpenDoors", "Delete pending accommodation " + dto.getId());
+        Call<ResponseBody> call = ClientUtils.pendingAccommodationService.delete(dto.getId());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    Log.d("OpenDoors", "Message received");
+                    Toast.makeText(requireActivity(), "Deleted pending accommodation", Toast.LENGTH_SHORT).show();
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack();
+                } else {
+                    Log.d("OpenDoors", "Message received: " + response.code());
+                    try {
+                        String errorBody = response.errorBody().string();
+                        JSONObject jsonObject = new JSONObject(errorBody);
+                        String errorMessage = jsonObject.optString("message", "Unknown error");
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
     }
 
     private void onApprove() {
@@ -197,6 +349,12 @@ public class AccommodationDetailsFragment extends Fragment {
         });
     }
 
+    private void onEdit() {
+        Intent intent = new Intent(requireActivity(), CreateAccommodationActivity.class);
+        intent.putExtra("id", accommodation.getId());
+        intent.putExtra("accommodationId", accommodation.getAccommodationId());
+        startActivity(intent);
+    }
     public void loadAccommodationDetails(Long accommodationId, View view) {
         Call<AccommodationWithTotalPrice> call = ClientUtils.accommodationService.getAccommodation(accommodationId);
         call.enqueue(new Callback<AccommodationWithTotalPrice>() {

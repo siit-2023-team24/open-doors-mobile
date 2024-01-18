@@ -55,10 +55,8 @@ public class PendingAccommodationHostListFragment extends ListFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i("OpenDoors", "onCreate PendingAccommodationHost List Fragment");
+        super.onViewCreated(view, savedInstanceState);
         this.getListView().setDividerHeight(2);
-        getDataFromClient();
     }
 
     @Override
@@ -70,7 +68,6 @@ public class PendingAccommodationHostListFragment extends ListFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 
@@ -85,7 +82,7 @@ public class PendingAccommodationHostListFragment extends ListFragment {
                     Log.d("REZ","Meesage recieved");
                     System.out.println(response.body());
                     accommodations = response.body();
-                    adapter = new PendingAccommodationHostListAdapter(getActivity(), getActivity().getSupportFragmentManager(), accommodations);
+                    adapter = new PendingAccommodationHostListAdapter(getActivity(), requireActivity().getSupportFragmentManager(), accommodations);
                     setListAdapter(adapter);
                     adapter.notifyDataSetChanged();
 

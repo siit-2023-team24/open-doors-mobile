@@ -10,9 +10,12 @@ import com.bookingapptim24.models.SeasonalRatesPricing;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -67,5 +70,21 @@ public interface AccommodationService {
     })
     @POST("accommodations/seasonalRate")
     Call<ArrayList<SeasonalRatesPricing>> getPricing(@Body AccommodationSeasonalRate accommodationSeasonalRate);
+  
+    @GET("accommodations/{id}")
+    Call<PendingAccommodationWhole> getById(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/editable/{id}")
+    Call<PendingAccommodationWhole> getForEdit(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android"
+    })
+    @DELETE("accommodations/{id}")
+    Call<ResponseBody> delete(@Path("id") Long id);
 
 }

@@ -1,7 +1,11 @@
 package com.bookingapptim24.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -22,6 +28,13 @@ import com.bookingapptim24.activities.EditAccountActivity;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.UserAccountView;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,11 +77,13 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getUserData();
+    }
 
+    private void getUserData() {
         Long userId = sessionManager.getUserId();
-
         Call<UserAccountView> call = ClientUtils.userService.getById(userId);
         call.enqueue(new Callback<UserAccountView>() {
             @Override
@@ -85,10 +100,14 @@ public class AccountFragment extends Fragment {
                     houseNumber.setText(Integer.toString(user.getNumber()));
                     phone.setText(user.getPhone());
                     role.setText(user.getRole());
-                    image.setImageResource(R.drawable.account);
+                    if (user.getImageId() != null && user.getImageId() > 0) {
+                        loadImage();
+                    } else {
+                        image.setImageResource(R.drawable.account);
+                    }
 
                 } else {
-                    Log.d("OpenDoors","Meesage recieved: "+response.code());
+                    Log.d("OpenDoors","Message received: "+response.code());
                 }
             }
 
@@ -97,8 +116,48 @@ public class AccountFragment extends Fragment {
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
 
+    private void loadImage() {
+        Call<ResponseBody> getImage = ClientUtils.imageService.getById(user.getImageId(), true);
+        getImage.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    try {
+                        InputStream inputStream = response.body().byteStream();
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        File imageFile = createTempImageFile(bitmap);
+                        Picasso.get().load(Uri.fromFile(imageFile)).into(image);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else Log.e("OpenDoors", "Error getting image");
+            }
 
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("OpenDoors", "Error loading image");
+                image.setImageResource(R.drawable.account);
+            }
+        });
+    }
+
+    private File createTempImageFile(Bitmap bitmap) throws IOException {
+        File tempDir = getContext().getCacheDir();
+        File tempFile = File.createTempFile("image", "png", tempDir);
+
+        OutputStream os = new FileOutputStream(tempFile);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        os.flush();
+        os.close();
+
+        return tempFile;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -144,7 +203,7 @@ public class AccountFragment extends Fragment {
             args.putString("username", sessionManager.getUsername());
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             navController.navigate(R.id.nav_edit_password, args);
-//            FragmentTransition.to(new EditPasswordFragment(), requireActivity(), false, R.layout.fragment_edit_password);
+            //FragmentTransition.to(new EditPasswordFragment(), requireActivity(), false, R.layout.fragment_edit_password);
         });
 
         Button editBtn = view.findViewById(R.id.edit_account_btn);

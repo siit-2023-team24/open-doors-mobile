@@ -49,10 +49,8 @@ public class PendingAccommodationAdminListFragment extends ListFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i("OpenDoors", "onCreate PendingAccommodationHost List Fragment");
+        super.onViewCreated(view, savedInstanceState);
         this.getListView().setDividerHeight(2);
-        getDataFromClient();
     }
 
     @Override
@@ -64,21 +62,17 @@ public class PendingAccommodationAdminListFragment extends ListFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
     }
 
 
     private void getDataFromClient() {
-        //todo: get user id
-        Long hostId = 1L;
-
         Call<ArrayList<PendingAccommodationHost>> call = ClientUtils.pendingAccommodationService.getAll();
         call.enqueue(new Callback<ArrayList<PendingAccommodationHost>>() {
             @Override
             public void onResponse(Call<ArrayList<PendingAccommodationHost>> call, Response<ArrayList<PendingAccommodationHost>> response) {
                 if (response.code() == 200){
-                    Log.d("REZ","Meesage recieved");
+                    Log.d("REZ","Message received");
                     System.out.println(response.body());
                     accommodations = response.body();
                     adapter = new PendingAccommodationHostListAdapter(getActivity(), getActivity().getSupportFragmentManager(), accommodations);
@@ -86,7 +80,7 @@ public class PendingAccommodationAdminListFragment extends ListFragment {
                     adapter.notifyDataSetChanged();
 
                 } else {
-                    Log.d("REZ","Meesage recieved: "+response.code());
+                    Log.d("REZ","Message received: "+response.code());
                 }
             }
 

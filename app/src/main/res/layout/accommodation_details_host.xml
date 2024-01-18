@@ -17,10 +17,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorAccent"
+            android:textColor="?attr/colorOnPrimary"
+            android:text="@string/delete"
+            android:id="@+id/delete_accommodation_btn"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:backgroundTint="?attr/colorTertiary"
             android:textColor="?attr/colorOnTertiary"
             android:text="@string/financial_report"
             android:id="@+id/accommodation_financial_report_btn"/>
+
 
         <Button
             android:layout_width="wrap_content"

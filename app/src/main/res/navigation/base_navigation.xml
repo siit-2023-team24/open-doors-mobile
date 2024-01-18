@@ -72,7 +72,6 @@
         android:label="@string/accommodation_details"
         tools:layout="@layout/accommodation_details_host"/>
 
-
     <fragment
         android:id="@+id/nav_accommodation_details_admin"
         android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsFragment"
@@ -91,12 +90,36 @@
         android:label="@string/password_change"
         tools:layout="@layout/fragment_edit_password"/>
 
+
     <fragment
         android:id="@+id/nav_fragment_make_reservation_request"
         android:name="com.bookingapptim24.fragments.accommodation_page.MakeReservationRequestFragment"
         android:label="@string/app_title"
         tools:layout="@layout/fragment_make_reservation_request"/>
 
+    <fragment android:id="@+id/nav_pending_reviews"
+        android:name="com.bookingapptim24.fragments.pending_reviews.PendingReviewListFragment"
+        android:label="@string/pending_reviews_title"
+        tools:layout="@layout/fragment_pending_review_list"/>
 
+    <fragment android:id="@+id/nav_reported_reviews"
+        android:name="com.bookingapptim24.fragments.reported_reviews.ReportedReviewListFragment"
+        android:label="@string/pending_reviews_title"
+        tools:layout="@layout/fragment_reported_review_list"/>
+
+    <fragment android:id="@+id/nav_reported_users"
+        android:name="com.bookingapptim24.fragments.user_reports.UserReportListFragment"
+        android:label="@string/reported_users_title"
+        tools:layout="@layout/fragment_user_report_list"/>
+
+    <fragment android:id="@+id/nav_blocked_users"
+        android:name="com.bookingapptim24.fragments.blocked_users.BlockedUserListFragment"
+        android:label="@string/blocked_users_title"
+        tools:layout="@layout/fragment_blocked_user_list"/>
+
+    <fragment android:id="@+id/nav_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestListPageFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_list_page"/>
 
 </navigation>
