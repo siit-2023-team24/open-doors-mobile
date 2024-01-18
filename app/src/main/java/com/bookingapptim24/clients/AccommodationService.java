@@ -2,9 +2,12 @@ package com.bookingapptim24.clients;
 
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.AccommodationSearchDTO;
+import com.bookingapptim24.models.AccommodationSeasonalRate;
 import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
+import com.bookingapptim24.models.SeasonalRatesPricing;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -65,6 +68,9 @@ public interface AccommodationService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @POST("accommodations/seasonalRate")
+    Call<ArrayList<SeasonalRatesPricing>> getPricing(@Body AccommodationSeasonalRate accommodationSeasonalRate);
+  
     @GET("accommodations/{id}")
     Call<PendingAccommodationWhole> getById(@Path("id") Long id);
 

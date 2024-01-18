@@ -18,13 +18,13 @@
         tools:layout="@layout/fragment_show_all"/>
 
     <fragment
-        android:id="@+id/fragment_search_accommodations"
+        android:id="@+id/nav_fragment_search_accommodations"
         android:name="com.bookingapptim24.fragments.home_page.SearchAccommodationsFragment"
         android:label="@string/app_title"
         tools:layout="@layout/fragment_search_accommodations"/>
 
     <fragment
-        android:id="@+id/fragment_filter_accommodations"
+        android:id="@+id/nav_fragment_filter_accommodations"
         android:name="com.bookingapptim24.fragments.home_page.FilterAccommodationsFragment"
         android:label="@string/app_title"
         tools:layout="@layout/fragment_filter_accommodations"/>
@@ -79,10 +79,23 @@
         tools:layout="@layout/accommodation_details_admin"/>
 
     <fragment
+        android:id="@+id/nav_accommodation_details_guest"
+        android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsFragment"
+        android:label="@string/accommodation_details"
+        tools:layout="@layout/accommodation_details_guest"/>
+
+    <fragment
         android:id="@+id/nav_edit_password"
         android:name="com.bookingapptim24.fragments.EditPasswordFragment"
         android:label="@string/password_change"
         tools:layout="@layout/fragment_edit_password"/>
+
+
+    <fragment
+        android:id="@+id/nav_fragment_make_reservation_request"
+        android:name="com.bookingapptim24.fragments.accommodation_page.MakeReservationRequestFragment"
+        android:label="@string/app_title"
+        tools:layout="@layout/fragment_make_reservation_request"/>
 
     <fragment android:id="@+id/nav_pending_reviews"
         android:name="com.bookingapptim24.fragments.pending_reviews.PendingReviewListFragment"
