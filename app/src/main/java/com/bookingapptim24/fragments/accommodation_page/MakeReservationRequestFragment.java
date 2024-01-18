@@ -105,6 +105,9 @@ public class MakeReservationRequestFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 boolean isInputNotEmpty = charSequence.length() > 0;
+                if(!isInputNotEmpty) {
+                    makeReservationButton.setEnabled(false);
+                }
 
                 try {
                     int numOfGuestsValue = Integer.parseInt(charSequence.toString());
@@ -235,13 +238,8 @@ public class MakeReservationRequestFragment extends Fragment {
                     showSnackbar("Reservation request failed!");
                     Log.d("REZ","Meesage recieved: "+response.code());
                 }
-
-                Bundle args = new Bundle();
-                ArrayList<AccommodationWithTotalPrice> accommodationContainer = new ArrayList<>();
-                accommodationContainer.add(accommodation);
-                args.putSerializable("accommodationContainer", accommodationContainer);
-                NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.nav_fragment_make_reservation_request, args);
+                Button makeReservationButton = view.findViewById(R.id.make_reservation_request_button);
+                makeReservationButton.setEnabled(false);
             }
 
             @Override
