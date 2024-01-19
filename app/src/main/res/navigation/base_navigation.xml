@@ -122,4 +122,24 @@
         android:label="@string/reservations_title"
         tools:layout="@layout/fragment_reservation_request_list_page"/>
 
+    <fragment android:id="@+id/nav_reservation_requests_guest"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestForGuestListFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_for_guest_list"/>
+
+    <fragment android:id="@+id/nav_reservation_requests_host"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestForHostListFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_for_host_list"/>
+
+    <fragment android:id="@+id/nav_fragment_search_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.SearchRequestsFragment"
+        android:label="Search Reservations"
+        tools:layout="@layout/fragment_search_requests"/>
+
+    <fragment android:id="@+id/nav_fragment_filter_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.FilterRequestsFragment"
+        android:label="Filter Reservations"
+        tools:layout="@layout/fragment_filter_requests"/>
+
 </navigation>

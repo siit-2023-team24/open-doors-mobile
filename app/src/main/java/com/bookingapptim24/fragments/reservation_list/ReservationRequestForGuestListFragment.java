@@ -19,6 +19,7 @@ import com.bookingapptim24.databinding.FragmentReservationRequestForGuestListBin
 import com.bookingapptim24.databinding.FragmentReservationRequestForHostListBinding;
 import com.bookingapptim24.models.ReservationRequestForGuest;
 import com.bookingapptim24.models.ReservationRequestForHost;
+import com.bookingapptim24.models.SearchAndFilterReservationRequests;
 import com.bookingapptim24.util.DataChangesListener;
 
 import java.util.ArrayList;
@@ -33,18 +34,16 @@ public class ReservationRequestForGuestListFragment extends ListFragment impleme
     private FragmentReservationRequestForGuestListBinding binding;
     private SessionManager sessionManager;
     private ArrayList<ReservationRequestForGuest> requests = new ArrayList<>();
+    private SearchAndFilterReservationRequests searchAndFilterDTO;
 
-    public ReservationRequestForGuestListFragment() {}
-
-    public static ReservationRequestForGuestListFragment newInstance() {
-        return new ReservationRequestForGuestListFragment();
+    public ReservationRequestForGuestListFragment(SearchAndFilterReservationRequests  searchAndFilterDTO) {
+        this.searchAndFilterDTO = searchAndFilterDTO;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("OpenDoors", "onCreateView Reservation Request Host List Fragment");
+        Log.i("OpenDoors", "onCreateView Reservation Request Guest List Fragment");
         binding = FragmentReservationRequestForGuestListBinding.inflate(inflater, container, false);
         sessionManager = new SessionManager(requireContext());
         return binding.getRoot();
@@ -53,10 +52,13 @@ public class ReservationRequestForGuestListFragment extends ListFragment impleme
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getData();
+        if(searchAndFilterDTO != null) {
+            searchAndFilterRequests();
+        } else {
+            getData();
+        }
         this.getListView().setDividerHeight(2);
     }
-
 
     @Override
     public void onResume() {
@@ -97,5 +99,30 @@ public class ReservationRequestForGuestListFragment extends ListFragment impleme
     @Override
     public void onDataChanged() {
         getData();
+    }
+
+    private void searchAndFilterRequests() {
+        Long userId = sessionManager.getUserId();
+        Call<ArrayList<ReservationRequestForGuest>> call = ClientUtils.reservationRequestService.searchRequestsForGuest(userId, searchAndFilterDTO);
+        call.enqueue(new Callback<ArrayList<ReservationRequestForGuest>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ReservationRequestForGuest>> call, Response<ArrayList<ReservationRequestForGuest>> response) {
+                if (response.code() == 200){
+                    Log.d("REZ","Message received");
+                    System.out.println(response.body());
+                    requests = response.body();
+                    adapter = new ReservationRequestForGuestListAdapter(getActivity(), getActivity().getSupportFragmentManager(), requests);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    adapter.setListener(ReservationRequestForGuestListFragment.this);
+                } else {
+                    Log.d("REZ","Message received: "+response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<ReservationRequestForGuest>> call, Throwable t) {
+                Log.d("U GUESTU SAM", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
     }
 }

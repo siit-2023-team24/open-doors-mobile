@@ -14,6 +14,7 @@ import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.FragmentReservationRequestForHostListBinding;
 import com.bookingapptim24.models.ReservationRequestForHost;
+import com.bookingapptim24.models.SearchAndFilterReservationRequests;
 import com.bookingapptim24.util.DataChangesListener;
 
 import java.util.ArrayList;
@@ -28,11 +29,10 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
     private FragmentReservationRequestForHostListBinding binding;
     private SessionManager sessionManager;
     private ArrayList<ReservationRequestForHost> requests = new ArrayList<>();
+    private SearchAndFilterReservationRequests searchAndFilterDTO;
 
-    public ReservationRequestForHostListFragment() {}
-
-    public static ReservationRequestForHostListFragment newInstance() {
-        return new ReservationRequestForHostListFragment();
+    public ReservationRequestForHostListFragment(SearchAndFilterReservationRequests searchAndFilterDTO) {
+        this.searchAndFilterDTO = searchAndFilterDTO;
     }
 
     @Override
@@ -54,7 +54,11 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        getData();
+        if(searchAndFilterDTO != null) {
+            searchAndFilterRequests();
+        } else {
+            getData();
+        }
     }
 
     @Override
@@ -83,7 +87,7 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
             }
             @Override
             public void onFailure(Call<ArrayList<ReservationRequestForHost>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+                Log.d("U HOSTU SAM", t.getMessage() != null?t.getMessage():"error");
             }
         });
     }
@@ -91,5 +95,30 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
     @Override
     public void onDataChanged() {
         getData();
+    }
+
+    private void searchAndFilterRequests() {
+        Long userId = sessionManager.getUserId();
+        Call<ArrayList<ReservationRequestForHost>> call = ClientUtils.reservationRequestService.searchRequestsForHost(userId, searchAndFilterDTO);
+        call.enqueue(new Callback<ArrayList<ReservationRequestForHost>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ReservationRequestForHost>> call, Response<ArrayList<ReservationRequestForHost>> response) {
+                if (response.code() == 200){
+                    Log.d("REZ","Message received");
+                    System.out.println(response.body());
+                    requests = response.body();
+                    adapter = new ReservationRequestForHostListAdapter(getActivity(), getActivity().getSupportFragmentManager(), requests);
+                    setListAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    adapter.setListener(ReservationRequestForHostListFragment.this);
+                } else {
+                    Log.d("REZ","Message received: "+response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<ReservationRequestForHost>> call, Throwable t) {
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
+            }
+        });
     }
 }

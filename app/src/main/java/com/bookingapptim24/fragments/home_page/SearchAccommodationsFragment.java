@@ -232,6 +232,7 @@ public class SearchAccommodationsFragment extends Fragment {
                     args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
                     NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+                    navController.popBackStack();
                     navController.navigate(R.id.nav_show_all, args);
 
                 } else {
