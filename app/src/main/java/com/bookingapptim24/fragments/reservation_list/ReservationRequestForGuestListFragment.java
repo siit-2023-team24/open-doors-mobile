@@ -98,7 +98,11 @@ public class ReservationRequestForGuestListFragment extends ListFragment impleme
 
     @Override
     public void onDataChanged() {
-        getData();
+        if(searchAndFilterDTO != null) {
+            searchAndFilterRequests();
+        } else {
+            getData();
+        }
     }
 
     private void searchAndFilterRequests() {
@@ -121,7 +125,7 @@ public class ReservationRequestForGuestListFragment extends ListFragment impleme
             }
             @Override
             public void onFailure(Call<ArrayList<ReservationRequestForGuest>> call, Throwable t) {
-                Log.d("U GUESTU SAM", t.getMessage() != null?t.getMessage():"error");
+                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
             }
         });
     }

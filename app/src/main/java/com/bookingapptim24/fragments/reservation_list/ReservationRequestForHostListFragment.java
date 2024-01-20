@@ -48,17 +48,17 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(searchAndFilterDTO != null) {
+            searchAndFilterRequests();
+        } else {
+            getData();
+        }
         this.getListView().setDividerHeight(2);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(searchAndFilterDTO != null) {
-            searchAndFilterRequests();
-        } else {
-            getData();
-        }
     }
 
     @Override
@@ -94,7 +94,11 @@ public class ReservationRequestForHostListFragment extends ListFragment implemen
 
     @Override
     public void onDataChanged() {
-        getData();
+        if(searchAndFilterDTO != null) {
+            searchAndFilterRequests();
+        } else {
+            getData();
+        }
     }
 
     private void searchAndFilterRequests() {
