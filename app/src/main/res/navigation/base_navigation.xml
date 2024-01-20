@@ -121,7 +121,24 @@
         android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestListPageFragment"
         android:label="@string/reservations_title"
         tools:layout="@layout/fragment_reservation_request_list_page"/>
+  
+    <fragment android:id="@+id/nav_report_user"
+        android:name="com.bookingapptim24.fragments.user_reports.WriteReportCardListFragment"
+        android:label="@string/report_user"
+        tools:layout="@layout/fragment_write_report_card_list"
+        />
 
+    <fragment android:id="@+id/host_reviews"
+        android:name="com.bookingapptim24.fragments.public_reviews.HostPublicReviewsFragment"
+        android:label="@string/host_reviews"
+        tools:layout="@layout/fragment_host_public_reviews"
+        />
+
+    <fragment android:id="@+id/accommodation_reviews"
+        android:name="com.bookingapptim24.fragments.public_reviews.AccommodationPublicReviewsFragment"
+        android:label="@string/accommodation_reviews"
+        tools:layout="@layout/fragment_accommodation_public_reviews"
+        />
     <fragment android:id="@+id/nav_reservation_requests_guest"
         android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestForGuestListFragment"
         android:label="@string/reservations_title"

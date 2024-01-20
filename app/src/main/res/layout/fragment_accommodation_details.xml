@@ -32,37 +32,69 @@
         android:layout_marginTop="8dp"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/ratingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_star"
+        android:drawablePadding="8dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cityCountryTextView"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ratingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_star"
-            android:drawablePadding="8dp"
-            android:textSize="16sp"
-            android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/notRatedTextView"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/not_rated"
-            android:textSize="16sp"
-            android:visibility="gone"/>
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <TextView
-            android:id="@+id/reviewsTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/reviewsTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="@string/reviews"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/reviews_btn"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textSize="16sp"
+                android:text="@string/view_reviews"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:weightSum="4">
+            <TextView
+                android:id="@+id/hostTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="@string/host"
+                android:textSize="16sp"/>
+
+            <Button
+                android:id="@+id/host_btn"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textSize="16sp"
+                android:layout_weight="3"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 
