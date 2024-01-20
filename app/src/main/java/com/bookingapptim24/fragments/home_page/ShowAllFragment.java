@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -176,8 +177,15 @@ public class ShowAllFragment extends Fragment implements SensorEventListener {
                 if (speed > SHAKE_THRESHOLD && accommodations != null) {
                     Log.d("Harlem", "Shake");
                     Log.d("list", accommodations.toString());
-                    if(isAscending) sortDescending();
-                    else sortAscending();
+                    if(isAscending) {
+                        sortDescending();
+                        Toast.makeText(requireContext(), requireContext().getString(R.string.sorted_descending), Toast.LENGTH_SHORT).show();
+
+                    }
+                    else {
+                        sortAscending();
+                        Toast.makeText(requireContext(), requireContext().getString(R.string.sorted_ascending), Toast.LENGTH_SHORT).show();
+                    }
                     Log.d("list", accommodations.toString());
                     homePageAccommodationAdapter.notifyDataSetChanged();
                 }
