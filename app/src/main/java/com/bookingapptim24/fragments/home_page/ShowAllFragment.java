@@ -1,6 +1,11 @@
 package com.bookingapptim24.fragments.home_page;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +26,26 @@ import com.bookingapptim24.models.SearchAndFilterAccommodations;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ShowAllFragment extends Fragment {
+public class ShowAllFragment extends Fragment implements SensorEventListener {
 
+    private SensorManager sensorManager;
     private ArrayList<AccommodationSearchDTO> accommodations;
     private RecyclerView recyclerView;
     private HomePageAccommodationAdapter homePageAccommodationAdapter;
     private SearchAndFilterAccommodations searchAndFilterDTO;
+    private static final int SHAKE_THRESHOLD = 800;
+    private long lastUpdate;
+    private float last_x;
+    private float last_y;
+    private float last_z;
+
+    private boolean isAscending = true;
 
     public ShowAllFragment() {}
 
@@ -64,6 +78,8 @@ public class ShowAllFragment extends Fragment {
 
         if(accommodations == null)
             fetchAccommodationsFromServer();
+        else
+            sortAscending();
         loadAccommodations();
 
         if(searchAndFilterDTO == null)
@@ -107,6 +123,7 @@ public class ShowAllFragment extends Fragment {
             public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
                 if(response.isSuccessful()) {
                     accommodations = response.body();
+                    sortAscending();
                     loadAccommodations();
                 } else {
                     Log.d("REZ","Meesage recieved: "+response.code());
@@ -127,6 +144,76 @@ public class ShowAllFragment extends Fragment {
 
     private void showSnackbar(String message, View view) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void sortAscending() {
+        isAscending = true;
+        accommodations.sort(Comparator.comparingDouble(AccommodationSearchDTO::getPrice));
+    }
+
+    private void sortDescending() {
+        isAscending = false;
+
+        accommodations.sort(Comparator.comparingDouble(AccommodationSearchDTO::getPrice).reversed());
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long curTime = System.currentTimeMillis();
+            // only allow one update every 100ms.
+            if ((curTime - lastUpdate) > 200) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                float[] values = event.values;
+                float x = values[0];
+                float y = values[1];
+                float z = values[2];
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD && accommodations != null) {
+                    Log.d("Harlem", "Shake");
+                    Log.d("list", accommodations.toString());
+                    if(isAscending) sortDescending();
+                    else sortAscending();
+                    Log.d("list", accommodations.toString());
+                    homePageAccommodationAdapter.notifyDataSetChanged();
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            Log.i("REZ_ACCELEROMETER", String.valueOf(accuracy));
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        super.onResume();
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
     }
 
 }
