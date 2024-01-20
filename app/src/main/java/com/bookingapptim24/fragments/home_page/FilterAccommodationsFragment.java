@@ -56,7 +56,6 @@ public class FilterAccommodationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_filter_accommodations, container, false);
 
-        Log.d("MILICA", "1. First I create view!");
         getAccommodationTypes();
         getAmenities();
 
@@ -109,7 +108,6 @@ public class FilterAccommodationsFragment extends Fragment {
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
                 if(response.isSuccessful()) {
                     accommodationTypes = response.body();
-                    Log.d("MILICA", "2. Then I get types!");
                     loadAccommodationTypes();
                 } else {
                     Log.d("REZ", "Message received: " + response.code());
@@ -130,7 +128,6 @@ public class FilterAccommodationsFragment extends Fragment {
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
                 if(response.isSuccessful()) {
                     amenities = response.body();
-                    Log.d("MILICA", "3. Then I get amenities!");
                     loadAmenities();
                 } else {
                     Log.d("REZ", "Message received: " + response.code());
@@ -145,7 +142,6 @@ public class FilterAccommodationsFragment extends Fragment {
     }
 
     private void loadAccommodationTypes() {
-        Log.d("MILICA", "4. Now I load types!");
         LinearLayout accommodationTypesLayout = view.findViewById(R.id.accommodationTypesLayout);
         accommodationTypesLayout.removeAllViewsInLayout();
 
@@ -166,7 +162,6 @@ public class FilterAccommodationsFragment extends Fragment {
     }
 
     private void loadAmenities() {
-        Log.d("MILICA", "5. Now I load amenities!");
         LinearLayout amenitiesLayout = view.findViewById(R.id.amenitiesFilterLayout);
         amenitiesLayout.removeAllViewsInLayout();
 
@@ -205,6 +200,7 @@ public class FilterAccommodationsFragment extends Fragment {
                     args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
                     NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+                    navController.popBackStack();
                     navController.navigate(R.id.nav_show_all, args);
 
                 } else {

@@ -2,6 +2,7 @@ package com.bookingapptim24.clients;
 
 import com.bookingapptim24.Accommodation;
 import com.bookingapptim24.models.AccommodationHost;
+import com.bookingapptim24.models.AccommodationWithTotalPrice;
 import com.bookingapptim24.models.PendingAccommodationHost;
 import com.bookingapptim24.models.PendingAccommodationWhole;
 import com.bookingapptim24.models.PendingAccommodationWholeEdited;
@@ -46,6 +47,13 @@ public interface PendingAccommodationService {
     })
     @GET("pending-accommodations/{id}")
     Call<PendingAccommodationWhole> getById(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("pending-accommodations/{id}")
+    Call<AccommodationWithTotalPrice> getDetails(@Path("id") Long id);
 
 
     @Headers({

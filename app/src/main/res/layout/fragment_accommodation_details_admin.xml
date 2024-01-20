@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/accommodation_details_admin"
-    >
+    tools:context=".fragments.accommodation_page.AccommodationDetailsAdminFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="?attr/colorAccent"
-            android:textColor="?attr/colorOnTertiary"
+            android:textColor="?attr/colorOnPrimary"
             android:text="@string/deny"
             android:id="@+id/deny_accommodation_btn"/>
 
@@ -27,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorOnPrimary"
             android:text="@string/approve"
             android:id="@+id/approve_accommodation_btn"/>
 

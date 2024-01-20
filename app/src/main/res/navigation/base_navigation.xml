@@ -18,13 +18,13 @@
         tools:layout="@layout/fragment_show_all"/>
 
     <fragment
-        android:id="@+id/fragment_search_accommodations"
+        android:id="@+id/nav_fragment_search_accommodations"
         android:name="com.bookingapptim24.fragments.home_page.SearchAccommodationsFragment"
         android:label="@string/app_title"
         tools:layout="@layout/fragment_search_accommodations"/>
 
     <fragment
-        android:id="@+id/fragment_filter_accommodations"
+        android:id="@+id/nav_fragment_filter_accommodations"
         android:name="com.bookingapptim24.fragments.home_page.FilterAccommodationsFragment"
         android:label="@string/app_title"
         tools:layout="@layout/fragment_filter_accommodations"/>
@@ -68,21 +68,34 @@
 
     <fragment
         android:id="@+id/nav_accommodation_details_host"
-        android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsFragment"
+        android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsHostFragment"
         android:label="@string/accommodation_details"
-        tools:layout="@layout/accommodation_details_host"/>
+        tools:layout="@layout/fragment_accommodation_details_host"/>
 
     <fragment
         android:id="@+id/nav_accommodation_details_admin"
+        android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsAdminFragment"
+        android:label="@string/accommodation_details"
+        tools:layout="@layout/fragment_accommodation_details_admin"/>
+
+    <fragment
+        android:id="@+id/nav_accommodation_details_guest"
         android:name="com.bookingapptim24.fragments.accommodation_page.AccommodationDetailsFragment"
         android:label="@string/accommodation_details"
-        tools:layout="@layout/accommodation_details_admin"/>
+        tools:layout="@layout/accommodation_details_guest"/>
 
     <fragment
         android:id="@+id/nav_edit_password"
         android:name="com.bookingapptim24.fragments.EditPasswordFragment"
         android:label="@string/password_change"
         tools:layout="@layout/fragment_edit_password"/>
+
+
+    <fragment
+        android:id="@+id/nav_fragment_make_reservation_request"
+        android:name="com.bookingapptim24.fragments.accommodation_page.MakeReservationRequestFragment"
+        android:label="@string/app_title"
+        tools:layout="@layout/fragment_make_reservation_request"/>
 
     <fragment android:id="@+id/nav_pending_reviews"
         android:name="com.bookingapptim24.fragments.pending_reviews.PendingReviewListFragment"
@@ -108,7 +121,7 @@
         android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestListPageFragment"
         android:label="@string/reservations_title"
         tools:layout="@layout/fragment_reservation_request_list_page"/>
-
+  
     <fragment android:id="@+id/nav_report_user"
         android:name="com.bookingapptim24.fragments.user_reports.WriteReportCardListFragment"
         android:label="@string/report_user"
@@ -126,5 +139,24 @@
         android:label="@string/accommodation_reviews"
         tools:layout="@layout/fragment_accommodation_public_reviews"
         />
+    <fragment android:id="@+id/nav_reservation_requests_guest"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestForGuestListFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_for_guest_list"/>
+
+    <fragment android:id="@+id/nav_reservation_requests_host"
+        android:name="com.bookingapptim24.fragments.reservation_list.ReservationRequestForHostListFragment"
+        android:label="@string/reservations_title"
+        tools:layout="@layout/fragment_reservation_request_for_host_list"/>
+
+    <fragment android:id="@+id/nav_fragment_search_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.SearchRequestsFragment"
+        android:label="Search Reservations"
+        tools:layout="@layout/fragment_search_requests"/>
+
+    <fragment android:id="@+id/nav_fragment_filter_reservation_requests"
+        android:name="com.bookingapptim24.fragments.reservation_list.FilterRequestsFragment"
+        android:label="Filter Reservations"
+        tools:layout="@layout/fragment_filter_requests"/>
 
 </navigation>

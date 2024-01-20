@@ -1,15 +1,26 @@
 package com.bookingapptim24.models;
 
-public class DateRangeDTO {
+import java.sql.Timestamp;
+
+public class AccommodationSeasonalRate {
+
+    private Long accommodationId;
     private String startDate;
     private String endDate;
 
-    public DateRangeDTO(String startDate, String endDate) {
+    public AccommodationSeasonalRate(Long accommodationId, String startDate, String endDate) {
+        this.accommodationId = accommodationId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public DateRangeDTO() {}
+    public Long getAccommodationId() {
+        return accommodationId;
+    }
+
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
+    }
 
     public String getStartDate() {
         return startDate;
@@ -29,8 +40,9 @@ public class DateRangeDTO {
 
     @Override
     public String toString() {
-        return "DateRange{" +
-                "startDate=" + startDate +
+        return "AccommodationSeasonalRateDTO{" +
+                "accommodationId=" + accommodationId +
+                ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';
     }

@@ -16,12 +16,12 @@ public class PendingAccommodationWhole {
     protected int maxGuests;
     protected String type;
 
-    protected List<DateRangeDTO> availability;
+    protected List<DateRange> availability;
     protected double price;
 
     protected boolean isPricePerGuest;
 
-    protected List<SeasonalRateDTO> seasonalRates;
+    protected List<SeasonalRate> seasonalRates;
 
     protected String city;
     protected String country;
@@ -208,19 +208,19 @@ public class PendingAccommodationWhole {
         this.hostUsername = hostUsername;
     }
 
-    public List<DateRangeDTO> getAvailability() {
+    public List<DateRange> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(List<DateRangeDTO> availability) {
+    public void setAvailability(List<DateRange> availability) {
         this.availability = availability;
     }
 
-    public List<SeasonalRateDTO> getSeasonalRates() {
+    public List<SeasonalRate> getSeasonalRates() {
         return seasonalRates;
     }
 
-    public void setSeasonalRates(List<SeasonalRateDTO> seasonalRates) {
+    public void setSeasonalRates(List<SeasonalRate> seasonalRates) {
         this.seasonalRates = seasonalRates;
     }
 

@@ -93,11 +93,7 @@ public class AccommodationHostListAdapter extends ArrayAdapter<AccommodationHost
             accommodationCard.setOnClickListener(v -> {
                 Log.i("OpenDoors", "Clicked: " + accommodation.getName() + ", id: " + accommodation.getId());
                 Bundle args = new Bundle();
-                args.putBoolean("fromMyList", true);
                 args.putLong("accommodationId", accommodation.getId());
-                args.putString("name", accommodation.getName());
-                if (accommodation.getImage() != null)
-                    args.putLong("image", accommodation.getImage());
                 NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
 
                 String role = sessionManager.getRole();
