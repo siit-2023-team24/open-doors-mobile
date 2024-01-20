@@ -208,4 +208,8 @@
     <string name="name">Name:</string>
     <string name="host">Host:</string>
     <string name="view_reviews">View reviews</string>
+
+    <!-- Sensors -->
+    <string name="where_will_you_go">The world is your oyster, where will you go? Perhaps…</string>
+    <string name="no_magnetometer">Magnetometer not available on this device.</string>
 </resources>
