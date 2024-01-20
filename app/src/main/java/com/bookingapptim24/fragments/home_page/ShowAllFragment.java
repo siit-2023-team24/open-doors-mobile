@@ -79,7 +79,7 @@ public class ShowAllFragment extends Fragment {
                 args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
                 NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.fragment_search_accommodations, args);
+                navController.navigate(R.id.nav_fragment_search_accommodations, args);
             }
         });
 
@@ -93,7 +93,7 @@ public class ShowAllFragment extends Fragment {
                 args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
                 NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.fragment_filter_accommodations, args);
+                navController.navigate(R.id.nav_fragment_filter_accommodations, args);
             }
         });
 
