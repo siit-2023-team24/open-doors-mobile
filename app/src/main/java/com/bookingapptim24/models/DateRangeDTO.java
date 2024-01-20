@@ -1,7 +1,5 @@
 package com.bookingapptim24.models;
 
-import java.sql.Timestamp;
-
 public class DateRangeDTO {
     private String startDate;
     private String endDate;

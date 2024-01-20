@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
@@ -48,8 +47,8 @@ import com.bookingapptim24.models.enums.Country;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +67,7 @@ import retrofit2.Response;
 
 public class CreateAccommodationActivity extends AppCompatActivity {
 
+    private ActivityCreateAccommodationBinding binding;
     private SessionManager sessionManager;
 
     private Long id = null;
@@ -132,8 +132,15 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
 
         super.onCreate(savedInstanceState);
-        ActivityCreateAccommodationBinding binding = ActivityCreateAccommodationBinding.inflate(getLayoutInflater());
+        binding = ActivityCreateAccommodationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            id = extras.getLong("id");
+            accommodationId = extras.getLong("accommodationId");
+            getData();
+        }
 
         nameET = binding.name;
         descriptionET = binding.description;
@@ -210,25 +217,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         typeSpinner = binding.typeSpinner;
         typeSpinner.setAdapter(typeAdapter);
 
-        String[] amenityArray = new String[Amenity.values().length];
-        for (int i = 0; i < Amenity.values().length; i++) {
-            amenityArray[i] = Amenity.values()[i].getAmenityName();
-        }
-
-
-        for (String amenity : amenityArray) {
-            System.out.println(amenity);
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(amenity);
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    selectedAmenities.add(amenity);
-                } else {
-                    selectedAmenities.remove(amenity);
-                }
-            });
-            binding.gridLayout.addView(checkBox);
-        }
+        if (id == null && accommodationId == null)
+            initiateAmenities();
 
         availabilityDatePicker.init(availabilityDatePicker.getYear(), availabilityDatePicker.getMonth(), availabilityDatePicker.getDayOfMonth(),
                 (view, year, monthOfYear, dayOfMonth) -> {
@@ -344,8 +334,10 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     minGuests,
                     maxGuests,
                     type,
+                    formAvailabilityDTOs(),
                     price,
                     isPricePerGuest,
+                    formSeasonalRateDTOs(),
                     city,
                     country,
                     street,
@@ -356,8 +348,8 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                     toDeleteImages
             );
 
-            dto.setAvailability(formAvailabilityDTOs());
-            dto.setSeasonalRates(formSeasonalRateDTOs());
+//            dto.setAvailability(formAvailabilityDTOs());
+//            dto.setSeasonalRates(formSeasonalRateDTOs());
 
             PendingAccommodationService service = ClientUtils.pendingAccommodationService;
 
@@ -385,12 +377,33 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         binding.backButton.setOnClickListener(v -> this.finish());
 
         binding.selectImageButton.setOnClickListener(v -> checkPermissions());
+    }
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            id = extras.getLong("id");
-            accommodationId = extras.getLong("accommodationId");
-            getData();
+    private void initiateAmenities() {
+        String[] amenityArray = new String[Amenity.values().length];
+        for (int i = 0; i < Amenity.values().length; i++) {
+            amenityArray[i] = Amenity.values()[i].getAmenityName();
+        }
+
+        for (String amenity : amenityArray) {
+            System.out.println(amenity);
+            CheckBox checkBox = new CheckBox(this);
+            checkBox.setText(amenity);
+
+            if (accommodation != null) {
+                selectedAmenities = accommodation.getAmenities();
+                if (accommodation.getAmenities().contains(amenity))
+                    checkBox.setChecked(true);
+            }
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    selectedAmenities.add(amenity);
+                } else {
+                    selectedAmenities.remove(amenity);
+                }
+            });
+            binding.gridLayout.addView(checkBox);
         }
     }
 
@@ -469,7 +482,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         counterDate.setTime(startDate);
 
         while (!counterDate.getTime().after(endDate)) {
-            int dateIndex = availableDates.indexOf(counterDate.getTime());
+            int dateIndex = find(availableDates, new Timestamp(counterDate.getTime().getTime()));
             if (dateIndex == -1) {
                 availableDates.add(new Timestamp(counterDate.getTime().getTime()));
             }
@@ -482,6 +495,15 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         return sdf.format(date);
     }
 
+    private Timestamp getTimestamp(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return new Timestamp(sdf.parse(date).getTime());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void generateAvailability() {
         availability.clear();
 
@@ -491,12 +513,15 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
         int i = 0;
         int j = 0;
+        int k = 0;
         while (i < availableDates.size()) {
-            while (j < availableDates.size() && areDatesWithinRange(availableDates, i, j)) {
+            while (j < availableDates.size() && areDatesWithinRange(availableDates, k, j)) {
                 j++;
+                if (j-1 != i) k++;
             }
             availability.add(new DateRange(availableDates.get(i), availableDates.get(j-1)));
             i = j;
+            k = i;
         }
     }
 
@@ -547,12 +572,15 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         priceDates.sort((a, b) -> a.compareTo(b));
         int i = 0;
         int j = 0;
+        int k = 0;
         while (i<priceDates.size()) {
-            while(j<priceDates.size() && areDatesWithinRange(priceDates, i, j) && areSamePrice(i,j)) {
+            while(j<priceDates.size() && areDatesWithinRange(priceDates, k, j) && areSamePrice(i,j)) {
                 j++;
+                if (j-1 != i) k++;
             }
             seasonalRates.add(new SeasonalRate(priceValues.get(formatDate(priceDates.get(i))), new DateRange(priceDates.get(i), priceDates.get(j-1))));
             i = j;
+            k = i;
         }
     }
 
@@ -576,10 +604,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         return yes;
     }
 
-    private boolean areDatesWithinRange(List<Timestamp> dates, int i, int j) {
-        long range = 1000 * 60 * 60 * 24 * (j - i);
-        return (dates.get(j).getTime() - dates.get(i).getTime() <= range);
+    private boolean areDatesWithinRange(List<Timestamp> dates, int k, int j) {
+        long range = 1000 * 60 * 60 * 24;
+        return (dates.get(j).getTime() - dates.get(k).getTime() <= range);
     }
+
+
 
     private void getData() {
         Log.d("OpenDoors", "Getting accommodation details: " + id + ", " + accommodationId);
@@ -658,12 +688,50 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         cityET.setText(accommodation.getCity());
         streetET.setText(accommodation.getStreet());
 
-        //todo set amenities, availabilities and rates
+        initiateAmenities();
 
         if (accommodation.getImages() != null && accommodation.getImages().size() > 0) {
             viewPager.setAdapter(new ImageAdapter(getApplicationContext(), accommodation.getImages()));
         }
+        retrieveAvailability();
+        updateAvailabilityView();
 
+        retrieveSeasonalRates();
+        updateSeasonalRatesView();
+    }
+
+    public void retrieveAvailability() {
+        this.availability = accommodation.getAvailability();
+        this.availableDates = new ArrayList<>();
+        for (DateRange period : availability) {
+            Timestamp startTimestamp = period.getStartDate();
+            Timestamp endTimestamp = period.getEndDate();
+            Timestamp counterTimestamp = new Timestamp(startTimestamp.getTime());
+
+            while (counterTimestamp.getTime() <= endTimestamp.getTime()) {
+                this.availableDates.add(new Timestamp(counterTimestamp.getTime()));
+                counterTimestamp.setTime(counterTimestamp.getTime() + 24 * 60 * 60 * 1000); // Add one day
+            }
+        }
+    }
+
+    private void retrieveSeasonalRates() {
+        this.seasonalRates = accommodation.getSeasonalRates();
+
+        for (SeasonalRate seasonalRate: seasonalRates) {
+            Timestamp start = seasonalRate.getPeriod().getStartDate();
+            Timestamp end = seasonalRate.getPeriod().getEndDate();
+            Timestamp counter = new Timestamp(start.getTime());
+
+            while (counter.getTime() <= end.getTime()) {
+                Timestamp newDate = new Timestamp(counter.getTime());
+
+                this.priceDates.add(newDate);
+                this.priceValues.put(formatDate(newDate), seasonalRate.getPrice());
+
+                counter.setTime(counter.getTime() + 24 * 60 * 60 * 1000);
+            }
+        }
     }
 
 

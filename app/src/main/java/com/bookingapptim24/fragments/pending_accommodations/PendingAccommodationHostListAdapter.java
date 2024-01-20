@@ -96,11 +96,6 @@ public class PendingAccommodationHostListAdapter extends ArrayAdapter<PendingAcc
                 args.putLong("id", accommodation.getId());
                 if (accommodation.getAccommodationId() != null)
                     args.putLong("accommodationId", accommodation.getAccommodationId());
-                args.putString("name", accommodation.getName());
-                if (accommodation.getImage() != null)
-                    args.putLong("image", accommodation.getImage());
-                if (sessionManager.getRole().equals("ROLE_HOST"))
-                    args.putBoolean("fromMyList", true);
                 NavController navController = Navigation.findNavController(activity, R.id.fragment_nav_content_main);
 
                 String role = sessionManager.getRole();
