@@ -46,7 +46,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void startLoginScreenAfterDelay() {
         int SPLASH_TIME_OUT = 2000
-                * 0 //for testing purposes
+//                * 0 //for testing purposes
                 ;
         new Timer().schedule(new TimerTask() {
             @Override

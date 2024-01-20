@@ -6,58 +6,83 @@
     android:id="@+id/fragment_search_accommodations"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search_accommodations"
-        android:textSize="20dp"
-        android:textAlignment="center"/>
+        android:orientation="vertical"
+        android:padding="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_accommodations"
+            android:textSize="20dp"
+            android:textAlignment="center"/>
 
-    <EditText
-        android:id="@+id/locationEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Location"
-        android:layout_marginTop="16dp"/>
+        <EditText
+            android:id="@+id/locationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location"
+            android:layout_marginTop="16dp"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_date"
+                android:layout_alignParentLeft="true"/>
+
+            <Button
+                android:id="@+id/endDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/end_date"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/numberOfGuestsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number of Guests"
+            android:inputType="number"
+            android:layout_marginTop="16dp"/>
 
         <Button
-            android:id="@+id/startDateButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_date"
-            android:layout_alignParentLeft="true"/>
+            android:text="Search"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/endDateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/end_date"
-            android:layout_alignParentRight="true"/>
 
-    </RelativeLayout>
-
-    <EditText
-        android:id="@+id/numberOfGuestsEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Number of Guests"
-        android:inputType="number"
-        android:layout_marginTop="16dp"/>
-
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:layout_marginTop="16dp"/>
-
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/temperature_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="30dp"
+            android:textSize="25dp"
+            android:text="@string/where_will_you_go"
+            android:textAlignment="center">
+        </TextView>
+        <ImageView
+            android:id="@+id/landmark_img"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp">
+        </ImageView>
+    </LinearLayout>
 </LinearLayout>
