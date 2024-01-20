@@ -171,7 +171,10 @@ public class SearchAccommodationsFragment extends Fragment {
         String numOfGuestsText = numOfGuests.getText().toString().trim();
 
         if(!locationText.isEmpty())
-            searchAndFilterDTO.setLocation(locationText.trim());
+            searchAndFilterDTO.setLocation(locationText);
+        else
+            searchAndFilterDTO.setLocation(null);
+
         if (!numOfGuestsText.isEmpty()) {
             try {
                 int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
@@ -179,6 +182,8 @@ public class SearchAccommodationsFragment extends Fragment {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+        } else {
+            searchAndFilterDTO.setGuestNumber(null);
         }
     }
 
@@ -190,35 +195,37 @@ public class SearchAccommodationsFragment extends Fragment {
         if(selectedEndDate != null)
             searchAndFilterDTO.setEndDate(dateFormat.format(selectedEndDate));
 
-        Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodations(searchAndFilterDTO);
-        call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
-            @Override
-            public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
-                if(response.isSuccessful()) {
-                    ArrayList<AccommodationSearchDTO> accommodations = response.body();
-                    for(AccommodationSearchDTO a : accommodations)
-                        Log.d("REZ", a.toString());
+        EditText location = view.findViewById(R.id.locationEditText);
+        EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
+        String locationText = location.getText().toString().trim();
+        String numOfGuestsText = numOfGuests.getText().toString().trim();
 
-                    ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
-                    searchAndFilters.add(searchAndFilterDTO);
+        if(!locationText.isEmpty())
+            searchAndFilterDTO.setLocation(locationText);
+        else
+            searchAndFilterDTO.setLocation(null);
 
-                    Bundle args = new Bundle();
-                    args.putSerializable("accommodations", accommodations);
-                    args.putSerializable("searchAndFilterDTO", searchAndFilters);
-
-                    NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                    navController.popBackStack();
-                    navController.navigate(R.id.nav_show_all, args);
-
-                } else {
-                    Log.d("REZ","Meesage recieved: "+response.code());
-                }
+        if (!numOfGuestsText.isEmpty()) {
+            try {
+                int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
+                searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
+        } else {
+            searchAndFilterDTO.setGuestNumber(null);
+        }
 
-            @Override
-            public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-            }
-        });
+        Log.d("FilterAccommodations", searchAndFilterDTO.toString());
+
+        ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+        searchAndFilters.add(searchAndFilterDTO);
+
+        Bundle args = new Bundle();
+        args.putSerializable("searchAndFilterDTO", searchAndFilters);
+
+        NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+        navController.popBackStack();
+        navController.navigate(R.id.nav_show_all, args);
     }
 }

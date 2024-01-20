@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,6 +33,7 @@ public class ShowAllFragment extends Fragment {
     private RecyclerView recyclerView;
     private HomePageAccommodationAdapter homePageAccommodationAdapter;
     private SearchAndFilterAccommodations searchAndFilterDTO;
+    private SessionManager sessionManager;
 
     public ShowAllFragment() {}
 
@@ -47,12 +49,7 @@ public class ShowAllFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            accommodations = (ArrayList<AccommodationSearchDTO>) args.getSerializable("accommodations");
-            ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
-            searchAndFilterDTO = searchAndFilters.get(0);
-        }
+        sessionManager = new SessionManager(requireContext());
     }
 
     @Override
@@ -62,18 +59,13 @@ public class ShowAllFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        if(accommodations == null)
-            fetchAccommodationsFromServer();
-        loadAccommodations();
-
-        if(searchAndFilterDTO == null)
-            searchAndFilterDTO = new SearchAndFilterAccommodations();
-
         Button searchButton = view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+                if(searchAndFilterDTO == null)
+                    searchAndFilterDTO = new SearchAndFilterAccommodations();
                 searchAndFilters.add(searchAndFilterDTO);
                 Bundle args = new Bundle();
                 args.putSerializable("searchAndFilterDTO", searchAndFilters);
@@ -88,6 +80,8 @@ public class ShowAllFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+                if(searchAndFilterDTO == null)
+                    searchAndFilterDTO = new SearchAndFilterAccommodations();
                 searchAndFilters.add(searchAndFilterDTO);
                 Bundle args = new Bundle();
                 args.putSerializable("searchAndFilterDTO", searchAndFilters);
@@ -100,33 +94,104 @@ public class ShowAllFragment extends Fragment {
         return view;
     }
 
-    private void fetchAccommodationsFromServer() {
-        Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.getAll();
-        call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
-            @Override
-            public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
-                if(response.isSuccessful()) {
-                    accommodations = response.body();
-                    loadAccommodations();
-                } else {
-                    Log.d("REZ","Meesage recieved: "+response.code());
-                }
-            }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle args = getArguments();
+        if (args != null) {
+            ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
+            searchAndFilterDTO = searchAndFilters.get(0);
+        }
+        if(searchAndFilterDTO != null)
+            searchAndFilter();
+        else
+            fetchAccommodationsFromServer();
+    }
 
-            @Override
-            public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-            }
-        });
+    private void fetchAccommodationsFromServer() {
+        String role = sessionManager.getRole();
+        if (role.equals("ROLE_GUEST")) {
+            Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.getAllWhenGuest(sessionManager.getUserId());
+            call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
+                @Override
+                public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
+                    if (response.isSuccessful()) {
+                        accommodations = response.body();
+                        loadAccommodations();
+                    } else {
+                        Log.d("REZ", "Meesage recieved: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
+                    Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                }
+            });
+        } else {
+            Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.getAll();
+            call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
+                @Override
+                public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
+                    if (response.isSuccessful()) {
+                        accommodations = response.body();
+                        loadAccommodations();
+                    } else {
+                        Log.d("REZ", "Meesage recieved: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
+                    Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                }
+            });
+        }
+    }
+
+    private void searchAndFilter() {
+        String role = sessionManager.getRole();
+        if (role.equals("ROLE_GUEST")) {
+            Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodationsWhenGuest(sessionManager.getUserId(), searchAndFilterDTO);
+            call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
+                @Override
+                public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
+                    if (response.isSuccessful()) {
+                        accommodations = response.body();
+                        loadAccommodations();
+                    } else {
+                        Log.d("REZ", "Meesage recieved: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
+                    Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                }
+            });
+        } else {
+            Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodations(searchAndFilterDTO);
+            call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
+                @Override
+                public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
+                    if (response.isSuccessful()) {
+                        accommodations = response.body();
+                        loadAccommodations();
+                    } else {
+                        Log.d("REZ", "Meesage recieved: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
+                    Log.d("REZ", t.getMessage() != null ? t.getMessage() : "error");
+                }
+            });
+        }
     }
 
     private void loadAccommodations() {
         homePageAccommodationAdapter = new HomePageAccommodationAdapter(accommodations, requireContext());
         recyclerView.setAdapter(homePageAccommodationAdapter);
     }
-
-    private void showSnackbar(String message, View view) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
-    }
-
 }

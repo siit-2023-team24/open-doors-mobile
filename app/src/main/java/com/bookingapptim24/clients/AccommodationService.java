@@ -1,5 +1,6 @@
 package com.bookingapptim24.clients;
 
+import com.bookingapptim24.models.AccommodationFavorites;
 import com.bookingapptim24.models.AccommodationHost;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.AccommodationSeasonalRate;
@@ -34,6 +35,13 @@ public interface AccommodationService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("accommodations/all/{guestId}")
+    Call<ArrayList<AccommodationSearchDTO>> getAllWhenGuest(@Path("guestId") Long guestId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @GET("accommodations/{id}")
     Call<AccommodationWithTotalPrice> getAccommodation(@Path("id") Long id);
 
@@ -43,6 +51,13 @@ public interface AccommodationService {
     })
     @POST("accommodations/search")
     Call<ArrayList<AccommodationSearchDTO>> searchAccommodations(@Body SearchAndFilterAccommodations searchAndFilterDTO);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/search/{guestId}")
+    Call<ArrayList<AccommodationSearchDTO>> searchAccommodationsWhenGuest(@Path("guestId") Long guestId, @Body SearchAndFilterAccommodations searchAndFilterDTO);
 
     @Headers({
             "User-Agent: Mobile-Android",
@@ -88,4 +103,24 @@ public interface AccommodationService {
     @DELETE("accommodations/{id}")
     Call<ResponseBody> delete(@Path("id") Long id);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/addToFavorites")
+    Call<ResponseBody> addToFavorites(@Body AccommodationFavorites dto);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("accommodations/removeFromFavorites")
+    Call<ResponseBody> removeFromFavorites(@Body AccommodationFavorites dto);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("accommodations/favorites/{guestId}")
+    Call<ArrayList<AccommodationSearchDTO>> getFavorites(@Path("guestId") Long guestId);
 }
