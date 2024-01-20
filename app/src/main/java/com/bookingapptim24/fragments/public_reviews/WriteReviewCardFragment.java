@@ -108,7 +108,6 @@ public class WriteReviewCardFragment extends Fragment {
             } else {
                 saveAccommodationReview(dto);
             }
-            listener.onDataChanged();
         });
         return binding.getRoot();
     }
@@ -148,6 +147,7 @@ public class WriteReviewCardFragment extends Fragment {
                 } else {
                     Log.d("REZ","Message received: "+response.code());
                 }
+                listener.onDataChanged();
             }
             @Override
             public void onFailure(Call<AccommodationReviewWhole> call, Throwable t) {
@@ -166,6 +166,7 @@ public class WriteReviewCardFragment extends Fragment {
                 } else {
                     Log.d("REZ","Message received: "+response.code());
                 }
+                listener.onDataChanged();
             }
             @Override
             public void onFailure(Call<HostReviewWhole> call, Throwable t) {
