@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import com.bookingapptim24.models.ReservationRequestForGuest;
 import com.bookingapptim24.models.ReservationRequestForHost;
+import com.bookingapptim24.models.SearchAndFilterReservationRequests;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,4 +66,26 @@ public interface ReservationRequestService {
     @GET("reservations/cancel/{id}")
     Call<ResponseBody> cancel(@Path("id") Long id);
 
+    @Headers({
+
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("reservations/search/{guestId}")
+    Call<ArrayList<ReservationRequestForGuest>> searchRequestsForGuest(@Path("guestId") Long guestId, @Body SearchAndFilterReservationRequests searchAndFilterDTO);
+
+    @Headers({
+
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("reservations/host-search/{hostId}")
+    Call<ArrayList<ReservationRequestForHost>> searchRequestsForHost(@Path("hostId") Long hostId, @Body SearchAndFilterReservationRequests searchAndFilterDTO);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("reservations/requestStatuses")
+    Call<ArrayList<String>> getReservationRequestStatuses();
 }

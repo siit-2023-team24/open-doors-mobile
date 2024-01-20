@@ -131,6 +131,9 @@
     <string name="filter">Filter</string>
     <string name="not_rated">Not rated</string>
     <string name="reservation_pricing">Pricing</string>
+    <string name="search_requests">Search requests</string>
+    <string name="accommodation_name">Accommodation name</string>
+    <string name="filter_requests">Filter requests</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>
@@ -154,7 +157,6 @@
     <string name="number_of_guests">Number of guests: </string>
     <string name="total_price">Total price: </string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--    Accommodation-->
     <!--    <string name="accommodation_name_and_id"></string>-->
 
