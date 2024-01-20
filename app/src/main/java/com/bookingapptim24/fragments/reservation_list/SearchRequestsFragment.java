@@ -81,6 +81,32 @@ public class SearchRequestsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle args = getArguments();
+        ArrayList<SearchAndFilterReservationRequests> searchAndFilters = (ArrayList<SearchAndFilterReservationRequests>) args.getSerializable("searchAndFilterDTO");
+        searchAndFilterDTO = searchAndFilters.get(0);
+        Log.d("sfDTO", searchAndFilterDTO.toString());
+        if(searchAndFilterDTO.getAccommodationName() != null) {
+            EditText accommodationName = view.findViewById(R.id.accommodationNameEditText);
+            accommodationName.setText(searchAndFilterDTO.getAccommodationName());
+        }
+        searchAndFilterDTO.setStartDate(null);
+        searchAndFilterDTO.setEndDate(null);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        EditText accommodationNameEditText = view.findViewById(R.id.accommodationNameEditText);
+        String accommodationName = accommodationNameEditText.getText().toString().trim();
+        if(!accommodationName.isEmpty()) {
+            searchAndFilterDTO.setAccommodationName(accommodationName);
+        }
+    }
+
     private void searchRequests() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(selectedStartDate != null)

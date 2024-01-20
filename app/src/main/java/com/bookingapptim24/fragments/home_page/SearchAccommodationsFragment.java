@@ -63,18 +63,6 @@ public class SearchAccommodationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                if(searchAndFilterDTO.getStartDate() != null) {
-                    try {
-                        Date date = dateFormat.parse(searchAndFilterDTO.getStartDate());
-                        long timestamp = date.getTime();
-                        selectedStartDate = new Timestamp(timestamp);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    calendar.setTimeInMillis(selectedStartDate.getTime());
-                }
 
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
@@ -102,21 +90,6 @@ public class SearchAccommodationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                if(searchAndFilterDTO.getEndDate() != null) {
-                    try {
-                        Date date = dateFormat.parse(searchAndFilterDTO.getEndDate());
-                        long timestamp = date.getTime();
-                        selectedEndDate = new Timestamp(timestamp);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    calendar.setTimeInMillis(selectedEndDate.getTime());
-                }
-
-                if(selectedEndDate != null)
-                    calendar.setTimeInMillis(selectedEndDate.getTime());
 
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH);
@@ -184,6 +157,8 @@ public class SearchAccommodationsFragment extends Fragment {
             EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
             numOfGuests.setText(searchAndFilterDTO.getGuestNumber().toString());
         }
+        searchAndFilterDTO.setStartDate(null);
+        searchAndFilterDTO.setEndDate(null);
     }
 
     @Override

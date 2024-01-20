@@ -133,6 +133,7 @@
     <string name="reservation_pricing">Pricing</string>
     <string name="search_requests">Search requests</string>
     <string name="accommodation_name">Accommodation name</string>
+    <string name="filter_requests">Filter requests</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>

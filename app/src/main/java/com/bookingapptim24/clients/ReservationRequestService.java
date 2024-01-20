@@ -82,4 +82,10 @@ public interface ReservationRequestService {
     @POST("reservations/host-search/{hostId}")
     Call<ArrayList<ReservationRequestForHost>> searchRequestsForHost(@Path("hostId") Long hostId, @Body SearchAndFilterReservationRequests searchAndFilterDTO);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("reservations/requestStatuses")
+    Call<ArrayList<String>> getReservationRequestStatuses();
 }
