@@ -90,7 +90,7 @@ public class WriteReportCardAdapter extends ArrayAdapter<String> {
             }
             errorTextView.setVisibility(View.GONE);
             AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
-            dialog.setMessage("Are you sure you want to report this user?")
+            dialog.setMessage(activity.getString(R.string.dialog_report_user))
                     .setCancelable(false)
                     .setPositiveButton(activity.getString(R.string.yes), (dialogInterface, id) -> {
                         NewUserReport dto = new NewUserReport(

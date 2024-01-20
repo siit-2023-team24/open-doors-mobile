@@ -262,7 +262,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
             String name = binding.name.getText().toString();
             if (name.isEmpty()) {
-                binding.name.setError("Accommodation name is required.");
+                binding.name.setError(getString(R.string.name_validation));
                 valid = false;
             }
 
@@ -284,12 +284,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 price = Double.parseDouble(priceText.getText().toString());
                 if (price < 0) {
                     valid = false;
-                    priceText.setError("Please enter a valid non-negative price.");
+                    priceText.setError(getString(R.string.price_validation));
                 }
             }
             catch (Exception e) {
                 valid = false;
-                priceText.setError("Please enter a valid non-negative price.");
+                priceText.setError(getString(R.string.price_validation));
             }
 
             RadioGroup pricePerGuest = binding.isPricePerGuest;
@@ -303,14 +303,14 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             EditText editTextCity = binding.city;
             String city = editTextCity.getText().toString().trim();
             if (city.isEmpty()) {
-                editTextCity.setError("City is required.");
+                editTextCity.setError(getString(R.string.city_validation));
                 valid=false;
             }
 
             EditText editTextStreet = binding.street;
             String street = editTextStreet.getText().toString().trim();
             if (street.isEmpty()) {
-                editTextStreet.setError("Street is required");
+                editTextStreet.setError(getString(R.string.street_validation));
                 valid=false;
             }
 
@@ -327,7 +327,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
             if(!valid) {
                 System.out.println("THERE RIGHT THERE - Look at that condescending smirk, see it on every guy at work.");
-                Toast.makeText(CreateAccommodationActivity.this, "Please enter the data according to the validations.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccommodationActivity.this, getString(R.string.toast_validations), Toast.LENGTH_SHORT).show();
                 return;
             }
 

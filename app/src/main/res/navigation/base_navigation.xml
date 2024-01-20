@@ -115,4 +115,16 @@
         tools:layout="@layout/fragment_write_report_card_list"
         />
 
+    <fragment android:id="@+id/host_reviews"
+        android:name="com.bookingapptim24.fragments.public_reviews.HostPublicReviewsFragment"
+        android:label="@string/host_reviews"
+        tools:layout="@layout/fragment_host_public_reviews"
+        />
+
+    <fragment android:id="@+id/accommodation_reviews"
+        android:name="com.bookingapptim24.fragments.public_reviews.AccommodationPublicReviewsFragment"
+        android:label="@string/accommodation_reviews"
+        tools:layout="@layout/fragment_accommodation_public_reviews"
+        />
+
 </navigation>

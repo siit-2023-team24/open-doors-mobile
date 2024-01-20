@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -369,9 +370,9 @@ public class AccommodationDetailsFragment extends Fragment {
         TextView nameTextView = view.findViewById(R.id.nameTextView);
         TextView cityCountryTextView = view.findViewById(R.id.cityCountryTextView);
         TextView ratingTextView = view.findViewById(R.id.ratingTextView);
-        TextView notRatedTextView = view.findViewById(R.id.notRatedTextView);
-        TextView reviewsTextView = view.findViewById(R.id.reviewsTextView);
         TextView descriptionTextView = view.findViewById(R.id.descriptionTextView);
+        Button hostBtn = view.findViewById(R.id.host_btn);
+        Button reviewsBtn = view.findViewById(R.id.reviews_btn);
 
         // Set data in views
         //Glide.with(requireContext()).load(accommodation.getImage()).into(imageView);
@@ -381,7 +382,7 @@ public class AccommodationDetailsFragment extends Fragment {
             ratingTextView.setText(String.valueOf(accommodationDetails.getAverageRating()));
             ratingTextView.setVisibility(View.VISIBLE);
         } else {
-            notRatedTextView.setVisibility(View.VISIBLE);
+            ratingTextView.setVisibility(View.GONE);
         }
         descriptionTextView.setText(accommodationDetails.getDescription());
 
@@ -393,5 +394,30 @@ public class AccommodationDetailsFragment extends Fragment {
             amenityTextView.setTextSize(16);
             amenitiesLayout.addView(amenityTextView);
         }
+        hostBtn.setText(accommodationDetails.getHost());
+        hostBtn.setOnClickListener(v -> {
+            openHostReviewsFragment(accommodationDetails.getHostId());
+        });
+        reviewsBtn.setOnClickListener(v -> {
+            openAccommodationReviewsFragment(accommodationDetails.getId());
+        });
+    }
+
+
+    private void openHostReviewsFragment(Long hostId) {
+        Bundle args = new Bundle();
+        args.putLong("hostId", hostId);
+
+        NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.host_reviews, args);
+    }
+
+
+    private void openAccommodationReviewsFragment(Long accommodationId) {
+        Bundle args = new Bundle();
+        args.putLong("accommodationId", accommodationId);
+
+        NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.accommodation_reviews, args);
     }
 }
