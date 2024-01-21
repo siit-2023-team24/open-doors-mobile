@@ -9,10 +9,15 @@ import android.widget.Toast;
 
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.models.Account;
+import com.bookingapptim24.models.NotificationDTO;
 import com.bookingapptim24.models.UserTokenState;
 import com.bookingapptim24.clients.AuthService;
 import com.bookingapptim24.databinding.ActivityLoginScreenBinding;
 import com.bookingapptim24.clients.SessionManager;
+import com.bookingapptim24.models.enums.NotificationType;
+import com.bookingapptim24.util.SocketService;
+
+import java.sql.Timestamp;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,19 +31,15 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         sessionManager = new SessionManager(getApplicationContext());
+        if(sessionManager.isLoggedIn()) {
+            sessionManager.logout();
+        }
 
         ActivityLoginScreenBinding binding = ActivityLoginScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        binding.loginButton.setOnClickListener((v) -> {
-//            //temporary solution without server
-//            HomeScreen.user = binding.editTextEmail.getText().toString();
-//            //
-//            Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
-//            startActivity(intent);
-//            finish();
-//        });
 
         binding.loginButton.setOnClickListener((v) -> {
 
@@ -55,6 +56,7 @@ public class LoginScreen extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         UserTokenState userTokenState = response.body();
                         sessionManager.saveUserSession(userTokenState.getAccessToken());
+
                         Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
                         startActivity(intent);
                         finish();

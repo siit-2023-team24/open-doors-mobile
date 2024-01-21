@@ -44,6 +44,7 @@ import com.bookingapptim24.models.SeasonalRateDTO;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 import com.bookingapptim24.models.enums.Country;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private Spinner countrySpinner;
     private Spinner typeSpinner;
     private EditText nameET;
-    private EditText descriptionET;
+    private TextInputEditText descriptionET;
     private EditText defaultPriceET;
     private EditText cityET;
     private EditText streetET;
@@ -118,9 +119,6 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private List<String> seasonalRatesText = new ArrayList<>();
     private ArrayAdapter<String> availabilityAdapter;
     private ArrayAdapter<String> seasonalRatesAdapter;
-
-    //todo bind amenities
-
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 101;
@@ -251,7 +249,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
             String name = binding.name.getText().toString();
             if (name.isEmpty()) {
-                binding.name.setError("Accommodation name is required.");
+                binding.name.setError(getString(R.string.name_validation));
                 valid = false;
             }
 
@@ -273,12 +271,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
                 price = Double.parseDouble(priceText.getText().toString());
                 if (price < 0) {
                     valid = false;
-                    priceText.setError("Please enter a valid non-negative price.");
+                    priceText.setError(getString(R.string.price_validation));
                 }
             }
             catch (Exception e) {
                 valid = false;
-                priceText.setError("Please enter a valid non-negative price.");
+                priceText.setError(getString(R.string.price_validation));
             }
 
             RadioGroup pricePerGuest = binding.isPricePerGuest;
@@ -292,14 +290,14 @@ public class CreateAccommodationActivity extends AppCompatActivity {
             EditText editTextCity = binding.city;
             String city = editTextCity.getText().toString().trim();
             if (city.isEmpty()) {
-                editTextCity.setError("City is required.");
+                editTextCity.setError(getString(R.string.city_validation));
                 valid=false;
             }
 
             EditText editTextStreet = binding.street;
             String street = editTextStreet.getText().toString().trim();
             if (street.isEmpty()) {
-                editTextStreet.setError("Street is required");
+                editTextStreet.setError(getString(R.string.street_validation));
                 valid=false;
             }
 
@@ -316,7 +314,7 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
             if(!valid) {
                 System.out.println("THERE RIGHT THERE - Look at that condescending smirk, see it on every guy at work.");
-                Toast.makeText(CreateAccommodationActivity.this, "Please enter the data according to the validations.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccommodationActivity.this, getString(R.string.toast_validations), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -439,33 +437,26 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         int dateIndex = find(availableDates, date);
 
         if (isSelecting) {
-            Log.d("Is selecting", "Is selecting");
             if (date.getTime() < availableRangeStart.getTime()) {
-                Log.d("Wrong time", "Wrong time");
-                instructions.setText(getString(R.string.instruction_set_future_date) + formatDate(availableRangeStart));
+                instructions.setText(getString(R.string.instruction_set_future_date, viewDate(availableRangeStart)));
                 return;
             }
 
             if (dateIndex != -1) {
-                Log.d("Occupied", "Occupied");
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_date_available) + formatDate(availableRangeStart) + ".");
+                instructions.setText(getString(R.string.instruction_date_available, viewDate(date), viewDate(availableRangeStart)));
                 return;
             }
 
             isSelecting = false;
-
-            Log.d("New date range", "New date range");
-            instructions.setText(getString(R.string.instruction_accommodation_available) + formatDate(availableRangeStart) + getString(R.string.instruction_to) + formatDate(date) + ".");
+            instructions.setText(getString(R.string.instruction_accommodation_available, viewDate(availableRangeStart), viewDate(date)));
             populateWithDates(availableRangeStart, date);
         } else {
             if (dateIndex != -1) {
-                Log.d("Deleted date", "Deleted date");
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_deleted));
+                instructions.setText(getString(R.string.instruction_deleted, viewDate(date)));
                 availableDates.remove(dateIndex);
             } else {
-                Log.d("Selected start", "Selected start");
                 isSelecting = true;
-                instructions.setText(getString(R.string.instruction_date) + formatDate(date) + getString(R.string.instruction_start_date_selected));
+                instructions.setText(getString(R.string.instruction_start_date_selected, viewDate(date)));
                 availableRangeStart = date;
                 return;
             }
@@ -473,8 +464,6 @@ public class CreateAccommodationActivity extends AppCompatActivity {
 
         generateAvailability();
         updateAvailabilityView();
-        Log.d("amogus", availability.toString());
-        Log.d("amogus2", availableDates.toString());
     }
 
     private void populateWithDates(Timestamp startDate, Timestamp endDate) {
@@ -495,6 +484,11 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         return sdf.format(date);
     }
 
+    private String viewDate(Timestamp date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format));
+        return sdf.format(date);
+    }
+  
     private Timestamp getTimestamp(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -529,12 +523,9 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         availabilityText.clear();
 
         for (DateRange range : availability) {
-            availabilityText.add("Available period: " +
-                    formatDate(range.getStartDate()) +
-                    " to " +
-                    formatDate(range.getEndDate()));
+            availabilityText.add(getString(R.string.availability_new_range,
+                    viewDate(range.getStartDate()), viewDate(range.getEndDate())));
         }
-        Log.d("dateRangesText", availabilityText.toString());
         availabilityAdapter.notifyDataSetChanged();
     }
 
@@ -543,12 +534,12 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         try {
             price = Double.parseDouble(seasonalRatePrice.getText().toString());
             if (price < 0) {
-                seasonalRatesError.setText("Please enter a valid non-negative price.");
+                seasonalRatesError.setText(getString(R.string.seasonal_rate_error));
                 return;
             }
         }
         catch (Exception e) {
-            seasonalRatesError.setText("Please enter a valid non-negative price.");
+            seasonalRatesError.setText(getString(R.string.seasonal_rate_error));
             return;
         }
         seasonalRatesError.setText("");
@@ -588,20 +579,16 @@ public class CreateAccommodationActivity extends AppCompatActivity {
         seasonalRatesText.clear();
 
         for (SeasonalRate seasonalRate : seasonalRates) {
-            seasonalRatesText.add("A new price of" +
-                    seasonalRate.getPrice() + "from" +
-                    formatDate(seasonalRate.getPeriod().getStartDate()) + "to" +
-                    formatDate(seasonalRate.getPeriod().getEndDate()) + ".");
+            seasonalRatesText.add(getString(R.string.seasonal_rate_new_rate, seasonalRate.getPrice(),
+                    viewDate(seasonalRate.getPeriod().getStartDate()),
+                    viewDate(seasonalRate.getPeriod().getEndDate())));
         }
 
         seasonalRatesAdapter.notifyDataSetChanged();
     }
 
     private boolean areSamePrice(int i, int j) {
-        Log.d("dict", priceValues.toString());
-        boolean yes = priceValues.get(formatDate(priceDates.get(i))).equals(priceValues.get(formatDate(priceDates.get(j))));
-        Log.d("yes", Boolean.toString(yes));
-        return yes;
+        return priceValues.get(formatDate(priceDates.get(i))).equals(priceValues.get(formatDate(priceDates.get(j))));
     }
 
     private boolean areDatesWithinRange(List<Timestamp> dates, int k, int j) {

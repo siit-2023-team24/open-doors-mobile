@@ -1,6 +1,7 @@
 package com.bookingapptim24.fragments.pending_reviews;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import androidx.navigation.Navigation;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.models.PendingReview;
+import com.bookingapptim24.models.enums.NotificationType;
+import com.bookingapptim24.util.SocketService;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -120,6 +123,10 @@ public class PendingReviewListAdapter extends ArrayAdapter<PendingReview> {
                     Toast.makeText(activity,"Review approved", Toast.LENGTH_SHORT).show();
                     reviews.remove(review);
                     PendingReviewListAdapter.this.notifyDataSetChanged();
+
+
+                    sendNotification(review.getHostUsername(), review.getAccommodationName() + " has been reviewed",
+                            NotificationType.ACCOMMODATION_REVIEW.getTypeMessage());
                 } else {
                     Log.d("OpenDoors", "Message received: " + response.code());
                 }
@@ -151,5 +158,14 @@ public class PendingReviewListAdapter extends ArrayAdapter<PendingReview> {
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
+
+    private void sendNotification(String username, String message, String type) {
+        Intent intent = new Intent(activity, SocketService.class);
+        intent.putExtra("username", username);
+        intent.putExtra("message", message);
+        intent.putExtra("type", type);
+        intent.setAction(SocketService.ACTION_SEND_NOTIFICATION);
+        activity.startForegroundService(intent);
     }
 }

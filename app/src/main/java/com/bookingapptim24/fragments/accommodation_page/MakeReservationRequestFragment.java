@@ -3,6 +3,7 @@ package com.bookingapptim24.fragments.accommodation_page;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -37,6 +38,8 @@ import com.bookingapptim24.models.DateRange;
 import com.bookingapptim24.models.MakeReservationRequest;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 import com.bookingapptim24.models.SeasonalRatesPricing;
+import com.bookingapptim24.models.enums.NotificationType;
+import com.bookingapptim24.util.SocketService;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -234,6 +237,10 @@ public class MakeReservationRequestFragment extends Fragment {
             public void onResponse(Call<MakeReservationRequest> call, Response<MakeReservationRequest> response) {
                 if(response.isSuccessful()) {
                     showSnackbar("Reservation request successful!");
+
+                    sendNotification(accommodation.getHost(), "New reservation request for " + accommodation.getName(),
+                            NotificationType.NEW_RESERVATION_REQUEST.getTypeMessage());
+
                 } else {
                     showSnackbar("Reservation request failed!");
                     Log.d("REZ","Meesage recieved: "+response.code());
@@ -385,5 +392,14 @@ public class MakeReservationRequestFragment extends Fragment {
 
     private void showSnackbar(String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void sendNotification(String username, String message, String type) {
+        Intent intent = new Intent(requireActivity(), SocketService.class);
+        intent.putExtra("username", username);
+        intent.putExtra("message", message);
+        intent.putExtra("type", type);
+        intent.setAction(SocketService.ACTION_SEND_NOTIFICATION);
+        requireActivity().startForegroundService(intent);
     }
 }

@@ -9,6 +9,7 @@ public class PendingReview {
     protected Timestamp timestamp;
     protected String authorUsername;
     protected String accommodationName;
+    protected String hostUsername;
 
     public PendingReview() {
     }
@@ -68,6 +69,14 @@ public class PendingReview {
 
     public void setAccommodationName(String accommodationName) {
         this.accommodationName = accommodationName;
+    }
+
+    public String getHostUsername() {
+        return hostUsername;
+    }
+
+    public void setHostUsername(String hostUsername) {
+        this.hostUsername = hostUsername;
     }
 
     @Override

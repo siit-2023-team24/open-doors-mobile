@@ -21,6 +21,12 @@
         <item android:id="@+id/nav_profile"
             android:title="@string/profile_title"/>
 
+        <item android:id="@+id/host_reviews"
+            android:title="@string/reviews_of_me"/>
+
+        <item android:id="@+id/nav_report_user"
+            android:title="@string/report_guest"/>
+
     </group>
 
 </menu>

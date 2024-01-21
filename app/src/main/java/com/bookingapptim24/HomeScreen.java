@@ -1,30 +1,40 @@
 package com.bookingapptim24;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
+import com.bookingapptim24.util.SocketService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class HomeScreen extends AppCompatActivity {
+
 
     private @NonNull ActivityHomeScreenNavigationBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
@@ -37,6 +47,8 @@ public class HomeScreen extends AppCompatActivity {
     private Set<Integer> topLevelDestinations = new HashSet<>();
 
     public static String role = null;
+    private static String CHANNEL_ID = "Zero channel";
+    private static final int PERMISSION_REQUEST_CODE = 505;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +91,15 @@ public class HomeScreen extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        createNotificationChannel();
+
+        checkPermissions();
+        startService();
     }
 
     @Override
     protected void onStart(){
-
         super.onStart();
     }
 
@@ -134,16 +150,14 @@ public class HomeScreen extends AppCompatActivity {
 
 
     private void setUpMenu() {
-        //temporary solution without server
         SessionManager sm = new SessionManager(getApplicationContext());
-        role = sm.getRole();
-        if (role == null)
+        if (!sm.isLoggedIn())
             binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
-        else if (role.equals("ROLE_ADMIN"))
+        else if (sm.getRole().equals("ROLE_ADMIN"))
             binding.navView.inflateMenu(R.menu.nav_menu_admin);
-        else if (role.equals("ROLE_GUEST"))
+        else if (sm.getRole().equals("ROLE_GUEST"))
             binding.navView.inflateMenu(R.menu.nav_menu_guest);
-        else
+        else if (sm.getRole().equals("ROLE_HOST"))
             binding.navView.inflateMenu(R.menu.nav_menu_host);
     }
 
@@ -152,6 +166,41 @@ public class HomeScreen extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notification channel";
+            String description = "Description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void startService() {
+        Intent intent = new Intent(this, SocketService.class);
+        intent.setAction(SocketService.ACTION_START_FOREGROUND_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.startForegroundService(intent);
+        } else {
+            this.startService(intent);
+        }
+    }
+
+    private void checkPermissions() {
+        Log.d("OpenDoors", "Checking permissions.");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
 
 }
 

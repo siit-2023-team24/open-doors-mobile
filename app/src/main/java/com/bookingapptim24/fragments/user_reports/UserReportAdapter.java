@@ -71,7 +71,7 @@ public class UserReportAdapter extends ArrayAdapter<UserReport> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.user_report_item, parent, false);
 
-        TextView complaintentUsername = convertView.findViewById(R.id.report_item_complaintant_username);
+        TextView complainantUsername = convertView.findViewById(R.id.report_item_complainant_username);
         TextView timestamp = convertView.findViewById(R.id.report_item_timestamp);
         TextView status = convertView.findViewById(R.id.report_item_status);
         TextView reason = convertView.findViewById(R.id.report_item_reason);
@@ -102,7 +102,7 @@ public class UserReportAdapter extends ArrayAdapter<UserReport> {
         });
 
         if (report != null) {
-            complaintentUsername.setText(report.getComplainantUsername());
+            complainantUsername.setText(report.getComplainantUsername());
             timestamp.setText(sdf.format(report.getTimestamp()));
             status.setText(report.getStatus().toLowerCase(Locale.ROOT).replace("role_", ""));
             reason.setText(report.getReason());

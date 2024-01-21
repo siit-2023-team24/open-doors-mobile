@@ -73,7 +73,7 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
             holder.priceTextView.setText(String.valueOf(accommodation.getPrice()) + " rsd/night");
         }
 
-        if(sessionManager.getRole().equals("ROLE_GUEST")) {
+        if(sessionManager.isLoggedIn() && sessionManager.getRole().equals("ROLE_GUEST")) {
             holder.heartImage.setVisibility(View.VISIBLE);
             if (accommodation.isFavoriteForGuest()) {
                 holder.heartImage.setImageResource(R.drawable.clicked_heart);
