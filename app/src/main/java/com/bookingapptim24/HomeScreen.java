@@ -1,19 +1,24 @@
 package com.bookingapptim24;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -42,11 +47,8 @@ public class HomeScreen extends AppCompatActivity {
     private Set<Integer> topLevelDestinations = new HashSet<>();
 
     public static String role = null;
-
-
     private static String CHANNEL_ID = "Zero channel";
-
-
+    private static final int PERMISSION_REQUEST_CODE = 505;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +93,13 @@ public class HomeScreen extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
         createNotificationChannel();
+
+        checkPermissions();
         startService();
     }
 
     @Override
     protected void onStart(){
-
         super.onStart();
     }
 
@@ -189,6 +192,13 @@ public class HomeScreen extends AppCompatActivity {
             this.startForegroundService(intent);
         } else {
             this.startService(intent);
+        }
+    }
+
+    private void checkPermissions() {
+        Log.d("OpenDoors", "Checking permissions.");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_REQUEST_CODE);
         }
     }
 

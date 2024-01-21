@@ -1,23 +1,24 @@
 package com.bookingapptim24.util;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bookingapptim24.BuildConfig;
 import com.bookingapptim24.HomeScreen;
@@ -26,8 +27,6 @@ import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.NotificationDTO;
 import com.bookingapptim24.models.enums.NotificationType;
 import com.google.gson.Gson;
-
-import java.util.Objects;
 
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
@@ -42,7 +41,10 @@ public class SocketService extends Service {
 
     private static final String TAG_FOREGROUND_SERVICE = "FOREGROUND_SERVICE";
     public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
+    public static final String ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE";
     public static final String ACTION_SEND_NOTIFICATION = "ACTION_SEND_NOTIFICATION";
+
+
     private static final String CHANNEL_ID = "Zero channel";
     private NotificationManager notificationManager;
     private NotificationChannel channel;
@@ -131,17 +133,23 @@ public class SocketService extends Service {
         {
             String action = intent.getAction();
             Log.i("SERVICE STARTED", "YES");
-            if (action.equals(ACTION_START_FOREGROUND_SERVICE)) {
-                startForegroundService();
-                Toast.makeText(getApplicationContext(), "Foreground service is started.", Toast.LENGTH_LONG).show();
-            } else if (action.equals(ACTION_SEND_NOTIFICATION)) {
-                Bundle extras = intent.getExtras();
-                String username = extras.getString("username");
-                String message = extras.getString("message");
-                String type = extras.getString("type");
-                NotificationDTO notificationDTO = new NotificationDTO(null, System.currentTimeMillis(),
-                        username, message, NotificationType.fromString(type));
-                sendNotification(notificationDTO);
+            switch (action) {
+                case ACTION_START_FOREGROUND_SERVICE:
+                    startForegroundService();
+                    Toast.makeText(getApplicationContext(), "Foreground service is started.", Toast.LENGTH_LONG).show();
+                    break;
+                case ACTION_SEND_NOTIFICATION:
+                    Bundle extras = intent.getExtras();
+                    String username = extras.getString("username");
+                    String message = extras.getString("message");
+                    String type = extras.getString("type");
+                    NotificationDTO notificationDTO = new NotificationDTO(null, System.currentTimeMillis(),
+                            username, message, NotificationType.fromString(type));
+                    sendNotification(notificationDTO);
+                    break;
+                case ACTION_STOP_FOREGROUND_SERVICE:
+                    onDestroy();
+                    break;
             }
         }
         return START_STICKY;
