@@ -61,9 +61,6 @@ public class LoginScreen extends AppCompatActivity {
                         UserTokenState userTokenState = response.body();
                         sessionManager.saveUserSession(userTokenState.getAccessToken());
 
-                        SocketService socketService = new SocketService(sessionManager);
-                        socketService.connect();
-
                         Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
                         startActivity(intent);
                         finish();

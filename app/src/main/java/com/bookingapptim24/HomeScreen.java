@@ -1,5 +1,14 @@
 package com.bookingapptim24;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,18 +20,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.ActivityHomeScreenNavigationBinding;
+import com.bookingapptim24.util.SocketService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
@@ -43,10 +43,6 @@ public class HomeScreen extends AppCompatActivity {
 
     public static String role = null;
 
-
-    //TODO
-//    private SyncReceiver syncReceiver;
-    public static String SYNC_DATA = "SYNC_DATA";
 
     private static String CHANNEL_ID = "Zero channel";
 
@@ -93,6 +89,9 @@ public class HomeScreen extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        createNotificationChannel();
+        startService();
     }
 
     @Override
@@ -167,6 +166,31 @@ public class HomeScreen extends AppCompatActivity {
     }
 
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notification channel";
+            String description = "Description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void startService() {
+        Intent intent = new Intent(this, SocketService.class);
+        intent.setAction(SocketService.ACTION_START_FOREGROUND_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.startForegroundService(intent);
+        } else {
+            this.startService(intent);
+        }
+    }
 
 
 }
