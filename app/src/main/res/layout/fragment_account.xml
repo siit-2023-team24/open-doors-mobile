@@ -24,7 +24,8 @@
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:background="@color/dark_blue"
+            android:id="@+id/account_image"
+            android:scaleType="centerCrop"
             />
 
     </LinearLayout>
@@ -84,6 +85,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/dark_grey"
+                android:text="@string/register_street_number" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_grey"
                 android:text="@string/register_phone" />
 
             <TextView
@@ -105,41 +112,56 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/emailTV"
                 android:text="test@test.com"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/firstNameTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/lastNameTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/countryTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/cityTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/streetTV"
+                android:text="Test" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/houseNumberTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/phoneTV"
                 android:text="Test" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/roleTV"
                 android:text="Test" />
 
         </LinearLayout>
@@ -162,29 +184,49 @@
         android:showDividers="middle">
 
         <Button
-            android:id="@+id/del_btn"
+            android:id="@+id/change_password_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:backgroundTint="?attr/colorAccent"
-            android:text="@string/delete_profile" />
+            android:backgroundTint="?attr/colorSecondary"
+            android:textColor="?attr/colorOnSecondary"
+            android:text="@string/change_password" />
 
         <Button
-            android:id="@+id/edit_btn"
+            android:id="@+id/edit_account_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:text="@string/edit" />
+            android:text="@string/edit_account" />
 
     </LinearLayout>
 
-        <Button
-            android:id="@+id/sign_out_btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?attr/colorTertiary"
-            android:textColor="?attr/colorOnTertiary"
-            android:text="@string/sign_out" />
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:showDividers="middle">
+
+            <Button
+                android:id="@+id/del_account_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:backgroundTint="?attr/colorAccent"
+                android:text="@string/delete_profile" />
+
+            <Button
+                android:id="@+id/sign_out_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorTertiary"
+                android:textColor="?attr/colorOnTertiary"
+                android:text="@string/sign_out" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </LinearLayout>

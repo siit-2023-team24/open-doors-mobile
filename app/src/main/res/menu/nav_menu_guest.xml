@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
 
         <item android:id="@+id/nav_show_all"
             android:title="@string/nav_show_all_title"/>
 
-        <item android:id="@+id/nav_reservations"
+        <item android:id="@+id/nav_reservation_requests"
             android:title="@string/reservations_title"/>
+
+        <item android:id="@+id/nav_favorites"
+            android:title="@string/favorites_title"/>
 
         <item android:id="@+id/nav_notifications"
             android:title="@string/notifications_title"/>
 
         <item android:id="@+id/nav_profile"
             android:title="@string/profile_title"/>
+
+        <item android:id="@+id/nav_report_user"
+            android:title="@string/report_host"/>
 
     </group>
 

@@ -40,6 +40,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/role_picker"/>
             <RadioGroup
+                android:id="@+id/role"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -77,6 +78,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/login_email"/>
             <EditText
+                android:id="@+id/username"
                 android:autofillHints="emailAddress"
                 android:inputType="textEmailAddress"
                 android:layout_width="0dp"
@@ -101,6 +103,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/login_password"/>
             <EditText
+                android:id="@+id/password"
                 android:autofillHints="password"
                 android:inputType="textPassword"
                 android:layout_width="0dp"
@@ -125,6 +128,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/confirm_password"/>
             <EditText
+                android:id="@+id/confirm_password"
                 android:autofillHints="password"
                 android:inputType="textPassword"
                 android:layout_width="0dp"
@@ -149,6 +153,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/register_first_name"/>
             <EditText
+                android:id="@+id/first_name"
                 android:autofillHints="name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -172,6 +177,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/register_last_name"/>
             <EditText
+                android:id="@+id/last_name"
                 android:autofillHints="name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -217,6 +223,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/register_city"/>
             <EditText
+                android:id="@+id/city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
@@ -239,6 +246,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/register_address"/>
             <EditText
+                android:id="@+id/street"
                 android:autofillHints="postalAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -246,6 +254,30 @@
                 android:textSize="16sp"
                 android:textAlignment="textStart"
                 android:hint="@string/address_hint"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:id="@+id/register_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="16sp"
+                android:textAlignment="textStart"
+                android:text="@string/register_street_number"/>
+            <NumberPicker
+                android:id="@+id/number"
+                android:inputType="number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:textAlignment="textStart"
+                android:hint="@string/number_hint"/>
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
@@ -262,6 +294,7 @@
                 android:textAlignment="textStart"
                 android:text="@string/register_phone"/>
             <EditText
+                android:id="@+id/phone"
                 android:autofillHints="phone"
                 android:inputType="phone"
                 android:layout_width="0dp"

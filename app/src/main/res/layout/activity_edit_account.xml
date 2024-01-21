@@ -28,14 +28,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center" >
+        android:gravity="center"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_wide_divider">
 
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:background="@color/dark_blue"
+            android:id="@+id/edit_account_image"
+            android:scaleType="centerCrop"
             />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="@drawable/empty_tall_divider">
+
+            <Button
+                android:id="@+id/change_profile_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_profile_image"
+                android:backgroundTint="?attr/colorPrimary"/>
+
+            <Button
+            android:id="@+id/delete_profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_profile_image"
+            android:backgroundTint="?attr/colorAccent"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -97,38 +122,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="48sp"
                 android:textColor="@color/dark_grey"
+                android:text="@string/register_street_number"
+                android:textSize="18sp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48sp"
+                android:textColor="@color/dark_grey"
                 android:text="@string/register_phone"
                 android:textSize="18sp"
                 android:gravity="center_vertical"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?attr/colorAccent"
-                android:text="@string/password_change" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48sp"
-                android:textColor="@color/dark_grey"
-                android:text="@string/current_password"
-                android:textSize="18sp"
-                android:gravity="center_vertical"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48sp"
-                android:textColor="@color/dark_grey"
-                android:text="@string/new_password"
-                android:textSize="18sp"
-                android:gravity="center_vertical"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48sp"
-                android:textColor="@color/dark_grey"
-                android:text="@string/confirm_password"
-                android:textSize="18sp"
-                android:gravity="center_vertical" />
 
         </LinearLayout>
 
@@ -142,15 +146,17 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:id="@+id/firstNameET"
                 android:text="Test" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:id="@+id/lastNameET"
                 android:text="Test" />
 
             <Spinner
-                android:id="@+id/country_spinner"
+                android:id="@+id/edit_country_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:textAlignment="textStart"/>
@@ -158,37 +164,29 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:id="@+id/cityET"
                 android:text="Test" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:id="@+id/streetET"
                 android:text="Test" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:inputType="number"
+                android:id="@+id/houseNumberET"
                 android:text="Test" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text=" "/>
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:inputType="textPassword"/>
+                android:id="@+id/phoneET"
+                android:text="Test" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textPassword" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:inputType="textPassword" />
 
         </LinearLayout>
 
@@ -203,7 +201,7 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/save_btn"
+            android:id="@+id/save_account_edit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save" />

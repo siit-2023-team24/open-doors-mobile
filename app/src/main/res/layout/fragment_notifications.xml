@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/settingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notification_settings"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp"/>
+
+    <Switch
+        android:id="@+id/reservationRequestsToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_reservation_requests"
+        android:textSize="16sp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:checked="true"/>
+
+    <Switch
+        android:id="@+id/statusChangesToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reservation_request_status_changes"
+        android:textSize="16sp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:checked="true"/>
+
+    <Switch
+        android:id="@+id/hostReviewsToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_host_reviews"
+        android:textSize="16sp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:checked="true"/>
+
+    <Switch
+        android:id="@+id/accommodationReviewsToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_accommodation_reviews"
+        android:textSize="16sp"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        android:checked="true"/>
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/save_settings"
+        />
+
+    <TextView
+        android:id="@+id/noDataTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/no_notifications"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/notification_card_item"/>
+
+</LinearLayout>
