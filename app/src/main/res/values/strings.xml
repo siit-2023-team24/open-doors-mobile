@@ -153,6 +153,13 @@
     <string name="search_requests">Search requests</string>
     <string name="accommodation_name">Accommodation name</string>
     <string name="filter_requests">Filter requests</string>
+    <string name="date_range_report">Date range report</string>
+    <string name="accommodation_id_report">Accommodation ID report</string>
+    <string name="time_period">Time period:</string>
+    <string name="accommodation">Accommodation:</string>
+    <string name="selected_start_date">Selected start date:</string>
+    <string name="selected_end_date">Selected end date:</string>
+    <string name="get_report">Get report</string>
 
     <!--    Titles-->
     <string name="login_title">Log into your account</string>
