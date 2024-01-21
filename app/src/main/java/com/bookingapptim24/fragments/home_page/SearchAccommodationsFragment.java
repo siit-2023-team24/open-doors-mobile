@@ -17,24 +17,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.bookingapptim24.R;
-import com.bookingapptim24.clients.ClientUtils;
-import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchAccommodationsFragment extends Fragment {
     private View view;
-    private SearchAndFilterAccommodations searchAndFilterDTO;
+    private SearchAndFilterAccommodations searchDTO;
     private Timestamp selectedStartDate;
     private Timestamp selectedEndDate;
 
@@ -117,23 +109,6 @@ public class SearchAccommodationsFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText location = view.findViewById(R.id.locationEditText);
-                EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-                String locationText = location.getText().toString().trim();
-                String numOfGuestsText = numOfGuests.getText().toString().trim();
-
-                if(!locationText.isEmpty())
-                    searchAndFilterDTO.setLocation(locationText.trim());
-                if (!numOfGuestsText.isEmpty()) {
-                    try {
-                        int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-                        searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
-                    } catch (NumberFormatException e) {
-                        // Handle the case where numOfGuestsText is not a valid integer
-                        e.printStackTrace();
-                    }
-                }
-
                 searchAccommodations();
             }
         });
@@ -147,53 +122,26 @@ public class SearchAccommodationsFragment extends Fragment {
 
         Bundle args = getArguments();
         ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
-        searchAndFilterDTO = searchAndFilters.get(0);
-        Log.d("sfDTO", searchAndFilterDTO.toString());
-        if(searchAndFilterDTO.getLocation() != null) {
+        searchDTO = searchAndFilters.get(0);
+        Log.d("sfDTO", searchDTO.toString());
+        if(searchDTO.getLocation() != null) {
             EditText location = view.findViewById(R.id.locationEditText);
-            location.setText(searchAndFilterDTO.getLocation());
+            location.setText(searchDTO.getLocation());
         }
-        if(searchAndFilterDTO.getGuestNumber() != null) {
+        if(searchDTO.getGuestNumber() != null) {
             EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-            numOfGuests.setText(searchAndFilterDTO.getGuestNumber().toString());
+            numOfGuests.setText(searchDTO.getGuestNumber().toString());
         }
-        searchAndFilterDTO.setStartDate(null);
-        searchAndFilterDTO.setEndDate(null);
+        searchDTO.setStartDate(null);
+        searchDTO.setEndDate(null);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        EditText location = view.findViewById(R.id.locationEditText);
-        EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-        String locationText = location.getText().toString().trim();
-        String numOfGuestsText = numOfGuests.getText().toString().trim();
-
-        if(!locationText.isEmpty())
-            searchAndFilterDTO.setLocation(locationText);
-        else
-            searchAndFilterDTO.setLocation(null);
-
-        if (!numOfGuestsText.isEmpty()) {
-            try {
-                int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-                searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        } else {
-            searchAndFilterDTO.setGuestNumber(null);
-        }
-    }
-
 
     private void searchAccommodations() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(selectedStartDate != null)
-            searchAndFilterDTO.setStartDate(dateFormat.format(selectedStartDate));
+            searchDTO.setStartDate(dateFormat.format(selectedStartDate));
         if(selectedEndDate != null)
-            searchAndFilterDTO.setEndDate(dateFormat.format(selectedEndDate));
+            searchDTO.setEndDate(dateFormat.format(selectedEndDate));
 
         EditText location = view.findViewById(R.id.locationEditText);
         EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
@@ -201,25 +149,25 @@ public class SearchAccommodationsFragment extends Fragment {
         String numOfGuestsText = numOfGuests.getText().toString().trim();
 
         if(!locationText.isEmpty())
-            searchAndFilterDTO.setLocation(locationText);
+            searchDTO.setLocation(locationText);
         else
-            searchAndFilterDTO.setLocation(null);
+            searchDTO.setLocation(null);
 
         if (!numOfGuestsText.isEmpty()) {
             try {
                 int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-                searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
+                searchDTO.setGuestNumber(numOfGuestsValue);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         } else {
-            searchAndFilterDTO.setGuestNumber(null);
+            searchDTO.setGuestNumber(null);
         }
 
-        Log.d("FilterAccommodations", searchAndFilterDTO.toString());
+        Log.d("FilterAccommodations", searchDTO.toString());
 
         ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
-        searchAndFilters.add(searchAndFilterDTO);
+        searchAndFilters.add(searchDTO);
 
         Bundle args = new Bundle();
         args.putSerializable("searchAndFilterDTO", searchAndFilters);

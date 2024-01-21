@@ -37,12 +37,8 @@ public class ShowAllFragment extends Fragment {
 
     public ShowAllFragment() {}
 
-    public ShowAllFragment(ArrayList<AccommodationSearchDTO> accommodations) {
-        this.accommodations = accommodations;
-    }
-
-    public static ShowAllFragment newInstance(ArrayList<AccommodationSearchDTO> accommodations) {
-        ShowAllFragment fragment = new ShowAllFragment(accommodations);
+    public static ShowAllFragment newInstance() {
+        ShowAllFragment fragment = new ShowAllFragment();
         return fragment;
     }
 
