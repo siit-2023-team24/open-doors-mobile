@@ -159,4 +159,9 @@
         android:label="Filter Reservations"
         tools:layout="@layout/fragment_filter_requests"/>
 
+    <fragment android:id="@+id/nav_favorites"
+        android:name="com.bookingapptim24.fragments.favorites.FavoritesFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorites"/>
+
 </navigation>

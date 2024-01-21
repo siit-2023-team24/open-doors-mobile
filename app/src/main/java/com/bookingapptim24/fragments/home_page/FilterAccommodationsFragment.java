@@ -18,14 +18,12 @@ import android.widget.LinearLayout;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
-import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 import com.bookingapptim24.models.enums.AccommodationType;
 import com.bookingapptim24.models.enums.Amenity;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 import retrofit2.Call;
@@ -35,7 +33,7 @@ import retrofit2.Response;
 public class FilterAccommodationsFragment extends Fragment {
 
     private View view;
-    private SearchAndFilterAccommodations searchAndFilterDTO;
+    private SearchAndFilterAccommodations filterDTO;
     private ArrayList<String> accommodationTypes;
     private ArrayList<String> amenities;
 
@@ -64,19 +62,6 @@ public class FilterAccommodationsFragment extends Fragment {
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCheckedAccommodationTypes();
-                getCheckedAmenities();
-
-                EditText startPriceEditText = view.findViewById(R.id.startPriceEditText);
-                EditText endPriceEditText = view.findViewById(R.id.endPriceEditText);
-                String startPriceText = startPriceEditText.getText().toString().trim();
-                String endPriceText = endPriceEditText.getText().toString().trim();
-
-                if(!startPriceText.isEmpty())
-                    searchAndFilterDTO.setStartPrice(Double.valueOf(startPriceText));
-                if(!endPriceText.isEmpty())
-                    searchAndFilterDTO.setEndPrice(Double.valueOf(endPriceText));
-
                 filterAccommodations();
             }
         });
@@ -90,15 +75,15 @@ public class FilterAccommodationsFragment extends Fragment {
 
         Bundle args = getArguments();
         ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
-        searchAndFilterDTO = searchAndFilters.get(0);
+        filterDTO = searchAndFilters.get(0);
         loadAccommodationTypes();
         loadAmenities();
         EditText startPriceEditText = view.findViewById(R.id.startPriceEditText);
         EditText endPriceEditText = view.findViewById(R.id.endPriceEditText);
-        if(searchAndFilterDTO.getStartPrice() != null)
-            startPriceEditText.setText(searchAndFilterDTO.getStartPrice().toString());
-        if(searchAndFilterDTO.getEndPrice() != null)
-            endPriceEditText.setText(searchAndFilterDTO.getEndPrice().toString());
+        if(filterDTO.getStartPrice() != null)
+            startPriceEditText.setText(filterDTO.getStartPrice().toString());
+        if(filterDTO.getEndPrice() != null)
+            endPriceEditText.setText(filterDTO.getEndPrice().toString());
     }
 
     private void getAccommodationTypes() {
@@ -151,8 +136,8 @@ public class FilterAccommodationsFragment extends Fragment {
                 checkBox.setText(accommodationType);
 
                 // Check if the type is in searchAndFilterDTO
-                if (searchAndFilterDTO.getTypes() != null &&
-                        searchAndFilterDTO.getTypes().contains(AccommodationType.valueOf(accommodationType))) {
+                if (filterDTO.getTypes() != null &&
+                        filterDTO.getTypes().contains(AccommodationType.valueOf(accommodationType))) {
                     checkBox.setChecked(true);
                 }
 
@@ -171,8 +156,8 @@ public class FilterAccommodationsFragment extends Fragment {
                 checkBox.setText(amenity);
 
                 // Check if the amenity is in searchAndFilterDTO
-                if (searchAndFilterDTO.getAmenities() != null &&
-                        searchAndFilterDTO.getAmenities().contains(Amenity.valueOf(amenity))) {
+                if (filterDTO.getAmenities() != null &&
+                        filterDTO.getAmenities().contains(Amenity.valueOf(amenity))) {
                     checkBox.setChecked(true);
                 }
 
@@ -182,37 +167,35 @@ public class FilterAccommodationsFragment extends Fragment {
     }
 
     private void filterAccommodations() {
-        Log.d("FilterDTO", searchAndFilterDTO.toString());
-        Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodations(searchAndFilterDTO);
-        call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
-            @Override
-            public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
-                if(response.isSuccessful()) {
-                    ArrayList<AccommodationSearchDTO> accommodations = response.body();
-                    for(AccommodationSearchDTO a : accommodations)
-                        Log.d("REZ", a.toString());
+        getCheckedAccommodationTypes();
+        getCheckedAmenities();
 
-                    ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
-                    searchAndFilters.add(searchAndFilterDTO);
+        EditText startPriceEditText = view.findViewById(R.id.startPriceEditText);
+        EditText endPriceEditText = view.findViewById(R.id.endPriceEditText);
+        String startPriceText = startPriceEditText.getText().toString().trim();
+        String endPriceText = endPriceEditText.getText().toString().trim();
 
-                    Bundle args = new Bundle();
-                    args.putSerializable("accommodations", accommodations);
-                    args.putSerializable("searchAndFilterDTO", searchAndFilters);
+        if(!startPriceText.isEmpty()) {
+            filterDTO.setStartPrice(Double.valueOf(startPriceText));
+        } else {
+            filterDTO.setStartPrice(null);
+        }
 
-                    NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                    navController.popBackStack();
-                    navController.navigate(R.id.nav_show_all, args);
+        if(!endPriceText.isEmpty()) {
+            filterDTO.setEndPrice(Double.valueOf(endPriceText));
+        } else {
+            filterDTO.setEndPrice(null);
+        }
 
-                } else {
-                    Log.d("REZ","Meesage recieved: "+response.code());
-                }
-            }
+        ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+        searchAndFilters.add(filterDTO);
 
-            @Override
-            public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-            }
-        });
+        Bundle args = new Bundle();
+        args.putSerializable("searchAndFilterDTO", searchAndFilters);
+
+        NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+        navController.popBackStack();
+        navController.navigate(R.id.nav_show_all, args);
     }
 
     private void getCheckedAccommodationTypes() {
@@ -236,7 +219,7 @@ public class FilterAccommodationsFragment extends Fragment {
             }
         }
 
-        searchAndFilterDTO.setTypes(checkedAccommodationTypes);
+        filterDTO.setTypes(checkedAccommodationTypes);
     }
 
     private void getCheckedAmenities() {
@@ -260,7 +243,7 @@ public class FilterAccommodationsFragment extends Fragment {
             }
         }
 
-        searchAndFilterDTO.setAmenities(checkedAmenities);
+        filterDTO.setAmenities(checkedAmenities);
     }
 
 }

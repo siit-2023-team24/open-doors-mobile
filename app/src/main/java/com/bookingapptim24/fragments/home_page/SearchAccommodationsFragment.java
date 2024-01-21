@@ -24,24 +24,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bookingapptim24.R;
-import com.bookingapptim24.clients.ClientUtils;
-import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.bookingapptim24.models.SearchAndFilterAccommodations;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchAccommodationsFragment extends Fragment implements SensorEventListener {
     private View view;
-    private SearchAndFilterAccommodations searchAndFilterDTO;
+    private SearchAndFilterAccommodations searchDTO;
     private Timestamp selectedStartDate;
     private Timestamp selectedEndDate;
 
@@ -128,23 +120,6 @@ public class SearchAccommodationsFragment extends Fragment implements SensorEven
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText location = view.findViewById(R.id.locationEditText);
-                EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-                String locationText = location.getText().toString().trim();
-                String numOfGuestsText = numOfGuests.getText().toString().trim();
-
-                if(!locationText.isEmpty())
-                    searchAndFilterDTO.setLocation(locationText.trim());
-                if (!numOfGuestsText.isEmpty()) {
-                    try {
-                        int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-                        searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
-                    } catch (NumberFormatException e) {
-                        // Handle the case where numOfGuestsText is not a valid integer
-                        e.printStackTrace();
-                    }
-                }
-
                 searchAccommodations();
             }
         });
@@ -165,25 +140,28 @@ public class SearchAccommodationsFragment extends Fragment implements SensorEven
 
         Bundle args = getArguments();
         ArrayList<SearchAndFilterAccommodations> searchAndFilters = (ArrayList<SearchAndFilterAccommodations>) args.getSerializable("searchAndFilterDTO");
-        searchAndFilterDTO = searchAndFilters.get(0);
-        Log.d("sfDTO", searchAndFilterDTO.toString());
-        if(searchAndFilterDTO.getLocation() != null) {
+        searchDTO = searchAndFilters.get(0);
+        Log.d("sfDTO", searchDTO.toString());
+        if(searchDTO.getLocation() != null) {
             EditText location = view.findViewById(R.id.locationEditText);
-            location.setText(searchAndFilterDTO.getLocation());
+            location.setText(searchDTO.getLocation());
         }
-        if(searchAndFilterDTO.getGuestNumber() != null) {
+        if(searchDTO.getGuestNumber() != null) {
             EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
-            numOfGuests.setText(searchAndFilterDTO.getGuestNumber().toString());
+            numOfGuests.setText(searchDTO.getGuestNumber().toString());
         }
-        searchAndFilterDTO.setStartDate(null);
-        searchAndFilterDTO.setEndDate(null);
+        searchDTO.setStartDate(null);
+        searchDTO.setEndDate(null);
 
         sensorManager.registerListener(this, magnetometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    private void searchAccommodations() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(selectedStartDate != null)
+            searchDTO.setStartDate(dateFormat.format(selectedStartDate));
+        if(selectedEndDate != null)
+            searchDTO.setEndDate(dateFormat.format(selectedEndDate));
 
         EditText location = view.findViewById(R.id.locationEditText);
         EditText numOfGuests = view.findViewById(R.id.numberOfGuestsEditText);
@@ -191,56 +169,34 @@ public class SearchAccommodationsFragment extends Fragment implements SensorEven
         String numOfGuestsText = numOfGuests.getText().toString().trim();
 
         if(!locationText.isEmpty())
-            searchAndFilterDTO.setLocation(locationText.trim());
+            searchDTO.setLocation(locationText);
+        else
+            searchDTO.setLocation(null);
+
         if (!numOfGuestsText.isEmpty()) {
             try {
                 int numOfGuestsValue = Integer.parseInt(numOfGuestsText);
-                searchAndFilterDTO.setGuestNumber(numOfGuestsValue);
+                searchDTO.setGuestNumber(numOfGuestsValue);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+        } else {
+            searchDTO.setGuestNumber(null);
         }
         sensorManager.unregisterListener(this);
     }
 
+        Log.d("FilterAccommodations", searchDTO.toString());
 
-    private void searchAccommodations() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if(selectedStartDate != null)
-            searchAndFilterDTO.setStartDate(dateFormat.format(selectedStartDate));
-        if(selectedEndDate != null)
-            searchAndFilterDTO.setEndDate(dateFormat.format(selectedEndDate));
+        ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
+        searchAndFilters.add(searchDTO);
 
-        Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodations(searchAndFilterDTO);
-        call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
-            @Override
-            public void onResponse(Call<ArrayList<AccommodationSearchDTO>> call, Response<ArrayList<AccommodationSearchDTO>> response) {
-                if(response.isSuccessful()) {
-                    ArrayList<AccommodationSearchDTO> accommodations = response.body();
-                    for(AccommodationSearchDTO a : accommodations)
-                        Log.d("REZ", a.toString());
+        Bundle args = new Bundle();
+        args.putSerializable("searchAndFilterDTO", searchAndFilters);
 
-                    ArrayList<SearchAndFilterAccommodations> searchAndFilters = new ArrayList<>();
-                    searchAndFilters.add(searchAndFilterDTO);
-
-                    Bundle args = new Bundle();
-                    args.putSerializable("accommodations", accommodations);
-                    args.putSerializable("searchAndFilterDTO", searchAndFilters);
-
-                    NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
-                    navController.popBackStack();
-                    navController.navigate(R.id.nav_show_all, args);
-
-                } else {
-                    Log.d("REZ","Meesage recieved: "+response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<AccommodationSearchDTO>> call, Throwable t) {
-                Log.d("REZ", t.getMessage() != null?t.getMessage():"error");
-            }
-        });
+        NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
+        navController.popBackStack();
+        navController.navigate(R.id.nav_show_all, args);
     }
 
     @Override
