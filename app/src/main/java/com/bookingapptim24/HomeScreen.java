@@ -151,14 +151,13 @@ public class HomeScreen extends AppCompatActivity {
 
     private void setUpMenu() {
         SessionManager sm = new SessionManager(getApplicationContext());
-        role = sm.getRole();
-        if (role == null)
+        if (!sm.isLoggedIn())
             binding.navView.inflateMenu(R.menu.nav_menu_unrecognised);
-        else if (role.equals("ROLE_ADMIN"))
+        else if (sm.getRole().equals("ROLE_ADMIN"))
             binding.navView.inflateMenu(R.menu.nav_menu_admin);
-        else if (role.equals("ROLE_GUEST"))
+        else if (sm.getRole().equals("ROLE_GUEST"))
             binding.navView.inflateMenu(R.menu.nav_menu_guest);
-        else
+        else if (sm.getRole().equals("ROLE_HOST"))
             binding.navView.inflateMenu(R.menu.nav_menu_host);
     }
 

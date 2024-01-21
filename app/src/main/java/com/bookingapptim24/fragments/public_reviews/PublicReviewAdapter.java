@@ -99,6 +99,7 @@ public class PublicReviewAdapter extends ArrayAdapter<ReviewDetails> {
             deleteButton.setVisibility(View.GONE);
             reportButton.setVisibility(View.GONE);
             withdrawButton.setVisibility(View.GONE);
+            pendingTextView.setVisibility(View.GONE);
             if(sessionManager.isLoggedIn() && sessionManager.getUsername().equals(review.getAuthorUsername())) {
                 deleteButton.setVisibility(View.VISIBLE);
             }
@@ -117,7 +118,7 @@ public class PublicReviewAdapter extends ArrayAdapter<ReviewDetails> {
                 changeReportStatus(review.getId());
             });
 
-            if(sessionManager.isLoggedIn() && hasPending && review.getAuthorUsername() == sessionManager.getUsername()) {
+            if(sessionManager.isLoggedIn() && hasPending && review.getAuthorUsername().equals(sessionManager.getUsername())) {
                 pendingTextView.setVisibility(View.VISIBLE);
             }
         }

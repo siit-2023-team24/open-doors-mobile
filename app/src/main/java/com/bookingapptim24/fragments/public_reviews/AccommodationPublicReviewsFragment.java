@@ -111,8 +111,8 @@ public class AccommodationPublicReviewsFragment extends ListFragment implements 
                         binding.averageRating.setText(String.valueOf(reviewDTOs.getAverageRating()));
                     }
                     if (reviewDTOs.getUnapprovedReview()!=null) {
-                        reviews.add(reviewDTOs.getUnapprovedReview());
                         adapter.setHasPending(true);
+                        reviews.add(reviewDTOs.getUnapprovedReview());
                     }
                     if(reviewDTOs.getIsReviewable()) {
                         binding.writeAccommodationReview.setVisibility(View.VISIBLE);

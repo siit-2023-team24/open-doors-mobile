@@ -93,8 +93,10 @@ public class AccommodationDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i("OpenDoors", "Accommodation Details onCreateView()");
         View view;
-
-        String role = sessionManager.getRole();
+        String role = null;
+        if(sessionManager.isLoggedIn()) {
+            role = sessionManager.getRole();
+        }
         String username = sessionManager.getUsername();
 
         if(role == null || !role.equals("ROLE_GUEST")) {

@@ -50,17 +50,6 @@
             />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/write_accommodation_review"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/public_review_card_item"/>
-
     <TextView
         android:id="@+id/no_reviews_text"
         android:layout_width="match_parent"
@@ -72,4 +61,16 @@
         android:layout_marginVertical="20dp"
         android:visibility="gone">
     </TextView>
+
+    <FrameLayout
+        android:id="@+id/write_accommodation_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/public_review_card_item"/>
+
 </LinearLayout>
