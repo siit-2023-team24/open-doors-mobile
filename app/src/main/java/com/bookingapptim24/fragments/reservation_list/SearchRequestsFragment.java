@@ -96,17 +96,6 @@ public class SearchRequestsFragment extends Fragment {
         searchAndFilterDTO.setEndDate(null);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        EditText accommodationNameEditText = view.findViewById(R.id.accommodationNameEditText);
-        String accommodationName = accommodationNameEditText.getText().toString().trim();
-        if(!accommodationName.isEmpty()) {
-            searchAndFilterDTO.setAccommodationName(accommodationName);
-        }
-    }
-
     private void searchRequests() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(selectedStartDate != null)
@@ -118,6 +107,8 @@ public class SearchRequestsFragment extends Fragment {
         String accommodationNameText = accommodationNameTextView.getText().toString().trim();
         if(!accommodationNameText.isEmpty())
             searchAndFilterDTO.setAccommodationName(accommodationNameText);
+        else
+            searchAndFilterDTO.setAccommodationName(null);
 
         ArrayList<SearchAndFilterReservationRequests> searchAndFilters = new ArrayList<>();
         searchAndFilters.add(searchAndFilterDTO);
@@ -151,12 +142,9 @@ public class SearchRequestsFragment extends Fragment {
 
             @Override
             public boolean isValid(long date) {
-                long currentDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
                 if(selectedEndDate != null) {
                     if(date > selectedEndDate.getTime()) return false;
                 }
-                if(date < currentDate)
-                    return false;
 
                 return true;
             }
@@ -206,12 +194,9 @@ public class SearchRequestsFragment extends Fragment {
 
             @Override
             public boolean isValid(long date) {
-                long currentDate = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
                 if(selectedStartDate != null) {
                     if(date < selectedStartDate.getTime()) return false;
                 }
-                if(date < currentDate)
-                    return false;
 
                 return true;
             }
