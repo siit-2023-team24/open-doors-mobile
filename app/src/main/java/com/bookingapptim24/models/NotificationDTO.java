@@ -2,6 +2,7 @@ package com.bookingapptim24.models;
 
 
 import com.bookingapptim24.models.enums.NotificationType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.Timestamp;
 
@@ -35,8 +36,12 @@ public class NotificationDTO {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestamp(String timestamp) {
+        try {
+            this.timestamp = Long.parseLong(timestamp);
+        } catch (NumberFormatException e) {
+            this.timestamp = 0L;
+        }
     }
 
     public String getUsername() {
@@ -72,5 +77,15 @@ public class NotificationDTO {
                 ", message='" + message + '\'' +
                 ", type='" + type + '\'' +
                 '}';
+    }
+
+    public static NotificationDTO fromJson(String json) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(json, NotificationDTO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -38,13 +38,16 @@ public class AccommodationPublicReviewsFragment extends ListFragment implements 
     private List<ReviewDetails> reviews = new ArrayList<>();
 
     private Long accommodationId;
+    private String hostUsername;
     private static final String ACCOMMODATION_ID = "accommodationId";
+    private static final String HOST_USERNAME = "hostUsername";
     public AccommodationPublicReviewsFragment() {}
 
-    public static AccommodationPublicReviewsFragment newInstance(Long accommodationId) {
+    public static AccommodationPublicReviewsFragment newInstance(Long accommodationId, String hostUsername) {
         AccommodationPublicReviewsFragment fragment = new AccommodationPublicReviewsFragment();
         Bundle args = new Bundle();
         args.putLong(ACCOMMODATION_ID, accommodationId);
+        args.putString(HOST_USERNAME, hostUsername);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,13 +57,14 @@ public class AccommodationPublicReviewsFragment extends ListFragment implements 
                              Bundle savedInstanceState) {
         binding = FragmentAccommodationPublicReviewsBinding.inflate(inflater, container, false);
         accommodationId = getArguments() != null ? getArguments().getLong(ACCOMMODATION_ID) : null;
+        hostUsername = getArguments() != null ? getArguments().getString(HOST_USERNAME) : "";
         sessionManager = new SessionManager(requireContext());
         adapter = new PublicReviewAdapter(getActivity(), getActivity().getSupportFragmentManager(), reviews, false, false);
         adapter.setListener(AccommodationPublicReviewsFragment.this);
         setListAdapter(adapter);
 
         if (savedInstanceState == null) {
-            WriteReviewCardFragment innerFragment = WriteReviewCardFragment.newInstance(accommodationId, false);
+            WriteReviewCardFragment innerFragment = WriteReviewCardFragment.newInstance(accommodationId, false, hostUsername);
             innerFragment.setListener(AccommodationPublicReviewsFragment.this);
             getChildFragmentManager().beginTransaction()
                     .replace(binding.writeAccommodationReview.getId(), innerFragment)

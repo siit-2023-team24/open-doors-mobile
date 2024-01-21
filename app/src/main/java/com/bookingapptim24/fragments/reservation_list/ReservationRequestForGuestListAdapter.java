@@ -1,6 +1,7 @@
 package com.bookingapptim24.fragments.reservation_list;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,8 +23,10 @@ import androidx.fragment.app.FragmentManager;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.models.ReservationRequestForGuest;
+import com.bookingapptim24.models.enums.NotificationType;
 import com.bookingapptim24.models.enums.ReservationRequestStatus;
 import com.bookingapptim24.util.DataChangesListener;
+import com.bookingapptim24.util.SocketService;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -155,6 +158,9 @@ public class ReservationRequestForGuestListAdapter extends ArrayAdapter<Reservat
                     Log.d("OpenDoors", "Message received");
                     Toast.makeText(activity,"Reservation canceled", Toast.LENGTH_SHORT).show();
                     listener.onDataChanged();
+
+                    sendNotification(request.getHostUsername(), "Reservation request #" + request.getId() + " has been cancelled",
+                            NotificationType.RESERVATION_REQUEST.getTypeMessage());
                 } else {
                     Log.d("OpenDoors", "Message received: " + response.code());
                     try {
@@ -231,5 +237,14 @@ public class ReservationRequestForGuestListAdapter extends ArrayAdapter<Reservat
         os.close();
 
         return tempFile;
+    }
+
+    private void sendNotification(String username, String message, String type) {
+        Intent intent = new Intent(activity, SocketService.class);
+        intent.putExtra("username", username);
+        intent.putExtra("message", message);
+        intent.putExtra("type", type);
+        intent.setAction(SocketService.ACTION_SEND_NOTIFICATION);
+        activity.startForegroundService(intent);
     }
 }

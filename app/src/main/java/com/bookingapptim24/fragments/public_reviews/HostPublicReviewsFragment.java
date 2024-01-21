@@ -35,13 +35,16 @@ public class HostPublicReviewsFragment extends ListFragment implements DataChang
     private FragmentHostPublicReviewsBinding binding;
     private List<ReviewDetails> reviews = new ArrayList<>();
     private Long hostId;
+    private String hostUsername;
     private static final String HOST_ID = "hostId";
+    private static final String HOST_USERNAME = "hostUsername";
     public HostPublicReviewsFragment() {}
 
-    public static HostPublicReviewsFragment newInstance(Long hostId) {
+    public static HostPublicReviewsFragment newInstance(Long hostId, String hostUsername) {
         HostPublicReviewsFragment fragment = new HostPublicReviewsFragment();
         Bundle args = new Bundle();
         args.putLong(HOST_ID, hostId);
+        args.putString(HOST_USERNAME, hostUsername);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,13 +55,14 @@ public class HostPublicReviewsFragment extends ListFragment implements DataChang
         sessionManager = new SessionManager(requireContext());
         binding = FragmentHostPublicReviewsBinding.inflate(inflater, container, false);
         hostId = getArguments() != null ? getArguments().getLong(HOST_ID) : sessionManager.getUserId();
+        hostUsername = getArguments() != null ? getArguments().getString(HOST_USERNAME) : "";
         boolean canReport = sessionManager.isLoggedIn() && sessionManager.getUserId() == hostId;
         adapter = new PublicReviewAdapter(getActivity(), getActivity().getSupportFragmentManager(), reviews, canReport, true);
         adapter.setListener(HostPublicReviewsFragment.this);
         setListAdapter(adapter);
 
         if (savedInstanceState == null) {
-            WriteReviewCardFragment innerFragment = WriteReviewCardFragment.newInstance(hostId, true);
+            WriteReviewCardFragment innerFragment = WriteReviewCardFragment.newInstance(hostId, true, hostUsername);
             innerFragment.setListener(HostPublicReviewsFragment.this);
             getChildFragmentManager().beginTransaction()
                     .replace(binding.writeHostReview.getId(), innerFragment)

@@ -206,26 +206,28 @@ public class AccommodationDetailsFragment extends Fragment {
         }
         hostBtn.setText(accommodationDetails.getHost());
         hostBtn.setOnClickListener(v -> {
-            openHostReviewsFragment(accommodationDetails.getHostId());
+            openHostReviewsFragment();
         });
         reviewsBtn.setOnClickListener(v -> {
-            openAccommodationReviewsFragment(accommodationDetails.getId());
+            openAccommodationReviewsFragment();
         });
     }
 
 
-    private void openHostReviewsFragment(Long hostId) {
+    private void openHostReviewsFragment() {
         Bundle args = new Bundle();
-        args.putLong("hostId", hostId);
+        args.putLong("hostId", accommodationDetails.getHostId());
+        args.putString("hostUsername", accommodationDetails.getHost());
 
         NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
         navController.navigate(R.id.host_reviews, args);
     }
 
 
-    private void openAccommodationReviewsFragment(Long accommodationId) {
+    private void openAccommodationReviewsFragment() {
         Bundle args = new Bundle();
-        args.putLong("accommodationId", accommodationId);
+        args.putLong("accommodationId", accommodationDetails.getId());
+        args.putString("hostUsername", accommodationDetails.getHost());
 
         NavController navController = Navigation.findNavController((Activity) requireContext(), R.id.fragment_nav_content_main);
         navController.navigate(R.id.accommodation_reviews, args);

@@ -1,5 +1,6 @@
 package com.bookingapptim24.fragments.public_reviews;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,10 +18,12 @@ import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.FragmentWriteReviewCardBinding;
+import com.bookingapptim24.models.enums.NotificationType;
 import com.bookingapptim24.models.reviews.AccommodationReviewWhole;
 import com.bookingapptim24.models.reviews.HostReviewWhole;
 import com.bookingapptim24.models.reviews.NewReview;
 import com.bookingapptim24.util.DataChangesListener;
+import com.bookingapptim24.util.SocketService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,17 +34,20 @@ public class WriteReviewCardFragment extends Fragment {
     private DataChangesListener listener;
     private int rating = 0;
     private Long recipientId;
+    private String hostUsername;
 
     private boolean isHost;
 
     private static final String IS_HOST = "isHost";
     private static final String RECIPIENT_ID = "recipientId";
+    private static final String HOST_USERNAME = "hostUsername";
 
-    public static WriteReviewCardFragment newInstance(Long recipientId, boolean isHost) {
+    public static WriteReviewCardFragment newInstance(Long recipientId, boolean isHost, String hostUsername) {
         WriteReviewCardFragment fragment = new WriteReviewCardFragment();
         Bundle args = new Bundle();
         args.putLong(RECIPIENT_ID, recipientId);
         args.putBoolean(IS_HOST, isHost);
+        args.putString(HOST_USERNAME, hostUsername);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +61,7 @@ public class WriteReviewCardFragment extends Fragment {
         binding.errorTextView.setVisibility(View.INVISIBLE);
         recipientId = getArguments() != null ? getArguments().getLong(RECIPIENT_ID) : null;
         isHost = getArguments() != null ? getArguments().getBoolean(IS_HOST) : false;
+        hostUsername = getArguments() != null ? getArguments().getString(HOST_USERNAME) : "";
         binding.starContainer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +170,9 @@ public class WriteReviewCardFragment extends Fragment {
             public void onResponse(Call<HostReviewWhole> call, Response<HostReviewWhole> response) {
                 if (response.isSuccessful()){
                     Log.d("Response", response.message());
+
+                    sendNotification(hostUsername, "You have a new review",
+                            NotificationType.HOST_REVIEW.getTypeMessage());
                 } else {
                     Log.d("REZ","Message received: "+response.code());
                 }
@@ -178,4 +188,14 @@ public class WriteReviewCardFragment extends Fragment {
     public void setListener(DataChangesListener listener) {
         this.listener = listener;
     }
+
+    private void sendNotification(String username, String message, String type) {
+        Intent intent = new Intent(requireActivity(), SocketService.class);
+        intent.putExtra("username", username);
+        intent.putExtra("message", message);
+        intent.putExtra("type", type);
+        intent.setAction(SocketService.ACTION_SEND_NOTIFICATION);
+        requireActivity().startForegroundService(intent);
+    }
+
 }

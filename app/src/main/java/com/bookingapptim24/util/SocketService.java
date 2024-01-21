@@ -24,6 +24,7 @@ import com.bookingapptim24.HomeScreen;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.NotificationDTO;
+import com.bookingapptim24.models.enums.NotificationType;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -41,13 +42,12 @@ public class SocketService extends Service {
 
     private static final String TAG_FOREGROUND_SERVICE = "FOREGROUND_SERVICE";
     public static final String ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE";
-    public static final String ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE";
+    public static final String ACTION_SEND_NOTIFICATION = "ACTION_SEND_NOTIFICATION";
     private static final String CHANNEL_ID = "Zero channel";
     private NotificationManager notificationManager;
     private NotificationChannel channel;
     private int notificationID = 50;
 
-    private String payload = "juhhuuu";
 
     public SocketService() {}
 
@@ -85,17 +85,10 @@ public class SocketService extends Service {
                     handleNotification(topicMessage);
                 },
                 error -> Log.e("WEBSOCKET", error.getMessage()));
-
-
-//        NotificationDTO notificationDTO = new NotificationDTO(null, System.currentTimeMillis(),
-//                sessionManager.getUsername(), "NOTIFICATION FROM MOBILE", NotificationType.NEW_RESERVATION_REQUEST);
-//
-//        sendNotification(notificationDTO);
     }
 
     private void handleNotification(StompMessage topicMessage) {
-        Gson gson = new Gson();
-        NotificationDTO notificationDTO = gson.fromJson(topicMessage.getPayload(), NotificationDTO.class);
+        NotificationDTO notificationDTO = NotificationDTO.fromJson(topicMessage.getPayload());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo)
@@ -141,6 +134,14 @@ public class SocketService extends Service {
             if (action.equals(ACTION_START_FOREGROUND_SERVICE)) {
                 startForegroundService();
                 Toast.makeText(getApplicationContext(), "Foreground service is started.", Toast.LENGTH_LONG).show();
+            } else if (action.equals(ACTION_SEND_NOTIFICATION)) {
+                Bundle extras = intent.getExtras();
+                String username = extras.getString("username");
+                String message = extras.getString("message");
+                String type = extras.getString("type");
+                NotificationDTO notificationDTO = new NotificationDTO(null, System.currentTimeMillis(),
+                        username, message, NotificationType.fromString(type));
+                sendNotification(notificationDTO);
             }
         }
         return START_STICKY;
