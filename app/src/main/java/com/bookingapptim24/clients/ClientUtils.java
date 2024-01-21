@@ -46,4 +46,5 @@ public class ClientUtils {
     public static HostReviewService hostReviewService = retrofit.create(HostReviewService.class);
     public static UserReportService userReportService = retrofit.create(UserReportService.class);
     public static ReservationRequestService reservationRequestService = retrofit.create(ReservationRequestService.class);
+    public static FinancialReportService financialReportService = retrofit.create(FinancialReportService.class);
 }

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.financialReports.FinancialReportsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/date_range_report"
+        android:textSize="20dp"
+        android:textAlignment="center"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/startDateReportsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_date"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:id="@+id/endDateReportsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/end_date"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selected_start_date"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/selectedStartDateTextView"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selected_end_date"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/selectedEndDateTextView"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/getDateRangeReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/get_report"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:id="@+id/dateRangeReportTableLayout">
+
+        <ir.androidexception.datatable.DataTable
+            android:id="@+id/data_table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:header_gravity="center"
+            app:row_gravity="center"
+            app:header_vertical_padding="16dp"
+            app:header_horizontal_padding="0dp"
+            app:row_vertical_padding="16dp"
+            app:header_text_size="12sp"
+            app:row_text_size="12sp"
+            app:row_text_color="#000"
+            app:header_text_color="#000"
+            app:row_background_color="#fff"
+            app:header_background_color="#fff"
+            app:persian_number="false"
+            app:corner_radius="8dp"
+            app:direction="ltr"
+            app:shadow="8dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reservation per accommodation"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/dateRangeReservationsChart"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profit per accommodation"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/dateRangeProfitChart"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/accommodation_id_report"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select accommodation:"
+        android:textSize="18dp"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/accommodationNameSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/getAccommodationIdReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/get_report"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:id="@+id/accommodationIdReportTableLayout">
+
+        <ir.androidexception.datatable.DataTable
+            android:id="@+id/data_table2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:header_gravity="center"
+            app:row_gravity="center"
+            app:header_vertical_padding="16dp"
+            app:header_horizontal_padding="0dp"
+            app:row_vertical_padding="16dp"
+            app:header_text_size="12sp"
+            app:row_text_size="12sp"
+            app:row_text_color="#000"
+            app:header_text_color="#000"
+            app:row_background_color="#fff"
+            app:header_background_color="#fff"
+            app:persian_number="false"
+            app:corner_radius="8dp"
+            app:direction="ltr"
+            app:shadow="8dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reservation per month"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/accommodationIdReservationsChart"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profit per month"
+        android:textSize="18dp"
+        android:textAlignment="center"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/accommodationIdProfitChart"/>
+
+
+</LinearLayout>

@@ -147,4 +147,9 @@
         android:label="Favorites"
         tools:layout="@layout/fragment_favorites"/>
 
+    <fragment android:id="@+id/nav_financial_reports_fragment"
+        android:name="com.bookingapptim24.fragments.financialReports.FinancialReportsFragment"
+        android:label="Financial Reports"
+        tools:layout="@layout/fragment_financial_reports"/>
+
 </navigation>
