@@ -11,7 +11,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +30,7 @@ import java.util.Set;
 
 public class HomeScreen extends AppCompatActivity {
 
+
     private @NonNull ActivityHomeScreenNavigationBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
@@ -37,6 +42,15 @@ public class HomeScreen extends AppCompatActivity {
     private Set<Integer> topLevelDestinations = new HashSet<>();
 
     public static String role = null;
+
+
+    //TODO
+//    private SyncReceiver syncReceiver;
+    public static String SYNC_DATA = "SYNC_DATA";
+
+    private static String CHANNEL_ID = "Zero channel";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +148,6 @@ public class HomeScreen extends AppCompatActivity {
 
 
     private void setUpMenu() {
-        //temporary solution without server
         SessionManager sm = new SessionManager(getApplicationContext());
         role = sm.getRole();
         if (role == null)
@@ -152,6 +165,9 @@ public class HomeScreen extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+
+
 
 }
 
