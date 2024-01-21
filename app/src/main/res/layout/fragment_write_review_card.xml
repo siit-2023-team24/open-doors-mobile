@@ -1,0 +1,204 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/fragmentRoot"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/reviewDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/starsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/starContainer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+
+                <ImageView
+                    android:id="@+id/emptyStar1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/star"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/fullStar1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/starContainer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+                <ImageView
+                    android:id="@+id/emptyStar2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/star"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/fullStar2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/starContainer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+                <ImageView
+                    android:id="@+id/emptyStar3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/star"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/fullStar3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/starContainer4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+                <ImageView
+                    android:id="@+id/emptyStar4"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/fullStar4"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/starContainer5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+                <ImageView
+                    android:id="@+id/emptyStar5"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:textColor="@color/star"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/fullStar5"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/star"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ratingContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="5dp">
+
+                <TextView
+                    android:id="@+id/rating"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:text=""
+                    android:textSize="22dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/commentTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="?attr/colorPrimary"
+        app:boxStrokeWidth="2dp"
+        app:hintEnabled="false"
+        app:layout_constraintTop_toBottomOf="@+id/reviewDetailsLayout"
+        app:layout_constraintBottom_toTopOf="@+id/justButtonContainer">
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:maxLines="4"
+            android:hint="Write your review..."
+            android:maxLength="255"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="10dp">
+
+
+
+        <Button
+            android:id="@+id/reviewButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit_review"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="@string/no_rating_error"
+            android:textColor="?attr/colorAccent"
+            android:paddingRight="20dp"
+            android:visibility="invisible"/>
+    </LinearLayout>
+</LinearLayout>

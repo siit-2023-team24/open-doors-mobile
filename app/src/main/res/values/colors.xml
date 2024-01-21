@@ -10,4 +10,5 @@
     <color name="dark_orange">#952705</color>
     <color name="good">#6FF0F8</color>
     <color name="bad">#FF3A29</color>
+    <color name="star">#DDDD00</color>
 </resources>
