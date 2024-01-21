@@ -1,6 +1,9 @@
 package com.bookingapptim24.fragments.reservation_list;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +20,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
+import com.bookingapptim24.models.NotificationDTO;
 import com.bookingapptim24.models.ReservationRequestForHost;
+import com.bookingapptim24.models.enums.NotificationType;
 import com.bookingapptim24.models.enums.ReservationRequestStatus;
 import com.bookingapptim24.util.DataChangesListener;
+import com.bookingapptim24.util.SocketService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -137,6 +143,9 @@ public class ReservationRequestForHostListAdapter extends ArrayAdapter<Reservati
                     Log.d("OpenDoors", "Message received");
                     Toast.makeText(activity,"Request confirmed", Toast.LENGTH_SHORT).show();
                     listener.onDataChanged();
+
+                    sendNotification(request.getGuestUsername(), "Your reservation request #" + request.getId() + " has been confirmed",
+                            NotificationType.RESERVATION_REQUEST.getTypeMessage());
                 } else {
                     Log.d("OpenDoors", "Message received: " + response.code());
                 }
@@ -158,6 +167,9 @@ public class ReservationRequestForHostListAdapter extends ArrayAdapter<Reservati
                     Log.d("OpenDoors", "Message received");
                     Toast.makeText(activity,"Request denied", Toast.LENGTH_SHORT).show();
                     listener.onDataChanged();
+
+                    sendNotification(request.getGuestUsername(), "Your reservation request #" + request.getId() + " has been denied",
+                            NotificationType.RESERVATION_REQUEST.getTypeMessage());
                 } else {
                     Log.d("OpenDoors", "Message received: " + response.code());
                 }
@@ -167,5 +179,14 @@ public class ReservationRequestForHostListAdapter extends ArrayAdapter<Reservati
                 Log.d("OpenDoors", t.getMessage() != null?t.getMessage():"error");
             }
         });
+    }
+
+    private void sendNotification(String username, String message, String type) {
+        Intent intent = new Intent(activity, SocketService.class);
+        intent.putExtra("username", username);
+        intent.putExtra("message", message);
+        intent.putExtra("type", type);
+        intent.setAction(SocketService.ACTION_SEND_NOTIFICATION);
+        activity.startForegroundService(intent);
     }
 }

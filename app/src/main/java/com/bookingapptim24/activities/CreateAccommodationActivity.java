@@ -120,9 +120,6 @@ public class CreateAccommodationActivity extends AppCompatActivity {
     private ArrayAdapter<String> availabilityAdapter;
     private ArrayAdapter<String> seasonalRatesAdapter;
 
-    //todo bind amenities
-
-
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 101;
 

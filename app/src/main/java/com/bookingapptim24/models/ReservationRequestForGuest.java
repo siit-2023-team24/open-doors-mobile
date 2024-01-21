@@ -15,10 +15,12 @@ public class ReservationRequestForGuest {
     protected ReservationRequestStatus status;
     protected Timestamp timestamp;
 
+    protected String hostUsername;
+
     public ReservationRequestForGuest() {
     }
 
-    public ReservationRequestForGuest(Long id, Long imageId, String accommodationName, Timestamp startDate, Timestamp endDate, int guestNumber, double totalPrice, ReservationRequestStatus status, Timestamp timestamp) {
+    public ReservationRequestForGuest(Long id, Long imageId, String accommodationName, Timestamp startDate, Timestamp endDate, int guestNumber, double totalPrice, ReservationRequestStatus status, Timestamp timestamp, String hostUsername) {
         this.id = id;
         this.imageId = imageId;
         this.accommodationName = accommodationName;
@@ -28,6 +30,7 @@ public class ReservationRequestForGuest {
         this.totalPrice = totalPrice;
         this.status = status;
         this.timestamp = timestamp;
+        this.hostUsername = hostUsername;
     }
 
     public Long getId() {
@@ -100,6 +103,14 @@ public class ReservationRequestForGuest {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getHostUsername() {
+        return hostUsername;
+    }
+
+    public void setHostUsername(String hostUsername) {
+        this.hostUsername = hostUsername;
     }
 
     @Override
