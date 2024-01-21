@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 public class NotificationDTO {
     private Long id;
-    private Timestamp timestamp;
+    private Long timestamp;
     private String username;
     private String message;
     private NotificationType type;
@@ -15,7 +15,7 @@ public class NotificationDTO {
     public NotificationDTO() {
     }
 
-    public NotificationDTO(Long id, Timestamp timestamp, String username, String message, NotificationType type) {
+    public NotificationDTO(Long id, Long timestamp, String username, String message, NotificationType type) {
         this.id = id;
         this.timestamp = timestamp;
         this.username = username;
@@ -31,11 +31,11 @@ public class NotificationDTO {
         this.id = id;
     }
 
-    public Timestamp getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 

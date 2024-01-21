@@ -61,11 +61,8 @@ public class LoginScreen extends AppCompatActivity {
                         UserTokenState userTokenState = response.body();
                         sessionManager.saveUserSession(userTokenState.getAccessToken());
 
-                        SocketService.connect();
-                        SocketService.setSessionManager(sessionManager);
-                        NotificationDTO notificationDTO = new NotificationDTO(null, new Timestamp(System.currentTimeMillis()),
-                                sessionManager.getUsername(), "NOTIF. FROM MOBILE", NotificationType.NEW_RESERVATION_REQUEST);
-                        SocketService.sendNotification(notificationDTO);
+                        SocketService socketService = new SocketService(sessionManager);
+                        socketService.connect();
 
                         Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
                         startActivity(intent);

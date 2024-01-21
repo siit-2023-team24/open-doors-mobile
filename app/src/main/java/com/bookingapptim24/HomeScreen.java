@@ -166,35 +166,8 @@ public class HomeScreen extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Notification channel";
-            String description = "Description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
 
-//    private void setUpReceiver(){
-//        syncReceiver = new SyncReceiver();
-//        /*
-//         * Registrujemo nas BroadcastReceiver i dodajemo mu 'filter'.
-//         * Filter koristimo prilikom prispeca poruka. Jedan receiver
-//         * moze da reaguje na vise tipova poruka. One nam kazu
-//         * sta tacno treba da se desi kada poruka odredjenog tipa (filera)
-//         * stigne.
-//         * */
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(SYNC_DATA);
-//        registerReceiver(syncReceiver, filter);
-//
-//    }
 
 }
 
