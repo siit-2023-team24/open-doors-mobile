@@ -10,12 +10,10 @@
     tools:context=".fragments.accommodation_page.AccommodationDetailsFragment"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/accommodation_image"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/nameTextView"

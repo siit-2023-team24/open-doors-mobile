@@ -27,9 +27,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bookingapptim24.R;
 import com.bookingapptim24.activities.CreateAccommodationActivity;
+import com.bookingapptim24.additionalAdapters.ImageAdapter;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.fragments.FragmentTransition;
@@ -187,7 +189,11 @@ public class AccommodationDetailsFragment extends Fragment {
         Button reviewsBtn = view.findViewById(R.id.reviews_btn);
 
         // Set data in views
-        //Glide.with(requireContext()).load(accommodation.getImage()).into(imageView);
+        if (accommodationDetails.getImages() != null && accommodationDetails.getImages().size() > 0) {
+            ViewPager2 viewPager = view.findViewById(R.id.viewPager);
+            viewPager.setAdapter(new ImageAdapter(requireContext(), accommodationDetails.getImages()));
+        }
+
         nameTextView.setText(accommodationDetails.getName());
         cityCountryTextView.setText(accommodationDetails.getCity() + ", " + accommodationDetails.getCountry());
         if(accommodationDetails.getAverageRating() != null) {

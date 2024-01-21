@@ -3,6 +3,9 @@ package com.bookingapptim24.fragments.home_page;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +25,13 @@ import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.models.AccommodationFavorites;
 import com.bookingapptim24.models.AccommodationSearchDTO;
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +63,13 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         AccommodationSearchDTO accommodation = accommodationList.get(position);
+
+        ImageView imageView = view.findViewById(R.id.accommodationImage);
+        if (accommodation.getImage() != null && accommodation.getImage() > 0)
+            loadImage(imageView, accommodation.getImage());
+        else
+            imageView.setImageResource(R.drawable.accommodation_image);
+
 //        holder.imageView.setImageResource(accommodation.getImageResource());
         holder.nameTextView.setText(accommodation.getName());
         if(accommodation.getAverageRating() != null) {
@@ -186,5 +202,42 @@ public class HomePageAccommodationAdapter extends RecyclerView.Adapter<HomePageA
 
     private void showSnackbar(String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void loadImage(ImageView image, Long id) {
+        Call<ResponseBody> getImage = ClientUtils.imageService.getById(id, false);
+        getImage.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    try {
+                        InputStream inputStream = response.body().byteStream();
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        File imageFile = createTempImageFile(bitmap);
+                        Picasso.get().load(Uri.fromFile(imageFile)).into(image);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else Log.e("OpenDoors", "Error getting image");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("OpenDoors", "Error loading image");
+                image.setImageResource(R.drawable.accommodation_image);
+            }
+        });
+    }
+
+    private File createTempImageFile(Bitmap bitmap) throws IOException {
+        File tempDir = context.getCacheDir();
+        File tempFile = File.createTempFile("image", "png", tempDir);
+
+        OutputStream os = new FileOutputStream(tempFile);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        os.flush();
+        os.close();
+
+        return tempFile;
     }
 }
