@@ -215,4 +215,16 @@
     <string name="sorted_descending">Accommodations sorted by descending price.</string>
     <string name="where_will_you_go">The world is your oyster, where will you go? Perhaps…</string>
     <string name="no_magnetometer">Magnetometer not available on this device.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Notifications -->
+    <string name="notification_settings">Notification settings:</string>
+    <string name="new_reservation_requests">For new reservation requests</string>
+    <string name="reservation_request_status_changes">For reservation request status changes</string>
+    <string name="new_host_reviews">For new host reviews</string>
+    <string name="new_accommodation_reviews">For new accommodation reviews</string>
+    <string name="save_settings">Save settings</string>
+    <string name="no_notifications">You do not have any notifications yet.</string>
+    <string name="settings_saved">Settings saved.</string>
 </resources>

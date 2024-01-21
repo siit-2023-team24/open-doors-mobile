@@ -17,11 +17,8 @@ import androidx.fragment.app.FragmentManager;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
-import com.bookingapptim24.models.NewUserReport;
-import com.bookingapptim24.models.UserReport;
 import com.bookingapptim24.models.reviews.ReviewDetails;
 import com.bookingapptim24.util.DataChangesListener;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

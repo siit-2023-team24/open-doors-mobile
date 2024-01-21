@@ -127,6 +127,11 @@ public class ShowAllFragment extends Fragment implements SensorEventListener {
             searchAndFilter();
         else
             fetchAccommodationsFromServer();
+
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void fetchAccommodationsFromServer() {
@@ -275,16 +280,6 @@ public class ShowAllFragment extends Fragment implements SensorEventListener {
         if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             Log.i("REZ_ACCELEROMETER", String.valueOf(accuracy));
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        super.onResume();
-        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
-        sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
