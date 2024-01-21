@@ -183,8 +183,6 @@ public class SearchAccommodationsFragment extends Fragment implements SensorEven
         } else {
             searchDTO.setGuestNumber(null);
         }
-        sensorManager.unregisterListener(this);
-    }
 
         Log.d("FilterAccommodations", searchDTO.toString());
 

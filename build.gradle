@@ -2,3 +2,7 @@
 plugins {
 id 'com.android.application' version '8.1.3' apply false
 }
+
+ext {
+    stompprotocolandroidVersion = '1.6.0'
+}

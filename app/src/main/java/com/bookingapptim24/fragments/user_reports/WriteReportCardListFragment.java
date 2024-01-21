@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +13,7 @@ import androidx.fragment.app.ListFragment;
 import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
-import com.bookingapptim24.databinding.FragmentUserReportListBinding;
 import com.bookingapptim24.databinding.FragmentWriteReportCardListBinding;
-import com.bookingapptim24.models.UserReport;
 import com.bookingapptim24.util.DataChangesListener;
 
 import java.util.ArrayList;

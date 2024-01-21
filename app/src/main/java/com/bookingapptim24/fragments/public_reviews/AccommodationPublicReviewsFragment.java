@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import android.util.Log;
@@ -12,14 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bookingapptim24.Accommodation;
-import com.bookingapptim24.R;
 import com.bookingapptim24.clients.ClientUtils;
 import com.bookingapptim24.clients.SessionManager;
 import com.bookingapptim24.databinding.FragmentAccommodationPublicReviewsBinding;
-import com.bookingapptim24.databinding.FragmentWriteReportCardListBinding;
-import com.bookingapptim24.fragments.user_reports.WriteReportCardAdapter;
-import com.bookingapptim24.fragments.user_reports.WriteReportCardListFragment;
 import com.bookingapptim24.models.reviews.AccommodationReviews;
 import com.bookingapptim24.models.reviews.ReviewDetails;
 import com.bookingapptim24.util.DataChangesListener;

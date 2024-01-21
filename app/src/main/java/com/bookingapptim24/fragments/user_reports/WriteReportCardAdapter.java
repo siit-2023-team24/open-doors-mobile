@@ -1,7 +1,6 @@
 package com.bookingapptim24.fragments.user_reports;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +22,7 @@ import com.bookingapptim24.models.UserReport;
 import com.bookingapptim24.util.DataChangesListener;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
