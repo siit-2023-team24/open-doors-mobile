@@ -136,7 +136,7 @@ public class ShowAllFragment extends Fragment implements SensorEventListener {
 
     private void fetchAccommodationsFromServer() {
         String role = sessionManager.getRole();
-        if (role.equals("ROLE_GUEST")) {
+        if (sessionManager.isLoggedIn() && role.equals("ROLE_GUEST")) {
             Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.getAllWhenGuest(sessionManager.getUserId());
             call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
                 @Override
@@ -178,7 +178,7 @@ public class ShowAllFragment extends Fragment implements SensorEventListener {
 
     private void searchAndFilter() {
         String role = sessionManager.getRole();
-        if (role.equals("ROLE_GUEST")) {
+        if (sessionManager.isLoggedIn() && role.equals("ROLE_GUEST")) {
             Call<ArrayList<AccommodationSearchDTO>> call = ClientUtils.accommodationService.searchAccommodationsWhenGuest(sessionManager.getUserId(), searchAndFilterDTO);
             call.enqueue(new Callback<ArrayList<AccommodationSearchDTO>>() {
                 @Override

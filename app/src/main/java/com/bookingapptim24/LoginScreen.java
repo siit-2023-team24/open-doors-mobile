@@ -31,19 +31,15 @@ public class LoginScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         sessionManager = new SessionManager(getApplicationContext());
+        if(sessionManager.isLoggedIn()) {
+            sessionManager.logout();
+        }
 
         ActivityLoginScreenBinding binding = ActivityLoginScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        binding.loginButton.setOnClickListener((v) -> {
-//            //temporary solution without server
-//            HomeScreen.user = binding.editTextEmail.getText().toString();
-//            //
-//            Intent intent = new Intent(LoginScreen.this, HomeScreen.class);
-//            startActivity(intent);
-//            finish();
-//        });
 
         binding.loginButton.setOnClickListener((v) -> {
 
